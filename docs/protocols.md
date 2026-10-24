@@ -16,17 +16,22 @@ listing the `chunk_id`s it references and a monotonically increasing `seq`.
 Commit, from the server's point of view:
 1. `PUT_CHUNK(id, bytes)`: if `id` is already indexed, dedup hit → ack. Otherwise append to the active
    segment. Group-commit: fsync the segment, then insert index entries, then ack. Never ack before fsync.
-2. `COMMIT(manifest)`: reject unless every referenced `chunk_id` is indexed (durable). Append the WAL
-   record and fsync, **then** ack. A checkpoint is *committed* iff its WAL record is durable and its
-   checksum is intact.
+2. `COMMIT(manifest)`: reject unless every referenced `chunk_id` is indexed (durable). Refresh the index
+   epoch of **every** referenced chunk (dedup hits included) to the current epoch, under the same lock as
+   the WAL append. Append the WAL record and fsync, **then** ack. A checkpoint is *committed* iff its WAL
+   record is durable and its checksum is intact. *(Fix found by TLC, M9: without the epoch refresh, a
+   commit landing between GC mark and sweep could have its deduped chunks swept.)*
+   Clients resend any chunk whose PUT ack is missing before issuing COMMIT. This is a liveness requirement
+   (M9).
 3. Recovery after a crash: scan the WAL; accept the longest prefix of records with valid checksums; truncate
    a torn tail. The index is cross-checked against the segments, and entries pointing past a segment's valid
    end are dropped. The *latest committed checkpoint* is the last accepted WAL record. `RESTORE` re-verifies
    blake3 of every chunk; any mismatch or missing chunk returns a **detected error** (never silently wrong data).
-4. GC: retain the last K committed manifests. Mark their chunks live. Copy live chunks out of victim
-   segments into a new segment, fsync, update the index, and only then delete victim segments. Chunks
-   indexed in epochs ≥ the GC start epoch are always retained, because they may belong to an in-flight,
-   uncommitted checkpoint.
+4. GC: retain the last K committed manifests, including WAL records appended but not yet fsync'd. Mark
+   their chunks live. Copy live chunks out of victim segments into a new segment, fsync, update the index,
+   and only then delete victim segments. Chunks whose epoch is ≥ the GC start epoch are always retained,
+   because they may belong to an in-flight, uncommitted checkpoint. The sweep **re-checks each chunk's epoch
+   immediately before deleting it**.
 
 Invariants (checked by tests and TLA+):
 - **I1** No committed manifest references a chunk that is not durably stored.
@@ -50,7 +55,8 @@ Invariants (checked by tests and TLA+):
 ## P3. Workload certificate rotation (security service)
 
 - A test CA (Python `cryptography`) issues X.509 certs with a SPIFFE URI SAN `spiffe://aegis.lab/<site>/<role>/<id>`
-  and lifetime `T`. `notBefore = now − S`, where `S` is the max modeled clock skew.
+  and lifetime `T`. `notBefore = now − 2S`, where `S` is the max modeled clock skew. *(Fix found by TLC, M9:
+  backdating by only S lets a CA running S fast issue a cert that a verifier running S slow rejects.)*
 - Each workload renews at `T/2 ± jitter`, retrying on failure. Old and new certs are both valid during the overlap.
 - Peers verify the chain to the trust bundle, the validity window with skew tolerance `S`, and that the SPIFFE ID is
   authorized for the RPC.
@@ -58,5 +64,6 @@ Invariants (checked by tests and TLA+):
   issued has expired (+ `S`).
 - gRPC servers reload credentials per handshake. Established connections are not torn down by rotation.
 
-Invariant **R1**: under clock skew ≤ `S` and issuance latency + retries < `T/2 − S`, every live workload holds,
-at every instant, at least one cert that all peers accept.
+Invariant **R1**: under clock skew ≤ `S` and issuance latency + retries < `T/2 − 2S`, every live workload
+holds, at every instant, at least one cert that all peers accept. (The precondition was `T/2 − S` before
+M9's model checking.) The new CA must reach **every** verifier's bundle before it signs anything.
