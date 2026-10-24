@@ -52,11 +52,33 @@ def launch(slots, out: str, mb: float = 16, iters: int = 8, ops: str = "all_redu
     import sys
 
     procs = []
-    for rank, (ns, ip) in enumerate(slots):
-        env = dict(os.environ, RANK=str(rank), WORLD_SIZE=str(len(slots)), MASTER_ADDR=slots[0][1],
-                   MASTER_PORT=str(port), GLOO_SOCKET_IFNAME="eth0", OMP_NUM_THREADS="1")
-        cmd = ["ip", "netns", "exec", ns, sys.executable, "-m", "bench.collective_micro", "--mb", str(mb),
-               "--iters", str(iters), "--ops", ops, "--out", out]
+    for rank, (ns, _ip) in enumerate(slots):
+        env = dict(
+            os.environ,
+            RANK=str(rank),
+            WORLD_SIZE=str(len(slots)),
+            MASTER_ADDR=slots[0][1],
+            MASTER_PORT=str(port),
+            GLOO_SOCKET_IFNAME="eth0",
+            OMP_NUM_THREADS="1",
+        )
+        cmd = [
+            "ip",
+            "netns",
+            "exec",
+            ns,
+            sys.executable,
+            "-m",
+            "bench.collective_micro",
+            "--mb",
+            str(mb),
+            "--iters",
+            str(iters),
+            "--ops",
+            ops,
+            "--out",
+            out,
+        ]
         procs.append(subprocess.Popen(cmd, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL))
     for p in procs:
         p.wait(timeout=600)
