@@ -60,9 +60,10 @@ def main() -> None:
         )
         ax.set_yticks(list(y), names, color=INK, fontsize=8)
         ax.invert_yaxis()
-        for yi, m in zip(y, means, strict=True):
-            ax.text(m * 1.02 + max(means) * 0.01, yi, f"{m:.3g} ms", va="center", fontsize=7, color=INK)
-        ax.set_xlim(0, max(means) * 1.25)
+        right = max(m + h for m, h in zip(means, half, strict=True))
+        for yi, m, h in zip(y, means, half, strict=True):  # label sits past the CI whisker, never on it
+            ax.text(m + h + right * 0.02, yi, f"{m:.3g} ms", va="center", fontsize=7, color=INK)
+        ax.set_xlim(0, right * 1.2)
         ax.set_title(title, fontsize=9, color=INK, loc="left")
         ax.tick_params(axis="x", labelsize=7, colors=MUTED)
         for s in ("top", "right"):

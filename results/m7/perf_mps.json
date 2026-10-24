@@ -1,0 +1,348 @@
+{
+  "meta": {
+    "git": {
+      "commit": "2ea0e9c17065aff6149eeef170e89265d8d7c8c6",
+      "dirty": false
+    },
+    "hardware": {
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "machine": "arm64",
+      "python": "3.12.14",
+      "cpu_count": 18,
+      "host_label": "darwin",
+      "mem_gb": 48.0,
+      "torch": "2.14.1",
+      "torch_threads": 4
+    },
+    "seed": 0,
+    "config": {
+      "device": "mps",
+      "threads": 4,
+      "trials": 10,
+      "shapes": "model,large",
+      "dtypes": null,
+      "seed": 0
+    },
+    "command": "kernels_perf.py --device mps --trials 10",
+    "timestamp": "2026-10-24T17:11:27+00:00"
+  },
+  "data": {
+    "device": "mps",
+    "threads": 4,
+    "note": "dev run, machine shared",
+    "peak_copy": {
+      "bytes": 1073741824,
+      "GBps": {
+        "n": 10,
+        "mean": 162.74236480888666,
+        "std": 67.84103763224978,
+        "ci95_lo": 114.21181003044103,
+        "ci95_hi": 211.2729195873323,
+        "median": 203.01112297316206,
+        "p99": null
+      }
+    },
+    "cases": [
+      {
+        "shape": "model",
+        "dtype": "fp32",
+        "impl": "eager_unfused",
+        "latency_ms": {
+          "n": 10,
+          "mean": 1.2451162503566593,
+          "std": 0.12893338131947857,
+          "ci95_lo": 1.1528828656196213,
+          "ci95_hi": 1.3373496350936973,
+          "median": 1.2584582989802584,
+          "p99": null
+        },
+        "max_abs_err": 1.0054219032884504e-06,
+        "eff_GBps_fused_min": 4.233782988929733,
+        "frac_of_peak": 0.026015248051124207,
+        "traffic": {
+          "fused_min": 5271552,
+          "fused_tiled": 12742656,
+          "unfused_padded_lb": 57617552,
+          "padding_waste": 0.35906374501992033
+        },
+        "seqlens_total": 2574,
+        "max_len": 251
+      },
+      {
+        "shape": "model",
+        "dtype": "fp32",
+        "impl": "sdpa_mask",
+        "latency_ms": {
+          "n": 10,
+          "mean": 0.2322724903933704,
+          "std": 0.014166844242033516,
+          "ci95_lo": 0.22213814052902098,
+          "ci95_hi": 0.2424068402577198,
+          "median": 0.23484164848923683,
+          "p99": null
+        },
+        "max_abs_err": 7.958950046238478e-07,
+        "eff_GBps_fused_min": 22.695550347233297,
+        "frac_of_peak": 0.13945692858700545,
+        "traffic": {
+          "fused_min": 5271552,
+          "fused_tiled": 12742656,
+          "unfused_padded_lb": 57617552,
+          "padding_waste": 0.35906374501992033
+        },
+        "seqlens_total": 2574,
+        "max_len": 251
+      },
+      {
+        "shape": "model",
+        "dtype": "fp32",
+        "impl": "metal_fused",
+        "latency_ms": {
+          "n": 10,
+          "mean": 0.20134455990046263,
+          "std": 0.08996458478374668,
+          "ci95_lo": 0.13698777288262606,
+          "ci95_hi": 0.26570134691829916,
+          "median": 0.17602909647393972,
+          "p99": null
+        },
+        "max_abs_err": 1.037118903646217e-06,
+        "eff_GBps_fused_min": 26.181745375221766,
+        "frac_of_peak": 0.16087848671713595,
+        "traffic": {
+          "fused_min": 5271552,
+          "fused_tiled": 12742656,
+          "unfused_padded_lb": 57617552,
+          "padding_waste": 0.35906374501992033
+        },
+        "seqlens_total": 2574,
+        "max_len": 251
+      },
+      {
+        "shape": "model",
+        "dtype": "fp16",
+        "impl": "eager_unfused",
+        "latency_ms": {
+          "n": 10,
+          "mean": 1.1138758389279246,
+          "std": 0.14576965857970475,
+          "ci95_lo": 1.0095985069819469,
+          "ci95_hi": 1.2181531708739024,
+          "median": 1.0775041475426406,
+          "p99": null
+        },
+        "max_abs_err": 0.0018455985146028642,
+        "eff_GBps_fused_min": 2.366310416192224,
+        "frac_of_peak": 0.014540223862244198,
+        "traffic": {
+          "fused_min": 2635776,
+          "fused_tiled": 6371328,
+          "unfused_padded_lb": 53505168,
+          "padding_waste": 0.35906374501992033
+        },
+        "seqlens_total": 2574,
+        "max_len": 251
+      },
+      {
+        "shape": "model",
+        "dtype": "fp16",
+        "impl": "sdpa_mask",
+        "latency_ms": {
+          "n": 10,
+          "mean": 0.23622540989890695,
+          "std": 0.07685865464213554,
+          "ci95_lo": 0.18124404051704102,
+          "ci95_hi": 0.2912067792807729,
+          "median": 0.202331249602139,
+          "p99": null
+        },
+        "max_abs_err": 0.0009497886397142885,
+        "eff_GBps_fused_min": 11.157885178939829,
+        "frac_of_peak": 0.06856165075420205,
+        "traffic": {
+          "fused_min": 2635776,
+          "fused_tiled": 6371328,
+          "unfused_padded_lb": 53505168,
+          "padding_waste": 0.35906374501992033
+        },
+        "seqlens_total": 2574,
+        "max_len": 251
+      },
+      {
+        "shape": "model",
+        "dtype": "fp16",
+        "impl": "metal_fused",
+        "latency_ms": {
+          "n": 10,
+          "mean": 0.24366667203139514,
+          "std": 0.13896273185447708,
+          "ci95_lo": 0.1442587221267453,
+          "ci95_hi": 0.343074621936045,
+          "median": 0.18698335043154657,
+          "p99": null
+        },
+        "max_abs_err": 0.0009497886397142885,
+        "eff_GBps_fused_min": 10.817137928737314,
+        "frac_of_peak": 0.06646786742616288,
+        "traffic": {
+          "fused_min": 2635776,
+          "fused_tiled": 6371328,
+          "unfused_padded_lb": 53505168,
+          "padding_waste": 0.35906374501992033
+        },
+        "seqlens_total": 2574,
+        "max_len": 251
+      },
+      {
+        "shape": "large",
+        "dtype": "fp32",
+        "impl": "eager_unfused",
+        "latency_ms": {
+          "n": 10,
+          "mean": 135.84385210706387,
+          "std": 1.2469972871950021,
+          "ci95_lo": 134.95180398594223,
+          "ci95_hi": 136.7359002281855,
+          "median": 135.95393749710638,
+          "p99": null
+        },
+        "max_abs_err": 1.202196352134699e-06,
+        "eff_GBps_fused_min": 1.2752599496623942,
+        "frac_of_peak": 0.007836066233644638,
+        "traffic": {
+          "fused_min": 173236224,
+          "fused_tiled": 1185767424,
+          "unfused_padded_lb": 3379096704,
+          "padding_waste": 0.3404752994011976
+        },
+        "seqlens_total": 21147,
+        "max_len": 1002
+      },
+      {
+        "shape": "large",
+        "dtype": "fp32",
+        "impl": "sdpa_mask",
+        "latency_ms": {
+          "n": 10,
+          "mean": 13.843806253862567,
+          "std": 0.38279869781661163,
+          "ci95_lo": 13.569968561782877,
+          "ci95_hi": 14.117643945942257,
+          "median": 13.769364755717106,
+          "p99": null
+        },
+        "max_abs_err": 1.0813690614064342e-06,
+        "eff_GBps_fused_min": 12.513626731208065,
+        "frac_of_peak": 0.0768922508033062,
+        "traffic": {
+          "fused_min": 173236224,
+          "fused_tiled": 1185767424,
+          "unfused_padded_lb": 3379096704,
+          "padding_waste": 0.3404752994011976
+        },
+        "seqlens_total": 21147,
+        "max_len": 1002
+      },
+      {
+        "shape": "large",
+        "dtype": "fp32",
+        "impl": "metal_fused",
+        "latency_ms": {
+          "n": 10,
+          "mean": 28.86336669616867,
+          "std": 1.1221086074517816,
+          "ci95_lo": 28.06065855457891,
+          "ci95_hi": 29.666074837758426,
+          "median": 28.8236769993091,
+          "p99": null
+        },
+        "max_abs_err": 1.0813690614064342e-06,
+        "eff_GBps_fused_min": 6.001941000978082,
+        "frac_of_peak": 0.036880015895223994,
+        "traffic": {
+          "fused_min": 173236224,
+          "fused_tiled": 1185767424,
+          "unfused_padded_lb": 3379096704,
+          "padding_waste": 0.3404752994011976
+        },
+        "seqlens_total": 21147,
+        "max_len": 1002
+      },
+      {
+        "shape": "large",
+        "dtype": "fp16",
+        "impl": "eager_unfused",
+        "latency_ms": {
+          "n": 10,
+          "mean": 121.60478344885632,
+          "std": 1.1711692416036428,
+          "ci95_lo": 120.76697944381473,
+          "ci95_hi": 122.44258745389791,
+          "median": 121.31181273434777,
+          "p99": null
+        },
+        "max_abs_err": 0.002079636442028354,
+        "eff_GBps_fused_min": 0.7122919801623531,
+        "frac_of_peak": 0.004376807360510088,
+        "traffic": {
+          "fused_min": 86618112,
+          "fused_tiled": 592883712,
+          "unfused_padded_lb": 3247762560,
+          "padding_waste": 0.3404752994011976
+        },
+        "seqlens_total": 21147,
+        "max_len": 1002
+      },
+      {
+        "shape": "large",
+        "dtype": "fp16",
+        "impl": "sdpa_mask",
+        "latency_ms": {
+          "n": 10,
+          "mean": 4.440118846832775,
+          "std": 0.1280130310941973,
+          "ci95_lo": 4.348543840985303,
+          "ci95_hi": 4.531693852680246,
+          "median": 4.452948007383384,
+          "p99": null
+        },
+        "max_abs_err": 0.0005889857369012486,
+        "eff_GBps_fused_min": 19.508061605555092,
+        "frac_of_peak": 0.119870825451406,
+        "traffic": {
+          "fused_min": 86618112,
+          "fused_tiled": 592883712,
+          "unfused_padded_lb": 3247762560,
+          "padding_waste": 0.3404752994011976
+        },
+        "seqlens_total": 21147,
+        "max_len": 1002
+      },
+      {
+        "shape": "large",
+        "dtype": "fp16",
+        "impl": "metal_fused",
+        "latency_ms": {
+          "n": 10,
+          "mean": 26.242864548112266,
+          "std": 0.9765616063522782,
+          "ci95_lo": 25.544274458902358,
+          "ci95_hi": 26.941454637322174,
+          "median": 26.189531257841736,
+          "p99": null
+        },
+        "max_abs_err": 0.00048689410739388705,
+        "eff_GBps_fused_min": 3.3006348007931448,
+        "frac_of_peak": 0.02028134963301769,
+        "traffic": {
+          "fused_min": 86618112,
+          "fused_tiled": 592883712,
+          "unfused_padded_lb": 3247762560,
+          "padding_waste": 0.3404752994011976
+        },
+        "seqlens_total": 21147,
+        "max_len": 1002
+      }
+    ]
+  }
+}
