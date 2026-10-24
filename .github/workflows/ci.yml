@@ -1,0 +1,22 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - uses: dtolnay/rust-toolchain@stable
+        with: { components: "clippy,rustfmt" }
+      - name: Python deps (public PyPI; uv.lock was resolved through a mirror, see DECISIONS D-004)
+        run: UV_INDEX_URL=https://pypi.org/simple uv sync --all-extras
+      - run: make lint
+      - run: make test
+  lab:
+    runs-on: ubuntu-24.04
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build lab image
+        run: UV_INDEX_URL=https://pypi.org/simple make lab-image
+      - run: make test-lab

@@ -1,0 +1,68 @@
+{
+  "meta": {
+    "git": {
+      "commit": "unknown",
+      "dirty": false
+    },
+    "hardware": {
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "machine": "arm64",
+      "python": "3.12.14",
+      "cpu_count": 18,
+      "host_label": "darwin",
+      "mem_gb": 48.0,
+      "torch": "2.14.1",
+      "torch_threads": 6
+    },
+    "seed": null,
+    "config": {},
+    "command": "probe_env.py",
+    "timestamp": "2026-10-24T16:51:11+00:00"
+  },
+  "data": {
+    "host": {
+      "os": "macOS-27.0.1-arm64-arm-64bit",
+      "machine": "arm64",
+      "python": "3.12.14",
+      "cpu": "Apple M5 Pro",
+      "cores": 18,
+      "mem_gb": 48.0,
+      "gpu": "Chipset Model: Apple M5 Pro Total Number of Cores: 20",
+      "torch": "2.14.1",
+      "cuda": false,
+      "mps": true,
+      "gloo": true,
+      "nccl": false,
+      "disk_free_gb": 770.7,
+      "tools": {
+        "docker": true,
+        "cargo": true,
+        "java": true,
+        "ffmpeg": true,
+        "tectonic": true,
+        "uv": true,
+        "git": true
+      },
+      "sudo_passwordless": false
+    },
+    "lab": {
+      "kernel": "7.0.12-linuxkit",
+      "nproc": "18",
+      "mem_kb": "49241896",
+      "io_uring_disabled": "0",
+      "netns": "ok",
+      "netem": "ok",
+      "tbf": "ok",
+      "xfs": "ok",
+      "ext4": "ok",
+      "ovs_kmod": "missing",
+      "fuse": "ok",
+      "frr": "8.4.4-1.1~deb12u2",
+      "torch": "2.14.1+cpu",
+      "blk": "vda 1 926.3G;vdb 1 644M;",
+      "image": "aegis-lab:latest",
+      "available": true
+    },
+    "rung": "cpu"
+  }
+}

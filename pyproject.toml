@@ -1,0 +1,50 @@
+[project]
+name = "aegisfabric"
+version = "0.1.0"
+description = "Network-aware, secure, multimodal foundation-model training research platform"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "numpy>=1.26",
+  "scipy>=1.13",
+  "pandas>=2.2",
+  "matplotlib>=3.9",
+  "pyyaml>=6.0",
+  "torch>=2.5",
+  "pulp>=2.9",
+  "grpcio>=1.66",
+  "protobuf>=5.27",
+  "cryptography>=43",
+  "reportlab>=4.2",
+  "pillow>=10.4",
+  "psutil>=6.0",
+  "blake3>=0.4",
+]
+
+[project.optional-dependencies]
+media = ["aiortc>=1.9", "av>=12"]
+posttrain = ["opacus>=1.5", "scikit-learn>=1.5"]
+dev = ["pytest>=8.3", "ruff>=0.6", "grpcio-tools>=1.66", "hypothesis>=6.112"]
+
+[build-system]
+requires = ["setuptools>=70"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = { find = { include = ["train*", "controller*", "netlab*", "security*", "media*", "kernels*", "posttrain*", "privacy*", "bench*", "data*"] } }
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+extend-exclude = ["**/*_pb2.py", "**/*_pb2_grpc.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501", "B008"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+  "slow: long-running tests (excluded from `make test`)",
+  "netlab: requires the privileged Linux lab container",
+]
+addopts = "-m 'not slow and not netlab'"

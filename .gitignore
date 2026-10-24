@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+ckpt/target/
+*.egg-info/
+/scratch/
+data/generated/
+results/**/raw_large/
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.blg
+.DS_Store
+formal/**/states/

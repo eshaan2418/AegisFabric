@@ -1,0 +1,15 @@
+numpy>=1.26
+scipy>=1.13
+pandas>=2.2
+matplotlib>=3.9
+pyyaml>=6.0
+pulp>=2.9
+grpcio>=1.66
+grpcio-tools>=1.66
+protobuf>=5.27
+cryptography>=43
+psutil>=6.0
+blake3>=0.4
+pytest>=8.3
+pillow>=10.4
+reportlab>=4.2
