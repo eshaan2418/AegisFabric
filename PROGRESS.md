@@ -5,23 +5,24 @@ Status values: `todo / in-progress / done / blocked-with-fallback`.
 | M | Title | Status | Evidence |
 |---|-------|--------|----------|
 | M0 | Bootstrap | done | `ENVIRONMENT.md`, `results/m0/environment.json`, `make test` + `make lint` green |
-| M1 | Baseline distributed training | todo | |
-| M2 | Network laboratory | todo | |
-| M3 | Adaptive placement & routing controller (primary) | todo | |
-| M4 | Crash-consistent checkpoint engine | todo | |
-| M5 | Security layer | todo | |
-| M6 | Real-time multimodal media pipeline | todo | |
-| M7 | Compiler/kernel extension | todo | |
-| M8 | Post-training & privacy | todo | |
-| M9 | Formal checks (TLA+) | todo | |
-| M10 | Integration, reproduction, write-up | todo | |
+| M1 | Baseline distributed training | in-progress | code: `train/`, driver `bench/m1_baselines.py`; campaign pending |
+| M2 | Network laboratory | in-progress | code: `netlab/`, lab tests `tests/test_netlab.py` (4/4 in container); `bench/m2_convergence.py` campaign pending |
+| M3 | Adaptive placement & routing controller (primary) | in-progress | code: `controller/`, `bench/wan_run.py`, `bench/m3_*.py`; calibration + campaign pending |
+| M4 | Crash-consistent checkpoint engine | in-progress | delegated to worktree branch (Rust `ckpt/`, envelope encryption) |
+| M5 | Security layer | in-progress | CA/mTLS/rotation code in `security/`; `bench/m5_rotation.py` pending; envelope part with M4 |
+| M6 | Real-time multimodal media pipeline | in-progress | delegated to worktree branch |
+| M7 | Compiler/kernel extension | done | `results/m7/` (correctness, perf CPU+MPS, sm80 IR) |
+| M8 | Post-training & privacy | in-progress | delegated to worktree branch |
+| M9 | Formal checks (TLA+) | done | `results/m9/summary.json`, `formal/` |
+| M10 | Integration, reproduction, write-up | todo | `bench/reproduce.sh`, `bench/make_figures.py`, `bench/audit_numbers.py` drafted |
 
 ## Next action
-M1: implement `train/model.py` (tiny multimodal transformer), `train/data.py` (synthetic chart+statement
-dataset), `train/trainer.py` (DDP / FSDP2 / HSDP over Gloo, telemetry hooks), and baselines on loopback.
+Run the lab campaigns sequentially (M1 → M2 → M3 calibrate → M3 main → M3 ablations → M5 rotation), merge the
+M4/M6/M8 branches, then M10 (integration demo, paper, README, resume bullets, audit, FINAL_REVIEW).
 
-## M0 plan (done)
-- [x] Probe environment → ENVIRONMENT.md (script `bench/probe_env.py`)
-- [x] Skeleton, Makefile, CI workflow, pinned deps (`uv.lock`), lab Dockerfile
-- [x] Synthetic data generators (`data/synth/finance.py`): statements (+PDF), transcripts, chart videos
-- [x] Accept: `make test` passes; ENVIRONMENT.md complete
+## Campaign plan
+- M1: `bench.m1_baselines --seeds 5` (DDP/FSDP2/HSDP × loopback/WAN).
+- M2: `bench.m2_convergence --trials 10`.
+- M3: calibrate; main = 8 scenarios × 5 methods × 5 seeds (methods interleaved per block); ablations =
+  4 scenarios × (5 signal ablations + no-migration) × seeds.
+- M5: `bench.m5_rotation --trials 5 --steps 60`.

@@ -11,6 +11,7 @@ engine client is another (ckpt/).
 
 from __future__ import annotations
 
+import hashlib
 import io
 import threading
 import time
@@ -56,6 +57,13 @@ def _key(k: str):
     return int(k) if k.isdigit() else k
 
 
+META = "\x00meta"
+
+
+def keyset_digest(keys) -> str:
+    return hashlib.blake2b("\n".join(sorted(keys)).encode(), digest_size=16).hexdigest()
+
+
 def my_slice(flat: dict[str, Any], rank: int, world: int) -> dict[str, Any]:
     """Greedy size-balanced assignment (largest leaf first to the least-loaded rank); deterministic."""
 
@@ -96,6 +104,14 @@ class SliceCheckpointer:
             k: (v.detach().clone() if isinstance(v, torch.Tensor) else v)
             for k, v in my_slice(flat, self.rank, self.world).items()
         }
+        # every slice carries the full key-set digest so restore can prove the union is complete
+        mine[META] = {
+            "step": step,
+            "rank": self.rank,
+            "world": self.world,
+            "n_total": len(flat),
+            "keys_digest": keyset_digest(flat),
+        }
         stall = time.perf_counter() - t0
         snap = {"step": step, "stall_s": stall, "wait_prev_s": waited}
         self.inflight_step = step
@@ -128,9 +144,22 @@ class SliceCheckpointer:
 
     def restore(self, step: int) -> dict:
         flat: dict[str, Any] = {}
+        metas = []
         for r in range(self.world):
             data = self.backend.get(self.key(step, r))
             if data is None:
                 raise FileNotFoundError(self.key(step, r))
-            flat.update(torch.load(io.BytesIO(data), weights_only=False))
+            part = torch.load(io.BytesIO(data), weights_only=False)
+            meta = part.pop(META, None)
+            if meta is None or meta["rank"] != r or meta["step"] != step or meta["world"] != self.world:
+                raise ValueError(f"slice {r} of step {step}: missing or mismatched metadata {meta}")
+            overlap = flat.keys() & part.keys()
+            if overlap:
+                raise ValueError(f"slice {r} of step {step} overlaps earlier slices: {sorted(overlap)[:3]}")
+            metas.append(meta)
+            flat.update(part)
+        if len({(m["n_total"], m["keys_digest"]) for m in metas}) != 1:
+            raise ValueError(f"step {step}: slices disagree on the key set")
+        if len(flat) != metas[0]["n_total"] or keyset_digest(flat) != metas[0]["keys_digest"]:
+            raise ValueError(f"step {step}: incomplete checkpoint ({len(flat)}/{metas[0]['n_total']} leaves)")
         return unflatten(flat)

@@ -103,10 +103,14 @@ def lm_loss(model, imgs, toks):
 
 
 def get_full_state(model, opt) -> dict:
-    """Full (unsharded) model+optimizer state on every rank, CPU tensors. Placement-independent."""
+    """Full (unsharded) model+optimizer state on every rank, CPU tensors. Placement-independent.
+
+    cpu_offload must stay False: with full_state_dict=True it makes every rank except 0 return an empty
+    dict, and each rank would then slice a different key set (training here is on CPU already).
+    """
     from torch.distributed.checkpoint.state_dict import StateDictOptions, get_state_dict
 
-    msd, osd = get_state_dict(model, opt, options=StateDictOptions(full_state_dict=True, cpu_offload=True))
+    msd, osd = get_state_dict(model, opt, options=StateDictOptions(full_state_dict=True, cpu_offload=False))
     return {"model": msd, "opt": osd}
 
 

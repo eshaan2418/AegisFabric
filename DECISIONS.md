@@ -78,3 +78,11 @@ signs. Renewal is scheduled at the midpoint of the *current cert's* validity, wi
 on start. A functional test caught bootstrap certs expiring during worker start-up under T/2-from-start
 scheduling. SPIRE was not deployed: bootstrap identities are injected by the harness as a stand-in for
 attestation (B-007).
+
+## D-011 (2026-10-24) Bug found in pre-campaign smoke test: checkpoints held ~1/6 of the state
+`get_full_state` used `full_state_dict=True, cpu_offload=True`; PyTorch then returns the full state on rank 0
+only and empty dicts elsewhere. Each rank sliced a different key set, so slices 1..5 were ~1 KB and restores
+after migration failed (`KeyError`), or would have restored incomplete state. Fixed (`cpu_offload=False`;
+tensors are on CPU already). Every slice now carries the full key-set digest, and restore rejects any
+incomplete, overlapping or mismatched union. Regression tests: `tests/test_checkpointing.py`. No results had
+been recorded with the buggy version (the smoke output went to `scratch/`).
