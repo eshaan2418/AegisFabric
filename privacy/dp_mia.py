@@ -20,7 +20,7 @@ import torch.nn.functional as Fn
 from sklearn.metrics import roc_auc_score, roc_curve
 
 from data.synth import qa
-from posttrain.model import ModelConfig, TinyLM, encode
+from posttrain.model import DEVICE, ModelConfig, TinyLM, encode
 from posttrain.task import Compute, episode_tokens, lm_batches, train_steps
 
 
@@ -41,7 +41,7 @@ def make_canaries(n: int, seed: int) -> list[str]:
 def pretrain_base(seed: int, cfg: ModelConfig, steps: int = 300, batch: int = 32) -> TinyLM:
     torch.manual_seed(seed)
     rng = np.random.default_rng(seed)
-    m = TinyLM(cfg)
+    m = TinyLM(cfg).to(DEVICE)
     opt = torch.optim.AdamW(m.parameters(), lr=2e-3, weight_decay=0.01)
     train_steps(m, opt, lm_batches(rng, batch, cfg.max_len), Compute(), max_steps=steps)
     return m
@@ -125,6 +125,7 @@ def finetune(
         for inp, tgt, msk in dl:
             if len(inp) == 0:
                 continue
+            inp, tgt, msk = inp.to(DEVICE), tgt.to(DEVICE), msk.to(DEVICE)
             loss = per_example_loss(model, inp, tgt, msk).mean()
             opt.zero_grad(set_to_none=True)
             loss.backward()
@@ -151,8 +152,8 @@ def finetune(
 @torch.no_grad()
 def canary_losses(model: TinyLM, canaries: list[str]) -> np.ndarray:
     ds = build_dataset([], canaries, model.cfg.max_len)
-    inp, tgt, msk = ds.tensors
-    return per_example_loss(model, inp, tgt, msk).numpy()
+    inp, tgt, msk = (t.to(DEVICE) for t in ds.tensors)
+    return per_example_loss(model, inp, tgt, msk).float().cpu().numpy()
 
 
 def attack_metrics(scores: np.ndarray, is_member: np.ndarray, n_boot: int = 2000, seed: int = 0) -> dict:

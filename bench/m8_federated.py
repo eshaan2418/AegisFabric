@@ -21,10 +21,11 @@ from bench.meta import RESULTS, write_result
 from bench.stats import summarize, welch
 from data.synth import qa
 from posttrain import task
+from posttrain.model import DEVICE
 from privacy.federated import SITES, central_train, fed_train
 
 OUT = "m8/federated"
-HP = dict(rounds=15, local_steps=20, batch=32, lr=2e-3, n_per_site=1000, n_eval_per_site=100, fedprox_mu=0.01)
+HP = dict(rounds=8, local_steps=10, batch=64, lr=2e-3, n_per_site=600, n_eval_per_site=100, fedprox_mu=0.01)
 
 
 def evaluate_sites(m, evals):
@@ -62,7 +63,7 @@ def cmd_run(a):
             m = central_train(base, data[s], total_steps // len(SITES), HP["batch"], HP["lr"], seed)
             res[f"local_{s}"] = {"eval": evaluate_sites(m, evals)}
         print(seed, {k: round(v["eval"]["global_exact"], 3) for k, v in res.items()}, flush=True)
-        write_result(f"{OUT}/seed{seed}.json", res, config=HP, seed=seed)
+        write_result(f"{OUT}/seed{seed}.json", res, config={**HP, "device": str(DEVICE)}, seed=seed)
 
 
 def cmd_summarize(a):
@@ -101,7 +102,7 @@ def cmd_summarize(a):
 
 
 def main():
-    torch.set_num_threads(4)
+    torch.set_num_threads(2)
     ap = argparse.ArgumentParser()
     ap.add_argument("cmd", choices=["run", "summarize"])
     ap.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2, 3, 4])

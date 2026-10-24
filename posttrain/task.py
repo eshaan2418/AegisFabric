@@ -10,7 +10,7 @@ import torch
 
 from data.synth import finance as F
 from data.synth import qa
-from posttrain.model import STOI, TinyLM, encode, flops_per_token, generate, pad_batch
+from posttrain.model import DEVICE, STOI, TinyLM, encode, flops_per_token, generate, pad_batch
 
 
 @dataclasses.dataclass
@@ -121,7 +121,7 @@ def rollout(
     compute: Compute | None,
     temperature: float,
     generator: torch.Generator | None = None,
-    batch: int = 128,
+    batch: int = 256,
 ) -> list[dict]:
     outs = []
     for s in range(0, len(episodes), batch):
@@ -160,7 +160,7 @@ def warm_start(
     """Stage 0 (LM pretraining on public synthetic corpus) + stage 1 (SFT on n_sft labelled episodes)."""
     torch.manual_seed(seed)
     rng = np.random.default_rng(seed)
-    model = TinyLM(cfg)
+    model = TinyLM(cfg).to(DEVICE)
     compute = Compute()
     opt = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=0.01)
     pre = train_steps(model, opt, lm_batches(rng, batch, cfg.max_len), compute, max_steps=pretrain_steps)

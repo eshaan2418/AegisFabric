@@ -21,12 +21,12 @@ from bench.meta import RESULTS, read_result, write_result
 from bench.stats import summarize
 from data.synth import qa
 from posttrain import task
-from posttrain.model import ModelConfig
+from posttrain.model import DEVICE, ModelConfig
 from privacy import dp_mia as D
 
 OUT = "m8/privacy"
-HP = dict(epochs=8, batch=128, lr=3e-3, delta=1e-5, max_grad_norm=1.0)
-N_TASK, N_POOL, POOL_SEED, K_SHADOW, N_EVAL = 1500, 200, 4242, 4, 300
+HP = dict(epochs=8, batch=64, lr=3e-3, delta=1e-5, max_grad_norm=1.0)
+N_TASK, N_POOL, POOL_SEED, K_SHADOW, N_EVAL = 600, 200, 4242, 3, 300
 _BASE = {}
 
 
@@ -35,16 +35,16 @@ def base_model():
     if "m" not in _BASE:
         from pathlib import Path
 
-        from posttrain.model import TinyLM
+        from posttrain.model import DEVICE, TinyLM
 
         p = Path("data/generated/m8_privacy_base.pt")
         if p.exists():
-            m = TinyLM(ModelConfig())
-            m.load_state_dict(torch.load(p))
+            m = TinyLM(ModelConfig()).to(DEVICE)
+            m.load_state_dict(torch.load(p, map_location=DEVICE))
         else:
-            m = D.pretrain_base(0, ModelConfig(), steps=300)
+            m = D.pretrain_base(0, ModelConfig(), steps=150, batch=64)
             p.parent.mkdir(parents=True, exist_ok=True)
-            torch.save(m.state_dict(), p)
+            torch.save({k: v.cpu() for k, v in m.state_dict().items()}, p)
         _BASE["m"] = m
     return _BASE["m"]
 
@@ -113,6 +113,7 @@ def cmd_run(a):
                     "n_pool": N_POOL,
                     "pool_seed": POOL_SEED,
                     "members": int(member.sum()),
+                    "device": str(DEVICE),
                     "eps": e,
                 },
                 seed=seed,

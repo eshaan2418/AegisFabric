@@ -14,7 +14,7 @@ import torch
 import torch.nn.functional as Fn
 
 from data.synth import qa
-from posttrain.model import ModelConfig, TinyLM, pad_batch
+from posttrain.model import DEVICE, ModelConfig, TinyLM, pad_batch
 from posttrain.task import Compute, rollout, sft_batches, train_steps
 
 
@@ -26,7 +26,7 @@ def verifiable_batch(outs: list[dict], c: Compute) -> np.ndarray:
     return np.array([verifiable_reward(o) for o in outs], float)
 
 
-def continued_sft(model: TinyLM, seed: int, budget: float, lr: float = 1e-3, batch: int = 32) -> Compute:
+def continued_sft(model: TinyLM, seed: int, budget: float, lr: float = 1e-3, batch: int = 128) -> Compute:
     rng = np.random.default_rng(seed)
     eps = qa.make_split(4000, seed=20_000 + seed)
     opt = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=0.01)
@@ -47,7 +47,7 @@ def dpo(
     budget: float,
     beta: float = 0.1,
     lr: float = 3e-4,
-    prompts: int = 32,
+    prompts: int = 64,
     k: int = 4,
     temperature: float = 1.0,
     reward_fn=verifiable_reward,
@@ -102,7 +102,7 @@ def grpo(
     seed: int,
     budget: float,
     lr: float = 3e-4,
-    prompts: int = 16,
+    prompts: int = 32,
     group: int = 8,
     kl_beta: float = 0.02,
     temperature: float = 1.0,
@@ -130,7 +130,7 @@ def grpo(
             continue
         seqs = [outs[i]["ids"] for i in keep]
         masks = [outs[i]["gen_mask"] for i in keep]
-        a = torch.tensor(adv.reshape(-1)[keep], dtype=torch.float)
+        a = torch.tensor(adv.reshape(-1)[keep], dtype=torch.float, device=DEVICE)
         model.train()
         with torch.no_grad():
             rlp, m, ntok = _masked_lp(ref, seqs, masks)
@@ -154,7 +154,7 @@ class RewardModel:
 
     def __init__(self, base: TinyLM):
         cfg = ModelConfig(**{**base.cfg.__dict__, "value_head": True})
-        self.net = TinyLM(cfg)
+        self.net = TinyLM(cfg).to(DEVICE)
         sd = {k: v for k, v in base.state_dict().items() if not k.startswith("head.")}
         self.net.load_state_dict(sd, strict=False)
 
@@ -166,8 +166,10 @@ class RewardModel:
                 chunk = outs[s : s + 256]
                 inp, tgt, _ = pad_batch([o["ids"] for o in chunk])
                 v = self.net(inp)
-                last = torch.tensor([len(o["ids"]) - 1 for o in chunk])
-                res.append(torch.sigmoid(v[torch.arange(len(chunk)), last]).numpy())
+                last = torch.tensor([len(o["ids"]) - 1 for o in chunk], device=v.device)
+                res.append(
+                    torch.sigmoid(v[torch.arange(len(chunk), device=v.device), last]).float().cpu().numpy()
+                )
         return np.concatenate(res)
 
     def fit(
@@ -182,9 +184,10 @@ class RewardModel:
                 chunk = [outs[i] for i in idx]
                 inp, tgt, _ = pad_batch([o["ids"] for o in chunk])
                 v = self.net(inp)
-                last = torch.tensor([len(o["ids"]) - 1 for o in chunk])
-                logit = v[torch.arange(len(chunk)), last]
-                loss = Fn.binary_cross_entropy_with_logits(logit, torch.tensor(y_all[idx], dtype=torch.float))
+                last = torch.tensor([len(o["ids"]) - 1 for o in chunk], device=v.device)
+                logit = v[torch.arange(len(chunk), device=v.device), last]
+                y = torch.tensor(y_all[idx], dtype=torch.float, device=v.device)
+                loss = Fn.binary_cross_entropy_with_logits(logit, y)
                 opt.zero_grad(set_to_none=True)
                 loss.backward()
                 opt.step()

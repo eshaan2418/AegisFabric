@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import dataclasses
 import math
+import os
 import string
 
 import torch
@@ -17,6 +18,8 @@ CHARS = "\x00" + string.ascii_letters + string.digits + " .,:;?!()+-_=/'\n[]<>#%
 STOI = {c: i for i, c in enumerate(CHARS)}
 PAD = 0
 VOCAB = len(CHARS)
+# Compute device for all M8 code paths ("cpu" or "mps"); sampling always happens on CPU for determinism.
+DEVICE = torch.device(os.environ.get("AEGIS_DEVICE", "cpu"))
 
 
 def encode(s: str) -> list[int]:
@@ -129,6 +132,7 @@ def generate(
     n_tokens (total positions processed).
     """
     model.eval()
+    dev = next(model.parameters()).device
     B = len(prompts)
     caches = [dict() for _ in model.blocks]
     queues = [encode(p) for p in prompts]
@@ -139,26 +143,24 @@ def generate(
     done = [False] * B
     max_len = model.cfg.max_len
     nl = STOI["\n"]
-    prev = torch.full((B,), STOI["\n"], dtype=torch.long)  # BOS = newline
+    prev = torch.full((B,), nl, dtype=torch.long, device=dev)  # BOS = newline
     total_steps = min(max_len, max(plen) + max_new)
     for pos in range(total_steps):
-        logits = model.step(prev, pos, caches)
+        logits = model.step(prev, pos, caches).float().cpu()
         if temperature > 0:
             probs = (logits / temperature).softmax(-1)
-            sampled = torch.multinomial(probs, 1, generator=generator)[:, 0]
+            sampled = torch.multinomial(probs, 1, generator=generator)[:, 0].tolist()
         else:
-            sampled = logits.argmax(-1)
-        nxt = sampled.clone()
+            sampled = logits.argmax(-1).tolist()
+        nxt = sampled
         for i in range(B):
-            if queues[i]:
-                nxt[i] = queues[i].pop(0)
-                forced = True
-            else:
-                forced = False
-            t = int(nxt[i])
             if done[i]:
                 nxt[i] = PAD
                 continue
+            forced = bool(queues[i])
+            if forced:
+                nxt[i] = queues[i].pop(0)
+            t = nxt[i]
             ids[i].append(t)
             gmask[i].append(0 if forced else 1)
             if not forced and pos >= plen[i]:
@@ -176,7 +178,7 @@ def generate(
                 line_buf[i] = ""
         if all(done):
             break
-        prev = nxt
+        prev = torch.tensor(nxt, dtype=torch.long, device=dev)
     out = []
     for i in range(B):
         out.append(
@@ -206,7 +208,7 @@ def pad_batch(seqs: list[list[int]], masks: list[list[int]] | None = None):
             m[i, : len(s)] = torch.tensor(masks[i], dtype=torch.float)
         else:
             m[i, : len(s)] = 1.0
-    return inp, tgt, m
+    return inp.to(DEVICE), tgt.to(DEVICE), m.to(DEVICE)
 
 
 def seq_logprobs(model: TinyLM, inp, tgt, m) -> torch.Tensor:

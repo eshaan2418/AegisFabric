@@ -1,7 +1,7 @@
 """M8: SFT vs DPO vs GRPO (+GRPO with learned RM) at equal analytic compute on the tool-use task.
 
-  uv run python -m bench.m8_posttrain tune  --budget 1e13            # LR sweep on dev split, tuning seed 100
-  uv run python -m bench.m8_posttrain run   --seeds 0 1 2 3 4 --budget 1e13
+  uv run python -m bench.m8_posttrain tune  --budget 4e12            # LR sweep on dev split, tuning seed 100
+  uv run python -m bench.m8_posttrain run   --seeds 0 1 2 3 4 --budget 4e12
   uv run python -m bench.m8_posttrain summarize
 
 Compute budget = analytic FLOPs (2N/token forward incl. sampling & reference/RM passes, 6N/token for
@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import os
 import time
 from pathlib import Path
 
@@ -23,10 +24,10 @@ from bench.meta import RESULTS, read_result, write_result
 from bench.stats import summarize, welch
 from data.synth import qa
 from posttrain import methods, task
-from posttrain.model import ModelConfig
+from posttrain.model import DEVICE, ModelConfig
 
 OUT = "m8/posttrain"
-WARM = dict(n_sft=2000, pretrain_steps=300, sft_steps=400)
+WARM = dict(n_sft=2000, pretrain_steps=150, sft_steps=200, batch=64)
 EVAL_SEED, DEV_SEED = 777, 998
 DEFAULT_LR = {"sft": 1e-3, "dpo": 3e-4, "grpo": 3e-4, "grpo_rm": 3e-4}
 
@@ -47,7 +48,7 @@ def cmd_tune(a):
     seed = 100
     warm, wc, info = task.warm_start(seed, ModelConfig(), **WARM)
     dev = qa.make_split(256, seed=DEV_SEED)
-    grid = {"sft": [3e-4, 1e-3], "dpo": [1e-4, 3e-4, 1e-3], "grpo": [1e-4, 3e-4, 1e-3]}
+    grid = {"sft": [3e-4, 1e-3], "dpo": [3e-4, 1e-3], "grpo": [1e-4, 3e-4]}
     rows = []
     for name, lrs in grid.items():
         for lr in lrs:
@@ -109,6 +110,7 @@ def cmd_run(a):
                 "n_eval": a.n_eval,
                 "model": ModelConfig().__dict__,
                 "threads": torch.get_num_threads(),
+                "device": str(DEVICE),
             },
             seed=seed,
         )
@@ -186,10 +188,10 @@ def _plot(table):
 
 
 def main():
-    torch.set_num_threads(6)
+    torch.set_num_threads(int(os.environ.get("AEGIS_THREADS", "3")))
     ap = argparse.ArgumentParser()
     ap.add_argument("cmd", choices=["tune", "run", "summarize"])
-    ap.add_argument("--budget", type=float, default=1e13)
+    ap.add_argument("--budget", type=float, default=4e12)
     ap.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2, 3, 4])
     ap.add_argument("--methods", nargs="+", default=["sft", "dpo", "grpo", "grpo_rm"])
     ap.add_argument("--n-eval", type=int, default=500)
