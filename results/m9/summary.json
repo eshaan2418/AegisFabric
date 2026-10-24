@@ -1,0 +1,623 @@
+{
+  "meta": {
+    "git": {
+      "commit": "3c26f34cd17b5d1c3136c84852c0d78d153ced78",
+      "dirty": false
+    },
+    "hardware": {
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "machine": "arm64",
+      "python": "3.12.14",
+      "cpu_count": 18,
+      "host_label": "darwin",
+      "mem_gb": 48.0,
+      "torch": "2.14.1",
+      "torch_threads": 6
+    },
+    "seed": null,
+    "config": {
+      "tla2tools_sha256": "d15655eeaff4b3f7b3d65c46b838bc0f35d131b2ef4b1e473689b62c98d4726f",
+      "workers": 4,
+      "small_only": false
+    },
+    "command": "run_tlc.py",
+    "timestamp": "2026-10-24T17:12:40+00:00"
+  },
+  "data": [
+    {
+      "states_generated": 512288,
+      "distinct_states": 115819,
+      "depth": 40,
+      "violation": null,
+      "error": null,
+      "trace_len": 0,
+      "completed": true,
+      "name": "p1_fixed",
+      "spec": "ckpt",
+      "expect": "pass",
+      "outcome": "pass",
+      "as_expected": true,
+      "wall_s": 15.11,
+      "note": "protocol with proposed GC fixes (touch-on-commit + pending records live)",
+      "constants": {
+        "Chunks": "{\"c1\", \"c2\", \"c3\"}",
+        "Mans": "{\"m1\", \"m2\"}",
+        "Refs": "MCRefs",
+        "K": "1",
+        "MaxCrash": "1",
+        "MaxGC": "1",
+        "BugIndexBeforeFsync": "FALSE",
+        "BugGcIgnoreEpoch": "FALSE",
+        "FixTouch": "TRUE",
+        "FixLivePending": "TRUE"
+      },
+      "invariants": [
+        "TypeOK",
+        "I1",
+        "I2",
+        "I3",
+        "AckedDurable"
+      ],
+      "properties": [
+        "AllDone"
+      ]
+    },
+    {
+      "states_generated": 4266321,
+      "distinct_states": 827630,
+      "depth": 46,
+      "violation": null,
+      "error": null,
+      "trace_len": 0,
+      "completed": true,
+      "name": "p1_fixed_2crash_2gc",
+      "spec": "ckpt",
+      "expect": "pass",
+      "outcome": "pass",
+      "as_expected": true,
+      "wall_s": 17.43,
+      "note": "fixed protocol, larger bounds, safety only",
+      "constants": {
+        "Chunks": "{\"c1\", \"c2\", \"c3\"}",
+        "Mans": "{\"m1\", \"m2\"}",
+        "Refs": "MCRefs",
+        "K": "1",
+        "MaxCrash": "2",
+        "MaxGC": "2",
+        "BugIndexBeforeFsync": "FALSE",
+        "BugGcIgnoreEpoch": "FALSE",
+        "FixTouch": "TRUE",
+        "FixLivePending": "TRUE"
+      },
+      "invariants": [
+        "TypeOK",
+        "I1",
+        "I2",
+        "I3",
+        "AckedDurable"
+      ],
+      "properties": []
+    },
+    {
+      "states_generated": 26951,
+      "distinct_states": 8334,
+      "depth": 11,
+      "violation": "I3",
+      "error": null,
+      "trace_len": 11,
+      "completed": false,
+      "name": "p1_as_written",
+      "spec": "ckpt",
+      "expect": "violation",
+      "outcome": "violation",
+      "as_expected": true,
+      "wall_s": 2.4,
+      "note": "docs/protocols.md P1 GC exactly as written (live set snapshotted at mark)",
+      "constants": {
+        "Chunks": "{\"c1\", \"c2\", \"c3\"}",
+        "Mans": "{\"m1\", \"m2\"}",
+        "Refs": "MCRefs",
+        "K": "1",
+        "MaxCrash": "1",
+        "MaxGC": "1",
+        "BugIndexBeforeFsync": "FALSE",
+        "BugGcIgnoreEpoch": "FALSE",
+        "FixTouch": "FALSE",
+        "FixLivePending": "FALSE"
+      },
+      "invariants": [
+        "TypeOK",
+        "I1",
+        "I2",
+        "I3",
+        "AckedDurable"
+      ],
+      "properties": [
+        "AllDone"
+      ]
+    },
+    {
+      "states_generated": 337,
+      "distinct_states": 205,
+      "depth": 6,
+      "violation": "I3",
+      "error": null,
+      "trace_len": 6,
+      "completed": false,
+      "name": "p1_bug_index_before_fsync",
+      "spec": "ckpt",
+      "expect": "violation",
+      "outcome": "violation",
+      "as_expected": true,
+      "wall_s": 1.22,
+      "note": "buggy: index entry inserted before segment fsync",
+      "constants": {
+        "Chunks": "{\"c1\", \"c2\", \"c3\"}",
+        "Mans": "{\"m1\", \"m2\"}",
+        "Refs": "MCRefs",
+        "K": "1",
+        "MaxCrash": "1",
+        "MaxGC": "1",
+        "BugIndexBeforeFsync": "TRUE",
+        "BugGcIgnoreEpoch": "FALSE",
+        "FixTouch": "TRUE",
+        "FixLivePending": "TRUE"
+      },
+      "invariants": [
+        "TypeOK",
+        "I1",
+        "I2",
+        "I3",
+        "AckedDurable"
+      ],
+      "properties": [
+        "AllDone"
+      ]
+    },
+    {
+      "states_generated": 50942,
+      "distinct_states": 15251,
+      "depth": 12,
+      "violation": "I1",
+      "error": null,
+      "trace_len": 12,
+      "completed": false,
+      "name": "p1_as_written_committed",
+      "spec": "ckpt",
+      "expect": "violation",
+      "outcome": "violation",
+      "as_expected": true,
+      "wall_s": 1.44,
+      "note": "as written, checking only durable-commit invariants (shows I1 on a committed manifest)",
+      "constants": {
+        "Chunks": "{\"c1\", \"c2\", \"c3\"}",
+        "Mans": "{\"m1\", \"m2\"}",
+        "Refs": "MCRefs",
+        "K": "1",
+        "MaxCrash": "1",
+        "MaxGC": "1",
+        "BugIndexBeforeFsync": "FALSE",
+        "BugGcIgnoreEpoch": "FALSE",
+        "FixTouch": "FALSE",
+        "FixLivePending": "FALSE"
+      },
+      "invariants": [
+        "TypeOK",
+        "I1",
+        "I2",
+        "AckedDurable"
+      ],
+      "properties": []
+    },
+    {
+      "states_generated": 4949,
+      "distinct_states": 2244,
+      "depth": 7,
+      "violation": "I1",
+      "error": null,
+      "trace_len": 7,
+      "completed": false,
+      "name": "p1_bug_index_before_fsync_committed",
+      "spec": "ckpt",
+      "expect": "violation",
+      "outcome": "violation",
+      "as_expected": true,
+      "wall_s": 0.86,
+      "note": "buggy index-before-fsync, durable-commit invariants only (needs a crash)",
+      "constants": {
+        "Chunks": "{\"c1\", \"c2\", \"c3\"}",
+        "Mans": "{\"m1\", \"m2\"}",
+        "Refs": "MCRefs",
+        "K": "1",
+        "MaxCrash": "1",
+        "MaxGC": "1",
+        "BugIndexBeforeFsync": "TRUE",
+        "BugGcIgnoreEpoch": "FALSE",
+        "FixTouch": "TRUE",
+        "FixLivePending": "TRUE"
+      },
+      "invariants": [
+        "TypeOK",
+        "I1",
+        "I2",
+        "AckedDurable"
+      ],
+      "properties": []
+    },
+    {
+      "states_generated": 30804,
+      "distinct_states": 9611,
+      "depth": 11,
+      "violation": "I3",
+      "error": null,
+      "trace_len": 11,
+      "completed": false,
+      "name": "p1_bug_gc_ignore_epoch",
+      "spec": "ckpt",
+      "expect": "violation",
+      "outcome": "violation",
+      "as_expected": true,
+      "wall_s": 2.9,
+      "note": "buggy: sweep ignores in-flight epoch rule",
+      "constants": {
+        "Chunks": "{\"c1\", \"c2\", \"c3\"}",
+        "Mans": "{\"m1\", \"m2\"}",
+        "Refs": "MCRefs",
+        "K": "1",
+        "MaxCrash": "1",
+        "MaxGC": "1",
+        "BugIndexBeforeFsync": "FALSE",
+        "BugGcIgnoreEpoch": "TRUE",
+        "FixTouch": "TRUE",
+        "FixLivePending": "TRUE"
+      },
+      "invariants": [
+        "TypeOK",
+        "I1",
+        "I2",
+        "I3",
+        "AckedDurable"
+      ],
+      "properties": [
+        "AllDone"
+      ]
+    },
+    {
+      "states_generated": 192958,
+      "distinct_states": 50760,
+      "depth": 17,
+      "violation": "NotAllDoneAfterCrashAndGC",
+      "error": null,
+      "trace_len": 17,
+      "completed": false,
+      "name": "p1_sanity_reachable",
+      "spec": "ckpt",
+      "expect": "violation",
+      "outcome": "violation",
+      "as_expected": true,
+      "wall_s": 2.76,
+      "note": "non-vacuity: crash + GC + both commits acknowledged is reachable",
+      "constants": {
+        "Chunks": "{\"c1\", \"c2\", \"c3\"}",
+        "Mans": "{\"m1\", \"m2\"}",
+        "Refs": "MCRefs",
+        "K": "1",
+        "MaxCrash": "1",
+        "MaxGC": "1",
+        "BugIndexBeforeFsync": "FALSE",
+        "BugGcIgnoreEpoch": "FALSE",
+        "FixTouch": "TRUE",
+        "FixLivePending": "TRUE"
+      },
+      "invariants": [
+        "NotAllDoneAfterCrashAndGC"
+      ],
+      "properties": []
+    },
+    {
+      "states_generated": 1607436,
+      "distinct_states": 1028232,
+      "depth": 48,
+      "violation": null,
+      "error": null,
+      "trace_len": 0,
+      "completed": true,
+      "name": "p3_fixed",
+      "spec": "rotation",
+      "expect": "pass",
+      "outcome": "pass",
+      "as_expected": true,
+      "wall_s": 12.97,
+      "note": "renew at T/2, notBefore backdated by 2S, bundle overlap",
+      "constants": {
+        "Verifiers": "{\"v1\", \"v2\"}",
+        "T": "10",
+        "S": "1",
+        "Lmax": "1",
+        "R": "1",
+        "MaxFail": "1",
+        "Horizon": "26",
+        "RenewDiv": "2",
+        "Backdate": "MCBackdate2S",
+        "WaitBeforeRemove": "TRUE",
+        "WaitBundleBeforeSign": "TRUE"
+      },
+      "invariants": [
+        "TypeOK",
+        "R1"
+      ],
+      "properties": []
+    },
+    {
+      "states_generated": 40817,
+      "distinct_states": 24922,
+      "depth": 12,
+      "violation": "R1",
+      "error": null,
+      "trace_len": 12,
+      "completed": false,
+      "name": "p3_fixed_2fail",
+      "spec": "rotation",
+      "expect": "violation",
+      "outcome": "violation",
+      "as_expected": true,
+      "wall_s": 2.76,
+      "note": "fixed protocol but precondition broken: 2 failures need 5 ticks > T/2 - 2S = 3",
+      "constants": {
+        "Verifiers": "{\"v1\", \"v2\"}",
+        "T": "10",
+        "S": "1",
+        "Lmax": "1",
+        "R": "1",
+        "MaxFail": "2",
+        "Horizon": "30",
+        "RenewDiv": "2",
+        "Backdate": "MCBackdate2S",
+        "WaitBeforeRemove": "TRUE",
+        "WaitBundleBeforeSign": "TRUE"
+      },
+      "invariants": [
+        "TypeOK",
+        "R1"
+      ],
+      "properties": []
+    },
+    {
+      "states_generated": 4640652,
+      "distinct_states": 3021543,
+      "depth": 56,
+      "violation": null,
+      "error": null,
+      "trace_len": 0,
+      "completed": true,
+      "name": "p3_fixed_2fail_T16",
+      "spec": "rotation",
+      "expect": "pass",
+      "outcome": "pass",
+      "as_expected": true,
+      "wall_s": 27.55,
+      "note": "2 failures with T=16 so retries (5) < T/2 - 2S (6)",
+      "constants": {
+        "Verifiers": "{\"v1\", \"v2\"}",
+        "T": "16",
+        "S": "1",
+        "Lmax": "1",
+        "R": "1",
+        "MaxFail": "2",
+        "Horizon": "36",
+        "RenewDiv": "2",
+        "Backdate": "MCBackdate2S",
+        "WaitBeforeRemove": "TRUE",
+        "WaitBundleBeforeSign": "TRUE"
+      },
+      "invariants": [
+        "TypeOK",
+        "R1"
+      ],
+      "properties": []
+    },
+    {
+      "states_generated": 7288,
+      "distinct_states": 4858,
+      "depth": 7,
+      "violation": "R1",
+      "error": null,
+      "trace_len": 7,
+      "completed": false,
+      "name": "p3_as_written",
+      "spec": "rotation",
+      "expect": "violation",
+      "outcome": "violation",
+      "as_expected": true,
+      "wall_s": 1.06,
+      "note": "docs/protocols.md P3 as written: notBefore = now - S with per-node skew <= S",
+      "constants": {
+        "Verifiers": "{\"v1\", \"v2\"}",
+        "T": "10",
+        "S": "1",
+        "Lmax": "1",
+        "R": "1",
+        "MaxFail": "1",
+        "Horizon": "26",
+        "RenewDiv": "2",
+        "Backdate": "MCBackdateS",
+        "WaitBeforeRemove": "TRUE",
+        "WaitBundleBeforeSign": "TRUE"
+      },
+      "invariants": [
+        "TypeOK",
+        "R1"
+      ],
+      "properties": []
+    },
+    {
+      "states_generated": 1607436,
+      "distinct_states": 1028232,
+      "depth": 48,
+      "violation": null,
+      "error": null,
+      "trace_len": 0,
+      "completed": true,
+      "name": "p3_as_written_weak",
+      "spec": "rotation",
+      "expect": "pass",
+      "outcome": "pass",
+      "as_expected": true,
+      "wall_s": 8.98,
+      "note": "as written, requiring only that SOME held cert is accepted by all peers",
+      "constants": {
+        "Verifiers": "{\"v1\", \"v2\"}",
+        "T": "10",
+        "S": "1",
+        "Lmax": "1",
+        "R": "1",
+        "MaxFail": "1",
+        "Horizon": "26",
+        "RenewDiv": "2",
+        "Backdate": "MCBackdateS",
+        "WaitBeforeRemove": "TRUE",
+        "WaitBundleBeforeSign": "TRUE"
+      },
+      "invariants": [
+        "TypeOK",
+        "R1Weak"
+      ],
+      "properties": []
+    },
+    {
+      "states_generated": 101404,
+      "distinct_states": 64474,
+      "depth": 19,
+      "violation": "NotRotatedFully",
+      "error": null,
+      "trace_len": 19,
+      "completed": false,
+      "name": "p3_sanity_reachable",
+      "spec": "rotation",
+      "expect": "violation",
+      "outcome": "violation",
+      "as_expected": true,
+      "wall_s": 1.64,
+      "note": "non-vacuity: full CA rotation completes within the horizon",
+      "constants": {
+        "Verifiers": "{\"v1\", \"v2\"}",
+        "T": "10",
+        "S": "1",
+        "Lmax": "1",
+        "R": "1",
+        "MaxFail": "1",
+        "Horizon": "26",
+        "RenewDiv": "2",
+        "Backdate": "MCBackdate2S",
+        "WaitBeforeRemove": "TRUE",
+        "WaitBundleBeforeSign": "TRUE"
+      },
+      "invariants": [
+        "NotRotatedFully"
+      ],
+      "properties": []
+    },
+    {
+      "states_generated": 9506,
+      "distinct_states": 6243,
+      "depth": 8,
+      "violation": "R1",
+      "error": null,
+      "trace_len": 8,
+      "completed": false,
+      "name": "p3_bug_renew_late",
+      "spec": "rotation",
+      "expect": "violation",
+      "outcome": "violation",
+      "as_expected": true,
+      "wall_s": 1.05,
+      "note": "buggy: renew at T/10 before expiry",
+      "constants": {
+        "Verifiers": "{\"v1\", \"v2\"}",
+        "T": "10",
+        "S": "1",
+        "Lmax": "1",
+        "R": "1",
+        "MaxFail": "1",
+        "Horizon": "26",
+        "RenewDiv": "10",
+        "Backdate": "MCBackdate2S",
+        "WaitBeforeRemove": "TRUE",
+        "WaitBundleBeforeSign": "TRUE"
+      },
+      "invariants": [
+        "TypeOK",
+        "R1"
+      ],
+      "properties": []
+    },
+    {
+      "states_generated": 6572,
+      "distinct_states": 4482,
+      "depth": 7,
+      "violation": "R1",
+      "error": null,
+      "trace_len": 7,
+      "completed": false,
+      "name": "p3_bug_remove_old_ca_early",
+      "spec": "rotation",
+      "expect": "violation",
+      "outcome": "violation",
+      "as_expected": true,
+      "wall_s": 0.9,
+      "note": "buggy: old CA removed from bundle as soon as issuance switches",
+      "constants": {
+        "Verifiers": "{\"v1\", \"v2\"}",
+        "T": "10",
+        "S": "1",
+        "Lmax": "1",
+        "R": "1",
+        "MaxFail": "1",
+        "Horizon": "26",
+        "RenewDiv": "2",
+        "Backdate": "MCBackdate2S",
+        "WaitBeforeRemove": "FALSE",
+        "WaitBundleBeforeSign": "TRUE"
+      },
+      "invariants": [
+        "TypeOK",
+        "R1"
+      ],
+      "properties": []
+    },
+    {
+      "states_generated": 11422,
+      "distinct_states": 6481,
+      "depth": 7,
+      "violation": "R1",
+      "error": null,
+      "trace_len": 7,
+      "completed": false,
+      "name": "p3_bug_sign_before_bundle",
+      "spec": "rotation",
+      "expect": "violation",
+      "outcome": "violation",
+      "as_expected": true,
+      "wall_s": 1.38,
+      "note": "buggy: new CA signs before every verifier has it in its bundle",
+      "constants": {
+        "Verifiers": "{\"v1\", \"v2\"}",
+        "T": "10",
+        "S": "1",
+        "Lmax": "1",
+        "R": "1",
+        "MaxFail": "1",
+        "Horizon": "26",
+        "RenewDiv": "2",
+        "Backdate": "MCBackdate2S",
+        "WaitBeforeRemove": "TRUE",
+        "WaitBundleBeforeSign": "FALSE"
+      },
+      "invariants": [
+        "TypeOK",
+        "R1"
+      ],
+      "properties": []
+    }
+  ]
+}
