@@ -4,7 +4,8 @@
   uv run python -m bench.media_run --trials 2 --quick    # reproduce-quick subset
 
 Each trial writes results/m6/trials/<condition>_s<seed>.json; aggregates go to results/m6/summary.json and
-figures to results/m6/figs/. Network impairment: seeded userspace UDP relay (media/netem.py), NOT kernel netem.
+figures to results/m6/figs/. Network impairment: seeded in-process link emulation (media/netem.py), NOT kernel netem; executed in
+virtual time (media/vloop.py) with real codec/STT/vision compute charged at its measured CPU time.
 """
 
 from __future__ import annotations
@@ -20,7 +21,7 @@ import numpy as np  # noqa: E402
 
 from bench.meta import RESULTS, read_result, write_result  # noqa: E402
 from bench.stats import holm, summarize, welch  # noqa: E402
-from media.inference import SimulatedStt, WhisperStt  # noqa: E402
+from media.inference import StubVisionModel, WhisperStt  # noqa: E402
 from media.netem import PROFILES  # noqa: E402
 from media.session import TrialConfig, run_trial, summarize_trial  # noqa: E402
 from media.source import build_source  # noqa: E402
@@ -53,17 +54,11 @@ METRICS = [
 ]
 
 
-def load_stt():
-    try:
-        return WhisperStt(threads=2)
-    except Exception as e:  # pragma: no cover - network dependent
-        print(f"whisper unavailable ({e}); using SimulatedStt")
-        return SimulatedStt(0.1)
-
-
 def run(trials: int, names: list[str], duration: float) -> None:
     qt = read_result("m6/calibration.json")["data"]["table"]
-    stt = load_stt()
+    # virtual-time mode: models run in-process, single-threaded; their CPU time is their latency
+    stt = WhisperStt(threads=1)
+    visions = {}
     for name, prof, pol, vms in [c for c in CONDITIONS if c[0] in names]:
         for seed in range(trials):
             out = RESULTS / "m6" / "trials" / f"{name}_s{seed}.json"
@@ -72,7 +67,10 @@ def run(trials: int, names: list[str], duration: float) -> None:
             src = build_source(seed, duration_s=duration)
             cfg = TrialConfig(PROFILES[prof], pol, seed=seed, vision_ms=vms)
             t = time.time()
-            log = run_trial(src, cfg, stt, qt)
+            load0 = os.getloadavg()
+            vision = visions.setdefault(vms, StubVisionModel(vms, seed=0, threads=1, pad=False))
+            log = run_trial(src, cfg, vision, stt, qt, mode="virtual")
+            load1 = os.getloadavg()
             v = rendered_vmaf(src.frames, log.display, log.decoded, 1.0, duration)
             s = summarize_trial(src, cfg, log, v)
             s.update(
@@ -80,7 +78,10 @@ def run(trials: int, names: list[str], duration: float) -> None:
                 stt=stt.name,
                 speech=src.speech,
                 wall_s=time.time() - t,
-                netem="userspace-relay (media/netem.py)",
+                loadavg_1m=[load0[0], load1[0]],
+                host_cpus=os.cpu_count(),
+                netem="in-process emulated link (media/netem.py), virtual time",
+                mode="virtual-time; compute latency = measured single-thread CPU time",
                 machine_note="dev run, machine shared",
             )
             write_result(
@@ -98,6 +99,10 @@ def aggregate() -> dict:
     for p in sorted((RESULTS / "m6" / "trials").glob("*.json")):
         rows.append(json.loads(p.read_text())["data"])
     agg: dict = {"conditions": {}, "tests": {}}
+    loads = [x for r in rows for x in r.get("loadavg_1m", [])]
+    agg["loadavg_1m"] = (
+        {"min": min(loads), "max": max(loads), "mean": float(np.mean(loads))} if loads else None
+    )
     for name, *_ in CONDITIONS:
         rs = [r for r in rows if r["condition"] == name]
         if not rs:

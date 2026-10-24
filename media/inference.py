@@ -16,11 +16,11 @@
 
 from __future__ import annotations
 
+import asyncio
 import collections
 import re
-import threading
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -70,9 +70,10 @@ class FrameSelector:
 class StubVisionModel:
     """Fixed random CNN (cost proxy) + chart reader; `service_ms` pads compute to a target service time."""
 
-    def __init__(self, service_ms: float, seed: int = 0, threads: int = 2):
+    def __init__(self, service_ms: float, seed: int = 0, threads: int = 2, pad: bool = True):
         import torch
 
+        self.pad = pad
         torch.manual_seed(seed)
         self.torch = torch
         self.net = torch.nn.Sequential(
@@ -96,7 +97,7 @@ class StubVisionModel:
             emb = self.net(x)
         cx, cy = chart_point(rgb)
         spent = time.perf_counter() - t0
-        if spent < self.service_s:
+        if self.pad and spent < self.service_s:
             time.sleep(self.service_s - spent)
         return {"chart_x": cx, "chart_y": cy, "emb0": float(emb[0, 0]), "compute_s": spent}
 
@@ -132,105 +133,109 @@ class WhisperStt:
 
 
 class SimulatedStt:
-    """Clearly-labelled fallback: returns the oracle transcript after rtf * duration seconds."""
+    """Clearly-labelled fallback: returns the oracle transcript; its service time is rtf * audio duration
+    (slept in real-time mode, charged via `service_s` in virtual-time mode)."""
 
     name = "simulated"
 
-    def __init__(self, rtf: float = 0.1):
+    def __init__(self, rtf: float = 0.1, sleep: bool = True):
         self.rtf = rtf
+        self.sleep = sleep
+
+    def service_s(self, pcm16k: np.ndarray) -> float:
+        return self.rtf * len(pcm16k) / 16000
 
     def __call__(self, pcm16k: np.ndarray, oracle: str | None = None) -> str:
-        time.sleep(self.rtf * len(pcm16k) / 16000)
+        if self.sleep:
+            time.sleep(self.service_s(pcm16k))
         return oracle or ""
 
 
-@dataclass(order=True)
+@dataclass
 class Job:
-    prio: int
-    seq: int
-    kind: str = field(compare=False)
-    payload: dict = field(compare=False)
-    t_submit: float = field(compare=False, default=0.0)
+    kind: str
+    payload: dict
+    t_submit: float = 0.0
 
 
 class Accelerator:
-    """Single worker thread shared by vision and STT jobs, under one of the policies in the module doc."""
+    """One shared "accelerator" (single server) for vision and STT jobs, as an asyncio task.
 
-    def __init__(self, vision: StubVisionModel, stt, policy: str, on_result, fifo_cap: int = 8):
-        self.vision, self.stt, self.policy, self.on_result = vision, stt, policy, on_result
-        self.fifo_cap = fifo_cap
-        self.cv = threading.Condition()
+    `runtime.compute(fn, ..., min_s)` executes a job and accounts for its service time (wall time in
+    real-time mode, measured CPU time charged to virtual time in virtual mode). The media path calls
+    `submit_frame` (awaitable; it only blocks under the "blocking" ablation) and `submit_stt`."""
+
+    def __init__(
+        self, runtime, vision, vision_service_s: float, stt, policy: str, on_result, fifo_cap: int = 8
+    ):
+        self.rt, self.vision, self.vision_s, self.stt = runtime, vision, vision_service_s, stt
+        self.policy, self.on_result, self.fifo_cap = policy, on_result, fifo_cap
         self.q: collections.deque[Job] = collections.deque()
-        self.hi: collections.deque[Job] = collections.deque()  # STT/answer jobs under "latest"
-        self.seq = 0
+        self.hi: collections.deque[Job] = collections.deque()
+        self.wake = asyncio.Event()
+        self.space = asyncio.Event()
         self.stopped = False
         self.dropped_frames = 0
         self.blocked_s = 0.0
         self.busy_s = 0.0
-        self.th = threading.Thread(target=self._run, daemon=True)
-        self.th.start()
 
-    def submit_frame(self, payload: dict) -> bool:
-        """Returns False if the frame was dropped by backpressure. Blocks only under policy 'blocking'."""
-        with self.cv:
-            self.seq += 1
-            job = Job(1, self.seq, "vision", payload, time.monotonic())
-            if self.policy == "latest":
-                kept = [j for j in self.q if j.kind != "vision"]
-                self.dropped_frames += len(self.q) - len(kept)
-                self.q = collections.deque(kept)
-                self.q.append(job)
-            elif self.policy == "fifo":
-                if sum(j.kind == "vision" for j in self.q) >= self.fifo_cap:
-                    self.dropped_frames += 1
-                    return False
-                self.q.append(job)
-            elif self.policy == "blocking":
-                t0 = time.monotonic()
-                while sum(j.kind == "vision" for j in self.q) >= 2 and not self.stopped:
-                    self.cv.wait(0.05)
-                self.blocked_s += time.monotonic() - t0
-                self.q.append(job)
-            else:  # unbounded
-                self.q.append(job)
-            self.cv.notify_all()
-            return True
+    def _n_vision(self) -> int:
+        return sum(j.kind == "vision" for j in self.q)
+
+    async def submit_frame(self, payload: dict) -> bool:
+        job = Job("vision", payload, self.rt.now())
+        if self.policy == "latest":
+            kept = [j for j in self.q if j.kind != "vision"]
+            self.dropped_frames += len(self.q) - len(kept)
+            self.q = collections.deque(kept)
+        elif self.policy == "fifo":
+            if self._n_vision() >= self.fifo_cap:
+                self.dropped_frames += 1
+                return False
+        elif self.policy == "blocking":
+            t0 = self.rt.now()
+            while self._n_vision() >= 2 and not self.stopped:
+                self.space.clear()
+                await self.space.wait()
+            self.blocked_s += self.rt.now() - t0
+        self.q.append(job)
+        self.wake.set()
+        return True
 
     def submit_stt(self, payload: dict) -> None:
-        with self.cv:
-            self.seq += 1
-            job = Job(0, self.seq, "stt", payload, time.monotonic())
-            (self.hi if self.policy == "latest" else self.q).append(job)
-            self.cv.notify_all()
+        job = Job("stt", payload, self.rt.now())
+        (self.hi if self.policy == "latest" else self.q).append(job)
+        self.wake.set()
 
     def queue_depth(self) -> int:
-        with self.cv:
-            return len(self.q) + len(self.hi)
+        return len(self.q) + len(self.hi)
 
-    def _run(self) -> None:
-        while True:
-            with self.cv:
-                while not self.q and not self.hi and not self.stopped:
-                    self.cv.wait(0.05)
-                if self.stopped:
-                    return
-                job = self.hi.popleft() if self.hi else self.q.popleft()
-                self.cv.notify_all()
-            t0 = time.monotonic()
+    async def run(self) -> None:
+        while not self.stopped:
+            if not self.q and not self.hi:
+                self.wake.clear()
+                await self.wake.wait()
+                continue
+            job = self.hi.popleft() if self.hi else self.q.popleft()
+            self.space.set()
+            t0 = self.rt.now()
             if job.kind == "vision":
-                res = self.vision(job.payload["rgb"])
+                res = await self.rt.compute(self.vision, job.payload["rgb"], min_s=self.vision_s, remote=True)
             else:
-                text = self.stt(job.payload["pcm16k"], job.payload.get("oracle"))
+                pcm = job.payload["pcm16k"]
+                min_s = self.stt.service_s(pcm) if hasattr(self.stt, "service_s") else 0.0
+                text = await self.rt.compute(
+                    self.stt, pcm, job.payload.get("oracle"), min_s=min_s, remote=True
+                )
                 res = {"text": text, "intent": intent_of(text)}
-            t1 = time.monotonic()
+            t1 = self.rt.now()
             self.busy_s += t1 - t0
             self.on_result(job, res, t0, t1)
 
     def stop(self) -> None:
-        with self.cv:
-            self.stopped = True
-            self.cv.notify_all()
-        self.th.join(timeout=5)
+        self.stopped = True
+        self.wake.set()
+        self.space.set()
 
 
 def normalise_text(s: str) -> str:

@@ -107,7 +107,7 @@ def render_video(rng: np.random.Generator, st: F.Statement, n: int, size: int) -
 
 
 def build_source(
-    seed: int, duration_s: float = 24.0, size: int = 256, q_starts=(2.5, 9.5, 16.5), use_say: bool = True
+    seed: int, duration_s: float = 24.0, size: int = 256, q_starts=(1.5, 9.5, 17.0), use_say: bool = True
 ) -> Source:
     rng = np.random.default_rng(seed)
     st = F.make_statement(rng, n_tx=10)

@@ -151,28 +151,63 @@ def test_intent():
 
 class _FakeVision:
     def __call__(self, rgb):
-        import time
-
-        time.sleep(0.02)
         return {"chart_x": 0.0, "chart_y": 0.0}
 
 
-@pytest.mark.parametrize("policy", ["fifo", "latest"])
-def test_accelerator_backpressure_never_blocks(policy):
-    import time
+@pytest.mark.parametrize("policy", ["fifo", "latest", "blocking"])
+def test_accelerator_policies_virtual_time(policy):
+    import asyncio
 
-    done = []
-    acc = Accelerator(_FakeVision(), SimulatedStt(0.0), policy, lambda j, r, t0, t1: done.append(j.kind))
-    t = time.monotonic()
-    for i in range(50):
-        acc.submit_frame({"rgb": None, "idx": i})
-    acc.submit_stt({"pcm16k": np.zeros(160, np.float32), "oracle": "closing balance"})
-    assert time.monotonic() - t < 0.05  # media path not blocked
-    time.sleep(0.6)
-    acc.stop()
-    assert acc.dropped_frames > 0 and "stt" in done
+    from media.session import Runtime
+    from media.vloop import run_virtual
+
+    async def main():
+        rt = Runtime("virtual")
+        done = []
+        acc = Accelerator(
+            rt,
+            _FakeVision(),
+            0.1,
+            SimulatedStt(0.5, sleep=False),
+            policy,
+            lambda j, r, t0, t1: done.append((j.kind, t1)),
+        )
+        task = asyncio.ensure_future(acc.run())
+        t = rt.now()
+        for i in range(20):  # offered 50 fps against a 10 fps server
+            await acc.submit_frame({"rgb": None, "idx": i})
+            await asyncio.sleep(0.02)
+        acc.submit_stt({"pcm16k": np.zeros(16000, np.float32), "oracle": "closing balance"})
+        submit_end = rt.now() - t
+        await asyncio.sleep(3)
+        acc.stop()
+        await task
+        return acc, done, submit_end
+
+    acc, done, submit_end = run_virtual(main())
+    kinds = [k for k, _ in done]
+    assert "stt" in kinds
+    if policy == "blocking":  # the media path is held back by the accelerator
+        assert submit_end > 1.0 and acc.blocked_s > 0.5 and acc.dropped_frames == 0
+    else:  # media path never blocks; overload is shed
+        assert submit_end == pytest.approx(0.4, abs=1e-6) and acc.dropped_frames > 0
     if policy == "latest":  # STT preempts queued vision work
-        assert done.index("stt") <= 2
+        assert kinds.index("stt") <= 6
+
+
+def test_short_virtual_trial_end_to_end():
+    from media.netem import PROFILES
+    from media.session import TrialConfig, run_trial, summarize_trial
+    from media.source import build_source
+
+    src = build_source(2, duration_s=4.0, q_starts=(0.5,), use_say=False)
+    qt = {f"{b}@{f}": float(f == 30) for b in LADDER_KBPS for f in (30, 15, 10)}
+    cfg = TrialConfig(PROFILES["lossy"], "joint", seed=3)
+    log = run_trial(src, cfg, _FakeVision(), SimulatedStt(0.1, sleep=False), qt)
+    s = summarize_trial(src, cfg, log, None)
+    assert s["decoded_frames"] > 90 and s["sent_kbps"] > 50
+    assert s["answered_frac"] == 1.0  # tone utterance detected by VAD, STT job served
+    assert log.extra["relay"]["fwd"]["lost"] > 0 and s["retransmits"] > 0
 
 
 def test_webrtc_stamp_roundtrip():
