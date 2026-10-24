@@ -160,3 +160,15 @@ def write_atomic(path: Path, data: bytes) -> None:
     tmp.write_bytes(data)
     tmp.chmod(0o600)
     tmp.replace(path)
+
+
+def load_issued(cert_pem: bytes, key_pem: bytes) -> Issued:
+    cert = x509.load_pem_x509_certificate(cert_pem)
+    return Issued(
+        cert_pem,
+        key_pem,
+        b"",
+        cert.not_valid_before_utc,
+        cert.not_valid_after_utc,
+        cert_spiffe(cert_pem) or "",
+    )

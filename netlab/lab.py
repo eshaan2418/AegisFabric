@@ -281,6 +281,12 @@ class Lab:
             run(f"ip netns pids {ns} | xargs -r kill -9", check=False)
             run(["ip", "netns", "del", ns], check=False)
         run(["ip", "link", "del", MGMT_BR], check=False)
+        # stray root-namespace veths left by an interrupted build
+        run(
+            "ip -o link show | awk -F': ' '{print $2}' | cut -d@ -f1 | grep -E '^(m[0-9]+[hr]|v[0-9]+[ab])$' "
+            "| xargs -r -n1 ip link del",
+            check=False,
+        )
         for d in ("/var/run/frr",):
             if os.path.isdir(d):
                 for sub in Path(d).iterdir():

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import datetime as dt
 import threading
 import time
 
@@ -10,7 +9,7 @@ import grpc
 
 from security import control_pb2 as pb
 from security import control_pb2_grpc as pbg
-from security.ca import Issued, TrustBundle
+from security.ca import Issued, TrustBundle, load_issued
 from security.mtls import Identity, RotatingChannel
 
 
@@ -37,7 +36,7 @@ class Reporter:
         self._stop = threading.Event()
         if secure:
             self._boot = bootstrap
-            self.identity = Identity(self._renew, ttl_s)
+            self.identity = Identity(self._renew, ttl_s, renew_on_start=True)
             self.chan = RotatingChannel(target, self.identity, self.bundle, server_name)
         else:
             self.chan = None
@@ -55,14 +54,7 @@ class Reporter:
         with self.bundle.lock:
             self.bundle.cas = [c.public_bytes(serialization.Encoding.PEM) for c in cas]
 
-        return Issued(
-            rep.cert_pem,
-            rep.key_pem,
-            b"",
-            dt.datetime.now(dt.UTC),
-            dt.datetime.fromtimestamp(rep.not_after, dt.UTC),
-            self._boot.spiffe,
-        )
+        return load_issued(rep.cert_pem, rep.key_pem)
 
     def start(self) -> None:
         if self.secure:

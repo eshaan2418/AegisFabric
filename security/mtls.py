@@ -21,11 +21,17 @@ from security.ca import Issued, TrustBundle, cert_spiffe
 
 
 class Identity:
-    """Holds the current workload cert; renews at T/2 ± jitter via `issue_fn` (retrying on failure)."""
+    """Holds the current workload cert; renews at the midpoint of its validity ± jitter (retrying on failure)."""
 
     def __init__(
-        self, issue_fn: Callable[[], Issued], ttl_s: float, jitter: float = 0.1, retry_s: float = 0.5
+        self,
+        issue_fn: Callable[[], Issued],
+        ttl_s: float,
+        jitter: float = 0.1,
+        retry_s: float = 0.5,
+        renew_on_start: bool = False,
     ):
+        self.renew_on_start = renew_on_start
         self.issue_fn = issue_fn
         self.ttl_s = ttl_s
         self.jitter = jitter
@@ -46,9 +52,19 @@ class Identity:
     def stop(self) -> None:
         self._stop.set()
 
+    def _next_renewal_wait(self) -> float:
+        """Renew at the midpoint of the *current cert's* validity (± jitter), not T/2 after process start:
+        a credential that is already past half-life (e.g. a bootstrap cert delivered late) renews at once."""
+        _, cur = self.get()
+        nb, na = cur.not_before.timestamp(), cur.not_after.timestamp()
+        mid = nb + (na - nb) / 2 * (1 + random.uniform(-self.jitter, self.jitter))
+        return max(0.0, mid - time.time())
+
     def _loop(self) -> None:
+        first = True
         while not self._stop.is_set():
-            wait = self.ttl_s / 2 * (1 + random.uniform(-self.jitter, self.jitter))
+            wait = 0.0 if (first and self.renew_on_start) else self._next_renewal_wait()
+            first = False
             if self._stop.wait(wait):
                 return
             while not self._stop.is_set():

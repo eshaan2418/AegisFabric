@@ -307,6 +307,7 @@ def run(cfg: RunConfig) -> dict:
     out = Path(cfg.out) / "raw" / cfg.scenario / cfg.label / f"seed{cfg.seed}"
     shutil.rmtree(out, ignore_errors=True)
     out.mkdir(parents=True)
+    load0 = os.getloadavg()
     sc = make_scenario(cfg.scenario, cfg.seed, steps=cfg.steps, ckpt_every=cfg.ckpt_every)
     lab = default_lab(ecmp=(cfg.method == "ecmp"))
     lab.build()
@@ -438,7 +439,15 @@ def run(cfg: RunConfig) -> dict:
     )
     recs = mgr.records()
     summ = summarize_run(recs, inj_log, mgr.events, t0, cfg)
-    summ.update({"timed_out": timed_out, "bgp_initial_convergence_s": conv, "n_decisions": len(decisions)})
+    summ.update(
+        {
+            "timed_out": timed_out,
+            "bgp_initial_convergence_s": conv,
+            "n_decisions": len(decisions),
+            "loadavg_start": load0,
+            "loadavg_end": os.getloadavg(),
+        }
+    )
     payload = {
         "summary": summ,
         "decisions": decisions,

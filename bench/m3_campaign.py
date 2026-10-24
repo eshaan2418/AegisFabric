@@ -12,7 +12,10 @@ import argparse
 import json
 import time
 import traceback
+import zlib
 from pathlib import Path
+
+import numpy as np
 
 from bench.scenarios import MAIN
 from bench.wan_run import RunConfig, run
@@ -36,8 +39,12 @@ def jobs(a) -> list[RunConfig]:
                     )
                 out.append(RunConfig(sc, "joint-nomig", seed, steps=a.steps, out=a.out))
             else:
-                for m in a.methods.split(","):
-                    out.append(RunConfig(sc, m, seed, steps=a.steps, out=a.out))
+                # methods interleaved per (seed, scenario) block in a seeded random order, so slow drift in
+                # host load (the machine is shared) hits all methods alike instead of biasing one
+                ms = a.methods.split(",")
+                order = np.random.default_rng([seed, zlib.crc32(sc.encode())]).permutation(len(ms))
+                for k in order:
+                    out.append(RunConfig(sc, ms[k], seed, steps=a.steps, out=a.out))
     return out
 
 

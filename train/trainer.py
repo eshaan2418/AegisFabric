@@ -57,6 +57,10 @@ def parse(argv=None):
     ap.add_argument("--restore-step", type=int, default=-1, help="restore this step (from --restore-addr)")
     ap.add_argument("--restore-addr", default=None, help="storage to restore from (default: --ckpt-addr)")
     ap.add_argument("--job", default="job")
+    ap.add_argument("--control-grpc", default=None, help="controller gRPC host:port (mgmt network)")
+    ap.add_argument("--identity-dir", type=Path, default=None, help="bootstrap cert.pem/key.pem/bundle.pem")
+    ap.add_argument("--cert-ttl", type=float, default=60.0)
+    ap.add_argument("--control-insecure", action="store_true")
     ap.add_argument("--pg-timeout", type=float, default=180)
     ap.add_argument("--peak-flops", type=float, default=0, help="per-rank peak FLOP/s (0 = measure)")
     return ap.parse_args(argv)
@@ -157,6 +161,33 @@ def make_checkpointer(args, rank: int, world: int, addr: str | None = None):
     return SliceCheckpointer(backend, rank, world, job=args.job)
 
 
+def make_reporter(args, rank: int):
+    if not args.control_grpc:
+        return None
+    from security.agent import Reporter
+
+    if args.control_insecure:
+        r = Reporter(args.control_grpc, None, b"", args.cert_ttl, args.job, rank, secure=False)
+    else:
+        import datetime as _dt
+
+        from security.ca import Issued, cert_spiffe
+
+        d = Path(str(args.identity_dir).format(rank=rank))  # per-rank dir via "{rank}" placeholder
+        cert = (d / "cert.pem").read_bytes()
+        boot = Issued(
+            cert,
+            (d / "key.pem").read_bytes(),
+            b"",
+            _dt.datetime.now(_dt.UTC),
+            _dt.datetime.now(_dt.UTC),
+            cert_spiffe(cert),
+        )
+        r = Reporter(args.control_grpc, boot, (d / "bundle.pem").read_bytes(), args.cert_ttl, args.job, rank)
+    r.start()
+    return r
+
+
 def read_control(path: Path | None) -> dict:
     if not path or not path.exists():
         return {}
@@ -209,6 +240,7 @@ def main(argv=None) -> int:
     fpt = flops_per_token(cfg, n_ne)
     tok_per_step = args.batch * cfg.seq_len * (world if args.mode != "local" else 1)
     sink = TelemetrySink(args.out / f"rank{rank}.jsonl", args.telemetry_udp, rank)
+    reporter = make_reporter(args, rank)
     sink.emit(
         {
             "event": "start",
@@ -233,6 +265,11 @@ def main(argv=None) -> int:
     stop_reason = "steps"
     while step < args.steps:
         ctl = read_control(args.control_file)
+        if reporter is not None and reporter.directive.stop_at_step >= 0:
+            ctl = {
+                "stop_at_step": reporter.directive.stop_at_step,
+                "final_ckpt": reporter.directive.final_ckpt,
+            }
         if "stop_at_step" in ctl and step >= int(ctl["stop_at_step"]):
             stop_reason = "control"
             if ckptr is not None and ctl.get("final_ckpt"):
@@ -279,6 +316,12 @@ def main(argv=None) -> int:
         }
         if ck is not None:
             rec["ckpt"] = ck
+        if reporter is not None:
+            reporter.latest = {
+                "step": step,
+                "step_s": dt_step,
+                "coll_s": sum(v["time_s"] for v in coll.values()),
+            }
         if args.eval_every and step % args.eval_every == 0:
             last_eval = evaluate(model, args, cfg, rank, world if args.mode != "local" else 1)
             rec["eval_loss"] = last_eval
@@ -311,6 +354,19 @@ def main(argv=None) -> int:
             "stop_reason": stop_reason,
         }
     )
+    if reporter is not None:
+        reporter.stop()
+        sink.emit(
+            {
+                "event": "control_channel",
+                "secure": not args.control_insecure,
+                "errors": reporter.errors,
+                "rpc_lat": reporter.rpc_lat,
+                "handshakes": getattr(getattr(reporter, "chan", None), "handshakes", []),
+                "renewals": getattr(getattr(reporter, "identity", None), "renewals", []),
+                "renew_failures": getattr(getattr(reporter, "identity", None), "failures", 0),
+            }
+        )
     sink.close()
     if world > 1 and args.mode != "local":
         dist.destroy_process_group()

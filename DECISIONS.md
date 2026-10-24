@@ -35,3 +35,46 @@ control plane: the controller rewrites FRR route-maps (local-preference per dest
 gateway, per border router) through `vtysh`, and the kernel FIB forwards. Compute and storage hosts live in
 separate prefixes per site, so collective flows and checkpoint flows can be steered independently. The
 control plane (controller → FRR) and data plane (kernel forwarding, tc qdiscs) stay separate.
+
+## D-006 (2026-10-24) Calibrated analytical cost model + exhaustive search (not an ILP) for the joint planner
+For 6 ranks on 3 sites, the joint space is small: 10 contiguous placements × 2 cyclic orders (where
+distinct), 2 storage sites, and ≤2^5 route assignments over the keys that a given (π, s) actually uses.
+Exhaustive enumeration is therefore exact and runs in milliseconds, so the joint planner uses it. The
+*independent TE* baseline is a B4-style min-max-utilisation MILP (PuLP + HiGHS), because that is what a
+network team would run. Larger topologies would need an ILP/LNS for the joint problem too, which is noted
+as future work. The cost model's Gloo ring structure (rank-order ring) was verified by microbenchmark:
+interleaved placement doubles all-reduce time (`bench/collective_micro.py`).
+
+## D-007 (2026-10-24) Experiment design for M3
+- Workload: DDP (fastest mode on WAN in M1 calibration), small preset (4.9 M params), batch 16/rank, 6 ranks,
+  160 steps, sliced async checkpoints every 20 steps to a storage site in {tor, mtl}. Canadian data
+  residency is a hard constraint for all methods.
+- Each failure scenario injects its failure twice on the tor–mtl pair: first on plane B, then on plane A.
+  Every evaluated placement uses tor–mtl, so every method faces one failure on its path regardless of the
+  plane it prefers.
+- Background traffic: seeded UDP CBR flows under a fixed (non-controlled) routing policy.
+- Methods are interleaved per (seed, scenario) in a seeded random order, because the host is shared (B-005).
+- Recovery = inject → first of 3 consecutive steps ≤ 1.2× the pre-failure median. Unrecovered events are
+  censored and reported separately.
+
+## D-008 (2026-10-24) Telemetry signals and capacity knowledge
+The controller reads device-reported link rate and oper-status (analogous to ifSpeed/oper-status via
+gNMI), interface/flow counters (nftables per-prefix counters at gateways), 5 Hz RTT probes per WAN link,
+rank-0 step/collective telemetry (online κ calibration) and checkpoint flush stats. Each can be ablated.
+The oracle gets ground truth (configured link specs and the background schedule).
+
+## D-009 (2026-10-24) Checkpoint transport for WAN experiments
+Sliced async checkpoints (each rank owns ~1/n of the full state, greedily size-balanced) go over the
+routed storage prefix. The transport sits behind a pluggable backend: `netlab/blobstore.py` (plain
+TCP+fsync) or the M4 engine client. Migration = graceful stop with a final checkpoint, relaunch at the
+new placement, restore from the old storage site.
+
+## D-010 (2026-10-24) Control-plane security design (M5)
+Python `cryptography` test CA (ECDSA P-256), SPIFFE URI SANs, grpcio mTLS. Servers use
+`dynamic_ssl_server_credentials` (per-handshake reload) and clients use a rotating channel (new channel on
+renewal, old one closed after a grace period). Authorization is by a SPIFFE-ID interceptor. Following the
+TLC findings (M9): 2S backdating, and a two-phase CA rotation in which the new CA is distributed before it
+signs. Renewal is scheduled at the midpoint of the *current cert's* validity, with an immediate renewal
+on start. A functional test caught bootstrap certs expiring during worker start-up under T/2-from-start
+scheduling. SPIRE was not deployed: bootstrap identities are injected by the harness as a stand-in for
+attestation (B-007).
