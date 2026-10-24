@@ -52,7 +52,11 @@ def parse(argv=None):
     ap.add_argument("--resume", type=Path, default=None, help="full-state file written by --save-final")
     ap.add_argument("--save-final", type=Path, default=None)
     ap.add_argument("--ckpt-every", type=int, default=0)
-    ap.add_argument("--ckpt-addr", default=None, help="aegis-ckpt server host:port (M4 engine)")
+    ap.add_argument("--ckpt-addr", default=None, help="storage service host:port")
+    ap.add_argument("--ckpt-backend", default="blob", choices=["blob", "engine"])
+    ap.add_argument("--restore-step", type=int, default=-1, help="restore this step (from --restore-addr)")
+    ap.add_argument("--restore-addr", default=None, help="storage to restore from (default: --ckpt-addr)")
+    ap.add_argument("--job", default="job")
     ap.add_argument("--pg-timeout", type=float, default=180)
     ap.add_argument("--peak-flops", type=float, default=0, help="per-rank peak FLOP/s (0 = measure)")
     return ap.parse_args(argv)
@@ -136,6 +140,23 @@ def evaluate(model, args, cfg, rank, world) -> float:
     return float(t.item())
 
 
+def make_checkpointer(args, rank: int, world: int, addr: str | None = None):
+    addr = addr or args.ckpt_addr
+    if not addr:
+        return None
+    from train.checkpointing import SliceCheckpointer
+
+    if args.ckpt_backend == "blob":
+        from netlab.blobstore import Client
+
+        backend = Client(addr)
+    else:
+        from ckpt.client import EngineBackend  # M4 engine adapter
+
+        backend = EngineBackend(addr, job=args.job, rank=rank)
+    return SliceCheckpointer(backend, rank, world, job=args.job)
+
+
 def read_control(path: Path | None) -> dict:
     if not path or not path.exists():
         return {}
@@ -165,6 +186,17 @@ def main(argv=None) -> int:
         model.register_comm_hook(None, timer.ddp_hook())
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01)
     step0 = args.start_step
+    ckptr = make_checkpointer(args, rank, world)
+    t_restore = 0.0
+    if ckptr is not None and args.restore_step >= 0:
+        t_r = time.perf_counter()
+        src = ckptr
+        if args.restore_addr and args.restore_addr != args.ckpt_addr:
+            src = make_checkpointer(args, rank, world, addr=args.restore_addr)
+        st = src.restore(args.restore_step)
+        set_full_state(model, opt, st)
+        step0 = args.restore_step
+        t_restore = time.perf_counter() - t_r
     if args.resume and args.resume.exists():
         st = torch.load(args.resume, weights_only=False)
         set_full_state(model, opt, st)
@@ -189,6 +221,7 @@ def main(argv=None) -> int:
             "world": world,
             "init_s": time.perf_counter() - t_init0,
             "start_step": step0,
+            "restore_s": t_restore,
             "pid": os.getpid(),
         }
     )
@@ -202,6 +235,14 @@ def main(argv=None) -> int:
         ctl = read_control(args.control_file)
         if "stop_at_step" in ctl and step >= int(ctl["stop_at_step"]):
             stop_reason = "control"
+            if ckptr is not None and ctl.get("final_ckpt"):
+                tf = time.perf_counter()
+                ckptr.save(step, get_full_state(model, opt), blocking=True)
+                if world > 1:
+                    dist.barrier()
+                sink.emit(
+                    {"event": "final_ckpt", "step": step, "s": time.perf_counter() - tf, **ckptr.last_stats}
+                )
             break
         for g in opt.param_groups:
             g["lr"] = lr_at(step, args)
@@ -213,8 +254,14 @@ def main(argv=None) -> int:
         loss.backward()
         t_bwd = time.perf_counter()
         opt.step()
-        t1 = time.perf_counter()
         step += 1
+        ck = None
+        if ckptr is not None and args.ckpt_every and step % args.ckpt_every == 0:
+            prev = dict(ckptr.last_stats)
+            ck = ckptr.save(step, get_full_state(model, opt))
+            if prev:
+                sink.emit({"event": "ckpt_done", **prev})
+        t1 = time.perf_counter()
         coll = timer.drain()
         dt_step = t1 - t0
         rec = {
@@ -230,6 +277,8 @@ def main(argv=None) -> int:
             "mfu": fpt * tok_per_step / dt_step / (peak * (world if args.mode != "local" else 1)),
             "coll": coll,
         }
+        if ck is not None:
+            rec["ckpt"] = ck
         if args.eval_every and step % args.eval_every == 0:
             last_eval = evaluate(model, args, cfg, rank, world if args.mode != "local" else 1)
             rec["eval_loss"] = last_eval
@@ -243,6 +292,10 @@ def main(argv=None) -> int:
         if args.max_time and time.perf_counter() - t_train0 > args.max_time:
             stop_reason = "max_time"
             break
+    if ckptr is not None:
+        ckptr.wait()
+        if ckptr.last_stats:
+            sink.emit({"event": "ckpt_done", **ckptr.last_stats})
     if args.save_final:
         st = get_full_state(model, opt)
         if rank == 0:

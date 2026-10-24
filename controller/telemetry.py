@@ -30,7 +30,7 @@ def install_flow_counters(lab) -> None:
     for s in SITES:
         rules = [
             "table inet aegis {",
-            " chain fwd {",
+            " chain flowcount {",
             "  type filter hook forward priority 0; policy accept;",
         ]
         for d in SITES:
@@ -46,7 +46,9 @@ def install_flow_counters(lab) -> None:
 
 def read_flow_counters(lab, site: str) -> dict[tuple[str, str], int]:
     out = run(
-        nsexec(f"{site}-gw", "nft", "-j", "list", "chain", "inet", "aegis", "fwd"), capture=True, check=False
+        nsexec(f"{site}-gw", "nft", "-j", "list", "chain", "inet", "aegis", "flowcount"),
+        capture=True,
+        check=False,
     )
     res = {}
     try:
@@ -209,10 +211,11 @@ class Estimator:
             if "rtt" in self.signals and self.rtt is not None:
                 r = self.rtt.latest(plane, u, v)
                 if r is None:
-                    if "speed" not in self.signals:
-                        ls.up = False
+                    ls.up = False  # no echo for 2 s: down or blackholed
                 else:
                     ls.delay_ms = r / 2
+                    if "speed" not in self.signals:
+                        ls.up = True
             if "util" in self.signals:
                 tx = info["tx"]
                 if dt and (plane, u, v) in self.prev_tx:
@@ -260,7 +263,8 @@ def ground_truth(lab, bg_active: dict[tuple[str, str], float]) -> M.NetState:
         )
         for x, y in ((u, v), (v, u)):
             ls = net.links[(lk.plane, x, y)]
-            ls.cap_mbit, ls.delay_ms, ls.up = lk.spec.rate_mbit, lk.spec.delay_ms, up
+            ls.cap_mbit, ls.delay_ms = lk.spec.rate_mbit, lk.spec.delay_ms
+            ls.up = up and lk.spec.loss_pct < 100
     for (s, d), rate in bg_active.items():
         for lkey in M.resolve_path(net, s, d, BG_POLICY[(s, d)]):
             net.links[lkey].bg_mbit += rate

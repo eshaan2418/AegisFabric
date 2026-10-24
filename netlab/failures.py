@@ -6,6 +6,7 @@ Failure types (all apply to one inter-site link of one plane):
   bw_collapse    tbf rate reduced to `rate_mbit` for `duration` s
   latency_spike  netem delay increased by `extra_ms` for `duration` s
   bgp_reset      hard reset of the eBGP session on that link (`clear ip bgp <peer>`)
+  blackhole      silent failure: 100% loss on both directions, carrier stays up (detected by BGP hold timer)
 Every action is logged to a JSONL file with wall-clock and monotonic timestamps.
 """
 
@@ -21,7 +22,7 @@ import numpy as np
 
 from netlab.topology import LinkSpec
 
-FAILURE_TYPES = ("link_down", "flap", "bw_collapse", "latency_spike", "bgp_reset")
+FAILURE_TYPES = ("link_down", "blackhole", "flap", "bw_collapse", "latency_spike", "bgp_reset")
 
 
 @dataclasses.dataclass
@@ -117,6 +118,12 @@ class Injector:
             )
             self.lab.set_wan(f.plane, f.s1, f.s2, spec)
             self.log(event="inject", **base, extra_ms=f.extra_ms, duration=f.duration)
+            time.sleep(f.duration)
+            self.lab.set_wan(f.plane, f.s1, f.s2, nominal)
+            self.log(event="restore", **base)
+        elif f.kind == "blackhole":
+            self.lab.set_wan(f.plane, f.s1, f.s2, dataclasses.replace(nominal, loss_pct=100.0))
+            self.log(event="inject", **base, duration=f.duration)
             time.sleep(f.duration)
             self.lab.set_wan(f.plane, f.s1, f.s2, nominal)
             self.log(event="restore", **base)
