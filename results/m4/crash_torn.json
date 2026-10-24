@@ -1,0 +1,3556 @@
+{
+  "meta": {
+    "git": {
+      "commit": "d8b74eeb0c4b68113d06ccd6c3dcbc9079b4fefe",
+      "dirty": false
+    },
+    "hardware": {
+      "platform": "Linux-7.0.12-linuxkit-aarch64-with-glibc2.36",
+      "machine": "aarch64",
+      "python": "3.12.15",
+      "cpu_count": 18,
+      "host_label": "lab-container",
+      "mem_gb": 47.0,
+      "torch": "2.14.1+cpu",
+      "torch_threads": 18
+    },
+    "seed": 1,
+    "config": {
+      "kill_trials": 1000,
+      "torn_trials": 500,
+      "flip_trials": 500,
+      "seed": 0,
+      "out": "m4"
+    },
+    "command": "ckpt_crash.py --kill-trials 1000 --torn-trials 500 --flip-trials 500 --seed 0 --out m4",
+    "timestamp": "2026-10-24T18:20:05+00:00"
+  },
+  "data": {
+    "trials": 500,
+    "outcomes": {
+      "ok": 325,
+      "detected": 175,
+      "undetected": 0
+    },
+    "by_target": {
+      "index": {
+        "ok": 325,
+        "detected": 0,
+        "undetected": 0
+      },
+      "wal": {
+        "ok": 0,
+        "detected": 62,
+        "undetected": 0
+      },
+      "segment": {
+        "ok": 0,
+        "detected": 113,
+        "undetected": 0
+      }
+    },
+    "wall_s": 306.62779784202576,
+    "trials_detail": [
+      {
+        "trial": 0,
+        "target": "index",
+        "fault": "truncate CURRENT 16->3",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 1,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->27382",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=6 acked=8: RollbackError"
+      },
+      {
+        "trial": 2,
+        "target": "index",
+        "fault": "truncate CURRENT 16->2",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 3,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->4622293",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 4,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->13609",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 5,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->644594",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 6,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->1197822",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 7,
+        "target": "index",
+        "fault": "truncate CURRENT 16->0",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 8,
+        "target": "index",
+        "fault": "truncate CURRENT 16->14",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 9,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->96",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 10,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->3289373",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 11,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->87",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 12,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->12574",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 13,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->26851",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=6 acked=8: RollbackError"
+      },
+      {
+        "trial": 14,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->5767651",
+        "outcome": "detected",
+        "detail": "seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 15,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->29",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 16,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->501",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 17,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->6641",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 18,
+        "target": "index",
+        "fault": "truncate CURRENT 16->6",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 19,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->3818",
+        "outcome": "detected",
+        "detail": "NotFoundError: not found: manifest 0"
+      },
+      {
+        "trial": 20,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->13626",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 21,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->25",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 22,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->5486800",
+        "outcome": "detected",
+        "detail": "seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 23,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->31",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 24,
+        "target": "index",
+        "fault": "truncate CURRENT 16->5",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 25,
+        "target": "index",
+        "fault": "truncate CURRENT 16->12",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 26,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->27",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 27,
+        "target": "index",
+        "fault": "truncate CURRENT 16->7",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 28,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->4102",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 29,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->6746",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 30,
+        "target": "index",
+        "fault": "truncate CURRENT 16->4",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 31,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->1536736",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 32,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->20823",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=5 acked=8: RollbackError"
+      },
+      {
+        "trial": 33,
+        "target": "index",
+        "fault": "truncate CURRENT 16->12",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 34,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->897",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 35,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->13",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 36,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->5741442",
+        "outcome": "detected",
+        "detail": "seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 37,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->7",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 38,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->4211618",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 39,
+        "target": "index",
+        "fault": "truncate CURRENT 16->14",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 40,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->8249",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 41,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->26",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 42,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->344471",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 43,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->5584",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 44,
+        "target": "index",
+        "fault": "truncate CURRENT 16->2",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 45,
+        "target": "index",
+        "fault": "truncate CURRENT 16->12",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 46,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->92",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 47,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->13235",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=4 acked=8: RollbackError"
+      },
+      {
+        "trial": 48,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->16",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 49,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->6307",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 50,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->32",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 51,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->17616",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=4 acked=8: RollbackError"
+      },
+      {
+        "trial": 52,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->12714",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 53,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->108",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 54,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->1721",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 55,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->23",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 56,
+        "target": "index",
+        "fault": "truncate CURRENT 16->1",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 57,
+        "target": "index",
+        "fault": "truncate CURRENT 16->10",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 58,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->4420115",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 59,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->3481101",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 60,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->30",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 61,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->818867",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 62,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->2456816",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 63,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->1028599",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 64,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->22",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 65,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->1271289",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 66,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->2101",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 67,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->2790",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 68,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->4986600",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 69,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->3010344",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 70,
+        "target": "index",
+        "fault": "truncate CURRENT 16->13",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 71,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->1872785",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 72,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->2322500",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 73,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->124",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 74,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->1522",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 75,
+        "target": "index",
+        "fault": "truncate CURRENT 16->9",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 76,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->2639379",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 77,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->5443449",
+        "outcome": "detected",
+        "detail": "seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 78,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->5091",
+        "outcome": "detected",
+        "detail": "NotFoundError: not found: manifest 0"
+      },
+      {
+        "trial": 79,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->7",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 80,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->990",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 81,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->4353",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 82,
+        "target": "index",
+        "fault": "truncate CURRENT 16->4",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 83,
+        "target": "index",
+        "fault": "truncate CURRENT 16->3",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 84,
+        "target": "index",
+        "fault": "truncate CURRENT 16->1",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 85,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->26",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 86,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->23",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 87,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->1153372",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 88,
+        "target": "index",
+        "fault": "truncate CURRENT 16->12",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 89,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->4940083",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 90,
+        "target": "index",
+        "fault": "truncate CURRENT 16->4",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 91,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->583425",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 92,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->1086",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 93,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->7659",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 94,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->13914",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 95,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->4863",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 96,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->3678177",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 97,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->3875475",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 98,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->5162142",
+        "outcome": "detected",
+        "detail": "seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 99,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->4326",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 100,
+        "target": "index",
+        "fault": "truncate CURRENT 16->8",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 101,
+        "target": "index",
+        "fault": "truncate CURRENT 16->5",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 102,
+        "target": "index",
+        "fault": "truncate CURRENT 16->15",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 103,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->20",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 104,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->3831",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 105,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->5655859",
+        "outcome": "detected",
+        "detail": "seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 106,
+        "target": "index",
+        "fault": "truncate CURRENT 16->9",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 107,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->601741",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 108,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->7424",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 109,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->4241",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 110,
+        "target": "index",
+        "fault": "truncate CURRENT 16->7",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 111,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->34",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 112,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->2393648",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 113,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->4548548",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 114,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->79430",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 115,
+        "target": "index",
+        "fault": "truncate CURRENT 16->2",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 116,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->4398158",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 117,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->4285788",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 118,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->3605",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 119,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->60898",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 120,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->440836",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 121,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->342408",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 122,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->3260975",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 123,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->7237",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=3 acked=8: RollbackError"
+      },
+      {
+        "trial": 124,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->17",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 125,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->1743689",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 126,
+        "target": "index",
+        "fault": "truncate CURRENT 16->11",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 127,
+        "target": "index",
+        "fault": "truncate CURRENT 16->1",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 128,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->23443",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=5 acked=8: RollbackError"
+      },
+      {
+        "trial": 129,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->15",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 130,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->2099678",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 131,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->10454",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 132,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->26710",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=6 acked=8: RollbackError"
+      },
+      {
+        "trial": 133,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->737802",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 134,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->3109",
+        "outcome": "detected",
+        "detail": "NotFoundError: not found: manifest 0"
+      },
+      {
+        "trial": 135,
+        "target": "index",
+        "fault": "truncate CURRENT 16->12",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 136,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->8934",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 137,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->4864",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 138,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->14012",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 139,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->15",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 140,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->108",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 141,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->81",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 142,
+        "target": "index",
+        "fault": "truncate CURRENT 16->0",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 143,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->7629",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 144,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->3141601",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 145,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->663",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 146,
+        "target": "index",
+        "fault": "truncate CURRENT 16->13",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 147,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->13155",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=4 acked=8: RollbackError"
+      },
+      {
+        "trial": 148,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->1202415",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 149,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->9432",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 150,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->55",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 151,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->11464",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 152,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->30412",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=6 acked=8: RollbackError"
+      },
+      {
+        "trial": 153,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->8118",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 154,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->3407",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 155,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->1863",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 156,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->10152",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 157,
+        "target": "index",
+        "fault": "truncate CURRENT 16->10",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 158,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->5610226",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 159,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->5380538",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 160,
+        "target": "index",
+        "fault": "truncate CURRENT 16->5",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 161,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->7814",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 162,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->2369702",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 163,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->31",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 164,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->6134",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 165,
+        "target": "index",
+        "fault": "truncate CURRENT 16->10",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 166,
+        "target": "index",
+        "fault": "truncate CURRENT 16->3",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 167,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->2151969",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 168,
+        "target": "index",
+        "fault": "truncate CURRENT 16->15",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 169,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->3750099",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 170,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->4460",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 171,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->6126",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 172,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->28194",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=6 acked=8: RollbackError"
+      },
+      {
+        "trial": 173,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->3574",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 174,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->7670",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 175,
+        "target": "index",
+        "fault": "truncate CURRENT 16->1",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 176,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->13",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 177,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->640608",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 178,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->18",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 179,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->18",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 180,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->32",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 181,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->11375",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 182,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->862268",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 183,
+        "target": "index",
+        "fault": "truncate CURRENT 16->15",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 184,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->30",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 185,
+        "target": "index",
+        "fault": "truncate CURRENT 16->11",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 186,
+        "target": "index",
+        "fault": "truncate CURRENT 16->15",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 187,
+        "target": "index",
+        "fault": "truncate CURRENT 16->10",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 188,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->8862",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 189,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->4426968",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 190,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->8738",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 191,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->27",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 192,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->1994",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 193,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->2281",
+        "outcome": "detected",
+        "detail": "NotFoundError: not found: manifest 0"
+      },
+      {
+        "trial": 194,
+        "target": "index",
+        "fault": "truncate CURRENT 16->5",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 195,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->30732",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=6 acked=8: RollbackError"
+      },
+      {
+        "trial": 196,
+        "target": "index",
+        "fault": "truncate CURRENT 16->11",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 197,
+        "target": "index",
+        "fault": "truncate CURRENT 16->10",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 198,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->44",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 199,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->4256570",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 200,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->4172",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 201,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->6851",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 202,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->5930866",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 203,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->34079",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=7 acked=8: RollbackError"
+      },
+      {
+        "trial": 204,
+        "target": "index",
+        "fault": "truncate CURRENT 16->13",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 205,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->4108977",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 206,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->19",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 207,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->5358257",
+        "outcome": "detected",
+        "detail": "seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 208,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->20",
+        "outcome": "detected",
+        "detail": "NotFoundError: not found: manifest 0"
+      },
+      {
+        "trial": 209,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->5462674",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 210,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->2501422",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 211,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->34885",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=7 acked=8: RollbackError"
+      },
+      {
+        "trial": 212,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->6087",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 213,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->26",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 214,
+        "target": "index",
+        "fault": "truncate CURRENT 16->9",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 215,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->1922486",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 216,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->15",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 217,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->114",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 218,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->34186",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=7 acked=8: RollbackError"
+      },
+      {
+        "trial": 219,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->17599",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=4 acked=8: RollbackError"
+      },
+      {
+        "trial": 220,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->5292",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 221,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->161",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 222,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->63",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 223,
+        "target": "index",
+        "fault": "truncate CURRENT 16->4",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 224,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->0",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 225,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->19369",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=5 acked=8: RollbackError"
+      },
+      {
+        "trial": 226,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->7256",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 227,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->5381",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 228,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->2555530",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 229,
+        "target": "index",
+        "fault": "truncate CURRENT 16->1",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 230,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->509306",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 231,
+        "target": "index",
+        "fault": "truncate CURRENT 16->4",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 232,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->20165",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=5 acked=8: RollbackError"
+      },
+      {
+        "trial": 233,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->7428",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 234,
+        "target": "index",
+        "fault": "truncate CURRENT 16->6",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 235,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->5881",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 236,
+        "target": "index",
+        "fault": "truncate CURRENT 16->1",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 237,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->5634197",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 238,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->5059",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 239,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->62",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 240,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->1139409",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 241,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->3644",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 242,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->22454",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 243,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->62",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 244,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->30626",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=6 acked=8: RollbackError"
+      },
+      {
+        "trial": 245,
+        "target": "index",
+        "fault": "truncate CURRENT 16->0",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 246,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->27",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 247,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->4639228",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 248,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->4524",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 249,
+        "target": "index",
+        "fault": "truncate CURRENT 16->4",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 250,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->2750950",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 251,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->3535229",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 252,
+        "target": "index",
+        "fault": "truncate CURRENT 16->7",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 253,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->229",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 254,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->7808",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 255,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->7236",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=3 acked=8: RollbackError"
+      },
+      {
+        "trial": 256,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->6",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 257,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->28590",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=6 acked=8: RollbackError"
+      },
+      {
+        "trial": 258,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->84",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 259,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->57",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 260,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->4827",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 261,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->23",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 262,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->19381",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=5 acked=8: RollbackError"
+      },
+      {
+        "trial": 263,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->3496",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 264,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->4211790",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 265,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->6",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 266,
+        "target": "index",
+        "fault": "truncate CURRENT 16->1",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 267,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->4976",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 268,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->103",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 269,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->392232",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 270,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->4512",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 271,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->122",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 272,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->19",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 273,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->20",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 274,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->69",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 275,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->8311",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 276,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->10639",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 277,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->31",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 278,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->16",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 279,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->5208030",
+        "outcome": "detected",
+        "detail": "seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 280,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->94",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 281,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->105",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 282,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->4802730",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 283,
+        "target": "index",
+        "fault": "truncate CURRENT 16->9",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 284,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->6095",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 285,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->1291",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 286,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->6122739",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 287,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->25324",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=5 acked=8: RollbackError"
+      },
+      {
+        "trial": 288,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->20672",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=5 acked=8: RollbackError"
+      },
+      {
+        "trial": 289,
+        "target": "index",
+        "fault": "truncate CURRENT 16->9",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 290,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->5585096",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 291,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->6360",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 292,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->12883",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 293,
+        "target": "index",
+        "fault": "truncate CURRENT 16->4",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 294,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->6602763",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 295,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->3718",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 296,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->5219",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 297,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->30517",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=6 acked=8: RollbackError"
+      },
+      {
+        "trial": 298,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->5318578",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 299,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->31",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 300,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->4",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 301,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->11206",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 302,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->3",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 303,
+        "target": "index",
+        "fault": "truncate CURRENT 16->15",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 304,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->12",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 305,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->2600",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 306,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->19",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 307,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->11063",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 308,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->29",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 309,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->6489",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 310,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->33",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 311,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->36256",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=7 acked=8: RollbackError"
+      },
+      {
+        "trial": 312,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->4340078",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 313,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->4409380",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 314,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->5862067",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 315,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->78",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 316,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->26",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 317,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->1902829",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 318,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->3725692",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 319,
+        "target": "index",
+        "fault": "truncate CURRENT 16->2",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 320,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->101",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 321,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->35701",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=7 acked=8: RollbackError"
+      },
+      {
+        "trial": 322,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->9813",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=3 acked=8: RollbackError"
+      },
+      {
+        "trial": 323,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->4454734",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 324,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->90",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 325,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->116",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 326,
+        "target": "index",
+        "fault": "truncate CURRENT 16->11",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 327,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->0",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 328,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->43",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 329,
+        "target": "index",
+        "fault": "truncate CURRENT 16->9",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 330,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->31448",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=6 acked=8: RollbackError"
+      },
+      {
+        "trial": 331,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->10",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 332,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->26836",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=6 acked=8: RollbackError"
+      },
+      {
+        "trial": 333,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->3214",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 334,
+        "target": "index",
+        "fault": "truncate CURRENT 16->14",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 335,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->21",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 336,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->5507",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 337,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->3229295",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 338,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->10791",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 339,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->4759325",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 340,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->3910",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 341,
+        "target": "index",
+        "fault": "truncate CURRENT 16->6",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 342,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->1173",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 343,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->26",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 344,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->2634565",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 345,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->3366",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 346,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->66",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 347,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->3473",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 348,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->37479",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=7 acked=8: RollbackError"
+      },
+      {
+        "trial": 349,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->2850",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 350,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->32",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 351,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->24069",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=5 acked=8: RollbackError"
+      },
+      {
+        "trial": 352,
+        "target": "index",
+        "fault": "truncate CURRENT 16->14",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 353,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->13495",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 354,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->2055",
+        "outcome": "detected",
+        "detail": "NotFoundError: not found: manifest 0"
+      },
+      {
+        "trial": 355,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->370329",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 356,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->21348",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=5 acked=8: RollbackError"
+      },
+      {
+        "trial": 357,
+        "target": "index",
+        "fault": "truncate CURRENT 16->1",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 358,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->12846",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 359,
+        "target": "index",
+        "fault": "truncate CURRENT 16->5",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 360,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->6295",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 361,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->20",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 362,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->20",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 363,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->114",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 364,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->4622",
+        "outcome": "detected",
+        "detail": "NotFoundError: not found: manifest 0"
+      },
+      {
+        "trial": 365,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->37894",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=7 acked=8: RollbackError"
+      },
+      {
+        "trial": 366,
+        "target": "index",
+        "fault": "truncate CURRENT 16->3",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 367,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->7366",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 368,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->4926013",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 369,
+        "target": "index",
+        "fault": "truncate CURRENT 16->5",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 370,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->3993520",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 371,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->4593",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 372,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->14",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 373,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->11",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 374,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->3068",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 375,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->734852",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 376,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->647",
+        "outcome": "detected",
+        "detail": "NotFoundError: not found: manifest 0"
+      },
+      {
+        "trial": 377,
+        "target": "index",
+        "fault": "truncate CURRENT 16->10",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 378,
+        "target": "index",
+        "fault": "truncate CURRENT 16->5",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 379,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->4374",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 380,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->86",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 381,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->33",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 382,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->10819",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 383,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->20",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 384,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->2280",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 385,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->285",
+        "outcome": "detected",
+        "detail": "NotFoundError: not found: manifest 0"
+      },
+      {
+        "trial": 386,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->4083",
+        "outcome": "detected",
+        "detail": "NotFoundError: not found: manifest 0"
+      },
+      {
+        "trial": 387,
+        "target": "index",
+        "fault": "truncate CURRENT 16->8",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 388,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->1011749",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 389,
+        "target": "index",
+        "fault": "truncate CURRENT 16->14",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 390,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->8246",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 391,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->2778668",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 392,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->6559",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 393,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->8719",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 394,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->5182295",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 395,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->3017217",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 396,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->94",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 397,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->4742",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 398,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->6798",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 399,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->5853099",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 400,
+        "target": "index",
+        "fault": "truncate CURRENT 16->2",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 401,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->119",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 402,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->106",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 403,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->28",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 404,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->16",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 405,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->7715",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 406,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->219930",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 407,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->50",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 408,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->59",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 409,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->19",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 410,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->139",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 411,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->10951",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 412,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->54",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 413,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->12770",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 414,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->1854496",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 415,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->20254",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=5 acked=8: RollbackError"
+      },
+      {
+        "trial": 416,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->8713",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 417,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->1750700",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 418,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->5173669",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 419,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->10",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 420,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->38",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 421,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->30002",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=6 acked=8: RollbackError"
+      },
+      {
+        "trial": 422,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->1183539",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 423,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->29",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 424,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->13952",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=4 acked=8: RollbackError"
+      },
+      {
+        "trial": 425,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->30",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 426,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->6575",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 427,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->118",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 428,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->31526",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=6 acked=8: RollbackError"
+      },
+      {
+        "trial": 429,
+        "target": "index",
+        "fault": "truncate CURRENT 16->13",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 430,
+        "target": "index",
+        "fault": "truncate CURRENT 16->6",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 431,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->28187",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=6 acked=8: RollbackError"
+      },
+      {
+        "trial": 432,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->10312",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 433,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->23",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 434,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->1777",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 435,
+        "target": "index",
+        "fault": "truncate CURRENT 16->5",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 436,
+        "target": "index",
+        "fault": "truncate CURRENT 16->9",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 437,
+        "target": "index",
+        "fault": "truncate CURRENT 16->2",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 438,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->4323731",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 439,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->12452",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 440,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->3710",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 441,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->7685",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 442,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->69",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 443,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->3879",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 444,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->13963",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=4 acked=8: RollbackError"
+      },
+      {
+        "trial": 445,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->35914",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=7 acked=8: RollbackError"
+      },
+      {
+        "trial": 446,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->36426",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=7 acked=8: RollbackError"
+      },
+      {
+        "trial": 447,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->62",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 448,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->18776",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=4 acked=8: RollbackError"
+      },
+      {
+        "trial": 449,
+        "target": "index",
+        "fault": "truncate CURRENT 16->14",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 450,
+        "target": "index",
+        "fault": "truncate CURRENT 16->5",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 451,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->50",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 452,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->10",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 453,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->10679",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=3 acked=8: RollbackError"
+      },
+      {
+        "trial": 454,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->2546125",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 455,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->8121",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 456,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->1243924",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 457,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->7637",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 458,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->10340",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 459,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->6647",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 460,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->5822800",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 461,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->4052",
+        "outcome": "detected",
+        "detail": "NotFoundError: not found: manifest 0"
+      },
+      {
+        "trial": 462,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->587075",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 463,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->10115",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=3 acked=8: RollbackError"
+      },
+      {
+        "trial": 464,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->2365249",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 465,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->77032",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 466,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->6997",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 467,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->64",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 468,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->21",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 469,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->11586",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 470,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->20007",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=5 acked=8: RollbackError"
+      },
+      {
+        "trial": 471,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->562381",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 472,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->7",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 473,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->18585",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=4 acked=8: RollbackError"
+      },
+      {
+        "trial": 474,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->36448",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=7 acked=8: RollbackError"
+      },
+      {
+        "trial": 475,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->23358",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=5 acked=8: RollbackError"
+      },
+      {
+        "trial": 476,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->919415",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 477,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->1777",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 478,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->5436174",
+        "outcome": "detected",
+        "detail": "seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 479,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->6",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 480,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->1289528",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 481,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->33",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 482,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->8",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 483,
+        "target": "index",
+        "fault": "truncate CURRENT 16->15",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 484,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->3619993",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 485,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->84",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 486,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->6976",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 487,
+        "target": "index",
+        "fault": "truncate CURRENT 16->2",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 488,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->19235",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=5 acked=8: RollbackError"
+      },
+      {
+        "trial": 489,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->3747",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 490,
+        "target": "index",
+        "fault": "truncate OPTIONS-000007 8986->6123",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 491,
+        "target": "index",
+        "fault": "truncate IDENTITY 36->6",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 492,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->3085429",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 493,
+        "target": "index",
+        "fault": "truncate MANIFEST-000005 127->12",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 494,
+        "target": "wal",
+        "fault": "truncate manifest.wal 38056->12344",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=3 acked=8: RollbackError"
+      },
+      {
+        "trial": 495,
+        "target": "segment",
+        "fault": "truncate seg-00000001.log 6301824->910069",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 496,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->9155",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 497,
+        "target": "segment",
+        "fault": "truncate seg-00000002.log 6630044->2328060",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 498,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->7702",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 499,
+        "target": "index",
+        "fault": "truncate 000004.log 14019->11666",
+        "outcome": "ok",
+        "detail": "latest=8"
+      }
+    ]
+  }
+}
