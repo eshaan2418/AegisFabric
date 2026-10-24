@@ -1,0 +1,38 @@
+syntax = "proto3";
+package aegis;
+
+// Control-plane RPCs between training workloads / site agents and the controller.
+// Carried over mTLS (TLS 1.3) on the out-of-band management network.
+service Control {
+  // Periodic telemetry from a workload; the reply carries the controller's current directive.
+  rpc Report(StepReport) returns (Directive);
+  // CA: issue a fresh short-lived workload certificate for the caller's SPIFFE ID (CSR-less lab model:
+  // the server generates the key; acceptable for a test CA, documented as a limitation).
+  rpc Renew(RenewRequest) returns (RenewReply);
+}
+
+message StepReport {
+  string job = 1;
+  int32 rank = 2;
+  int64 step = 3;
+  double step_s = 4;
+  double coll_s = 5;
+  double wall = 6;
+}
+
+message Directive {
+  int64 stop_at_step = 1;  // -1 = keep going
+  bool final_ckpt = 2;
+  int64 epoch = 3;
+}
+
+message RenewRequest {
+  string spiffe_id = 1;
+}
+
+message RenewReply {
+  bytes cert_pem = 1;
+  bytes key_pem = 2;
+  bytes bundle_pem = 3;
+  double not_after = 4;
+}
