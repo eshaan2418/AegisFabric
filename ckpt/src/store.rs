@@ -814,7 +814,9 @@ impl Store {
             if let Some(v) = per_seg_live.get(s) {
                 for (id, l) in v {
                     let p = self.get_chunk(id)?;
-                    copy.push((*id, p, l.epoch));
+                    // current epoch, not the mark-time one: never regress an epoch refreshed since
+                    let ep = self.chunk_epoch(id).unwrap_or(l.epoch).max(l.epoch);
+                    copy.push((*id, p, ep));
                 }
             }
         }
@@ -1095,6 +1097,10 @@ mod tests {
             .unwrap();
         assert_eq!(r["rescued_at_sweep"].as_u64().unwrap(), 1, "{r}");
         assert_eq!(s.get_chunk(&id(1)).unwrap(), b"chunk-X");
+        assert!(
+            s.chunk_epoch(&id(1)).unwrap() >= 3,
+            "epoch regressed by compaction"
+        );
         assert!(s.verify(3).unwrap()["ok"].as_bool().unwrap());
         drop(s);
         let s = open(d.path());

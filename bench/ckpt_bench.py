@@ -202,7 +202,9 @@ def run_dcp(fs: LoopFS, wl: Workload, n: int, steps: int) -> dict:
     return {"per_ckpt": per, "recovery_s": time.perf_counter() - t0}
 
 
-def run_engine(fs: LoopFS, wl: Workload, n: int, steps: int, io: str, encrypt: bool) -> dict:
+def run_engine(
+    fs: LoopFS, wl: Workload, n: int, steps: int, io: str, encrypt: bool, overlap_train: bool = True
+) -> dict:
     root = fs.mnt / f"aegis-{io}"
     srv = ServerProcess(root, io=io, io_threads=4).start()
     crypto = CkptCrypto.generate("bench") if encrypt else None
@@ -218,7 +220,7 @@ def run_engine(fs: LoopFS, wl: Workload, n: int, steps: int, io: str, encrypt: b
             h = c.snapshot(st, step=i)
             # keep training while the flush runs in the background; measure interference
             overlap = []
-            while not h.done.is_set():
+            while overlap_train and not h.done.is_set():
                 overlap.append(wl.step())
             s = h.wait()
             durable = time.perf_counter() - t0
@@ -277,7 +279,8 @@ def summarize_trial(r: dict) -> dict:
     }
     if "overlap_step_s" in per[-1]:
         ov = [p["overlap_step_s"] for p in per if p.get("overlap_step_s")]
-        out["overlap_slowdown"] = float(np.mean(ov) / r["baseline_step_s"]) if ov else None
+        if ov:
+            out["overlap_slowdown"] = float(np.mean(ov) / r["baseline_step_s"])
         out["write_amp_vs_new_bytes"] = device / stored if stored else float("nan")
     return out
 
@@ -289,7 +292,9 @@ def main() -> None:
     ap.add_argument("--steps", type=int, default=2, help="optimizer steps between checkpoints")
     ap.add_argument("--scenarios", default="frozen,full")
     ap.add_argument("--fs", default="ext4,xfs")
-    ap.add_argument("--methods", default="torch_save,dcp,aegis_uring,aegis_pwrite,aegis_uring_plain")
+    ap.add_argument(
+        "--methods", default="torch_save,dcp,aegis_uring,aegis_pwrite,aegis_uring_plain,aegis_uring_noovl"
+    )
     ap.add_argument("--threads", type=int, default=4)
     ap.add_argument("--d", type=int, default=1536)
     ap.add_argument("--layers", type=int, default=10)
@@ -317,7 +322,13 @@ def main() -> None:
                             else:
                                 io = "uring" if "uring" in meth else "pwrite"
                                 r = run_engine(
-                                    fs, wl, a.ckpts, a.steps, io, encrypt=not meth.endswith("plain")
+                                    fs,
+                                    wl,
+                                    a.ckpts,
+                                    a.steps,
+                                    io,
+                                    encrypt="plain" not in meth,
+                                    overlap_train="noovl" not in meth,
                                 )
                         finally:
                             fs.close()
