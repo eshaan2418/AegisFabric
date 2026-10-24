@@ -173,3 +173,14 @@ def test_accelerator_backpressure_never_blocks(policy):
     assert acc.dropped_frames > 0 and "stt" in done
     if policy == "latest":  # STT preempts queued vision work
         assert done.index("stt") <= 2
+
+
+def test_webrtc_stamp_roundtrip():
+    from media.webrtc_ingest import read_stamp, stamp
+
+    img = np.full((64, 160, 3), 90, np.uint8)
+    for i in (0, 1, 777, 4095):
+        assert read_stamp(stamp(img, i)) == i
+    bad = stamp(img, 5)
+    bad[:8, 0:8] = 255 - bad[:8, 0:8]
+    assert read_stamp(bad) is None
