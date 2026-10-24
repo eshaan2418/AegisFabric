@@ -12,9 +12,12 @@ from formal import run_tlc  # noqa: E402
 from formal.models import MODELS  # noqa: E402
 
 JAVA = run_tlc.find_java()
-pytestmark = pytest.mark.skipif(
-    not JAVA or not run_tlc.JAR.exists(), reason="java or tla2tools.jar missing (run formal/get_tools.sh)"
-)
+pytestmark = [
+    pytest.mark.slow,  # ~85 s; run with `make test-formal`
+    pytest.mark.skipif(
+        not JAVA or not run_tlc.JAR.exists(), reason="java or tla2tools.jar missing (run formal/get_tools.sh)"
+    ),
+]
 
 
 @pytest.mark.parametrize("model", [m for m in MODELS if m.small], ids=lambda m: m.name)

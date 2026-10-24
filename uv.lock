@@ -15,6 +15,7 @@ dependencies = [
     { name = "blake3" },
     { name = "cryptography" },
     { name = "grpcio" },
+    { name = "highspy" },
     { name = "matplotlib" },
     { name = "numpy" },
     { name = "pandas" },
@@ -56,6 +57,7 @@ requires-dist = [
     { name = "cryptography", specifier = ">=43" },
     { name = "grpcio", specifier = ">=1.66" },
     { name = "grpcio-tools", marker = "extra == 'dev'", specifier = ">=1.66" },
+    { name = "highspy", specifier = ">=1.7" },
     { name = "hypothesis", marker = "extra == 'dev'", specifier = ">=6.112" },
     { name = "jax", marker = "extra == 'kernels'", specifier = ">=0.4.30" },
     { name = "jaxlib", marker = "extra == 'kernels'", specifier = ">=0.4.30" },
@@ -66,7 +68,7 @@ requires-dist = [
     { name = "pillow", specifier = ">=10.4" },
     { name = "protobuf", specifier = ">=5.27" },
     { name = "psutil", specifier = ">=6.0" },
-    { name = "pulp", specifier = ">=2.9" },
+    { name = "pulp", specifier = ">=2.9,<3" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3" },
     { name = "pyyaml", specifier = ">=6.0" },
     { name = "reportlab", specifier = ">=4.2" },
@@ -106,15 +108,6 @@ dependencies = [
 sdist = { url = "https://reposerver.w10external.com/repository/pypi/packages/aiortc/1.14.0/aiortc-1.14.0.tar.gz", hash = "sha256:adc8a67ace10a085721e588e06a00358ed8eaf5f6b62f0a95358ff45628dd762" }
 wheels = [
     { url = "https://reposerver.w10external.com/repository/pypi/packages/aiortc/1.14.0/aiortc-1.14.0-py3-none-any.whl", hash = "sha256:4b244d7e482f4e1f67e685b3468269628eca1ec91fa5b329ab517738cfca086e" },
-]
-
-[[package]]
-name = "annotated-types"
-version = "0.8.0"
-source = { registry = "https://reposerver.w10external.com/repository/pypi/simple" }
-sdist = { url = "https://reposerver.w10external.com/repository/pypi/packages/annotated-types/0.8.0/annotated_types-0.8.0.tar.gz", hash = "sha256:13b2beaad985e05e2d6407ee4c4f35590b11f8d693a258a561055cac8f64cab7" }
-wheels = [
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/annotated-types/0.8.0/annotated_types-0.8.0-py3-none-any.whl", hash = "sha256:f072f4d804ea359e4eaf198b1af7a8b0943881a87f31bb764f8bf219bb9419e0" },
 ]
 
 [[package]]
@@ -256,18 +249,6 @@ wheels = [
     { url = "https://reposerver.w10external.com/repository/pypi/packages/contourpy/1.4.0/contourpy-1.4.0-cp312-cp312-win32.whl", hash = "sha256:5450f091ac1be0be3ad3a2a3b3f23b5e443e78c670ced4fd347d626f92a28fd2" },
     { url = "https://reposerver.w10external.com/repository/pypi/packages/contourpy/1.4.0/contourpy-1.4.0-cp312-cp312-win_amd64.whl", hash = "sha256:6e697d94e69f499ff6bebb899cae97a58d5d14f0e1fe9568b43a0248d2f9af8c" },
     { url = "https://reposerver.w10external.com/repository/pypi/packages/contourpy/1.4.0/contourpy-1.4.0-cp312-cp312-win_arm64.whl", hash = "sha256:0c7a4c2716a4e98342221954416a836cca77c996c14ddbf22b5f01d5d93ca09c" },
-]
-
-[[package]]
-name = "cpsat-logutils"
-version = "1.0.0"
-source = { registry = "https://reposerver.w10external.com/repository/pypi/simple" }
-dependencies = [
-    { name = "pydantic" },
-]
-sdist = { url = "https://reposerver.w10external.com/repository/pypi/packages/cpsat-logutils/1.0.0/cpsat_logutils-1.0.0.tar.gz", hash = "sha256:db8e0b5bf16fae203e08692088e9f8a248846e03934242367f7da5dab10322ee" }
-wheels = [
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/cpsat-logutils/1.0.0/cpsat_logutils-1.0.0-py3-none-any.whl", hash = "sha256:02112cc460d30aeab3a591592bfa09cc5705fa3745d5d418a7339e8843c14e5d" },
 ]
 
 [[package]]
@@ -497,6 +478,27 @@ wheels = [
     { url = "https://reposerver.w10external.com/repository/pypi/packages/grpcio-tools/1.84.0/grpcio_tools-1.84.0-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:602453d5a04f74ead2077064249fc462bd4a93a1d23cb9f2c89cd254ac170ab7" },
     { url = "https://reposerver.w10external.com/repository/pypi/packages/grpcio-tools/1.84.0/grpcio_tools-1.84.0-cp312-cp312-win32.whl", hash = "sha256:13a7e252569e3d2b3496fad5439a5f02f9f8d3454e66c5177fb3127342635c57" },
     { url = "https://reposerver.w10external.com/repository/pypi/packages/grpcio-tools/1.84.0/grpcio_tools-1.84.0-cp312-cp312-win_amd64.whl", hash = "sha256:848338ebb0f1bccaf15c09d3905a2bda5907101ca2c88ed411c4ae707615f8ac" },
+]
+
+[[package]]
+name = "highspy"
+version = "1.15.1"
+source = { registry = "https://reposerver.w10external.com/repository/pypi/simple" }
+dependencies = [
+    { name = "numpy" },
+]
+sdist = { url = "https://reposerver.w10external.com/repository/pypi/packages/highspy/1.15.1/highspy-1.15.1.tar.gz", hash = "sha256:20ed2fbf1cb64bf3044ee6632364b7e2653d93e6901e2b19fd3d5df10702e8c5" }
+wheels = [
+    { url = "https://reposerver.w10external.com/repository/pypi/packages/highspy/1.15.1/highspy-1.15.1-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:a781dc8432568ea990fcdcc8d6e4365e67aa4848ca1f99275db096645b27cae3" },
+    { url = "https://reposerver.w10external.com/repository/pypi/packages/highspy/1.15.1/highspy-1.15.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:9499d631edeb9642fc08dee59ca6c5815be1764c13a336c58ab7ba063011aa24" },
+    { url = "https://reposerver.w10external.com/repository/pypi/packages/highspy/1.15.1/highspy-1.15.1-cp312-cp312-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:ef048fa722cdeb80062d271b8ba211cd6650ab73419762d80da7642bbd4a8420" },
+    { url = "https://reposerver.w10external.com/repository/pypi/packages/highspy/1.15.1/highspy-1.15.1-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:9730647160a6481426729f46d9989a0507d05f3cf96f9fb180f4ab9891bea67b" },
+    { url = "https://reposerver.w10external.com/repository/pypi/packages/highspy/1.15.1/highspy-1.15.1-cp312-cp312-manylinux_2_26_i686.manylinux_2_28_i686.whl", hash = "sha256:6a6a2f21ee31a9205a928fbbc3f8c054893c1aec34f6a7c56588317e2800e673" },
+    { url = "https://reposerver.w10external.com/repository/pypi/packages/highspy/1.15.1/highspy-1.15.1-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:9a6760962b3e813814dc5e88301890d7cce975de5ce97cc3aed589cfdd461811" },
+    { url = "https://reposerver.w10external.com/repository/pypi/packages/highspy/1.15.1/highspy-1.15.1-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:787c92d5ff274256ba8848ab174cfc65d5af696f51bffe87423c85b2ea25c3fe" },
+    { url = "https://reposerver.w10external.com/repository/pypi/packages/highspy/1.15.1/highspy-1.15.1-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:dd9ee8e139e7260ec1306a48e30f1bd7937d9cfb8cb201d25da10e1099e5129b" },
+    { url = "https://reposerver.w10external.com/repository/pypi/packages/highspy/1.15.1/highspy-1.15.1-cp312-cp312-win32.whl", hash = "sha256:01c6585e83938ecf4139248b074b2ee736816d63716a20dc608b1d2fc9637b66" },
+    { url = "https://reposerver.w10external.com/repository/pypi/packages/highspy/1.15.1/highspy-1.15.1-cp312-cp312-win_amd64.whl", hash = "sha256:8c548165270608a40147a7ea6d985fd62a65fabf0f075b3c0c59ea910b724223" },
 ]
 
 [[package]]
@@ -941,18 +943,6 @@ wheels = [
 ]
 
 [[package]]
-name = "orloge"
-version = "1.0.0"
-source = { registry = "https://reposerver.w10external.com/repository/pypi/simple" }
-dependencies = [
-    { name = "cpsat-logutils" },
-]
-sdist = { url = "https://reposerver.w10external.com/repository/pypi/packages/orloge/1.0.0/orloge-1.0.0.tar.gz", hash = "sha256:6c0bf7d2867fe22e60ef6425d7e99599938c0b1611d513a0baf972fa91b71c88" }
-wheels = [
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/orloge/1.0.0/orloge-1.0.0-py3-none-any.whl", hash = "sha256:e58cc1e15c7939fb8dc0b6ea6839c3c35805d31bbd7d3721dfc88ddc77f4b8e3" },
-]
-
-[[package]]
 name = "packaging"
 version = "26.3"
 source = { registry = "https://reposerver.w10external.com/repository/pypi/simple" }
@@ -1047,27 +1037,11 @@ wheels = [
 
 [[package]]
 name = "pulp"
-version = "4.1.0"
+version = "2.9.0"
 source = { registry = "https://reposerver.w10external.com/repository/pypi/simple" }
-dependencies = [
-    { name = "orloge" },
-]
-sdist = { url = "https://reposerver.w10external.com/repository/pypi/packages/pulp/4.1.0/pulp-4.1.0.tar.gz", hash = "sha256:03993abf9379be2f00c4b8c9c0e249ee71989cc8ee45730e812edebaca23f33a" }
+sdist = { url = "https://reposerver.w10external.com/repository/pypi/packages/pulp/2.9.0/pulp-2.9.0.tar.gz", hash = "sha256:2e30e6c0ef2c0edac185220e3e53faca62eb786a9bd68465208f05bc63e850f3" }
 wheels = [
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pulp/4.1.0/pulp-4.1.0-cp312-cp312-macosx_10_12_x86_64.whl", hash = "sha256:e82af8bfd26e3bf5634f063033a0a4af21d9981e8592bebac96863fc22ca11b4" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pulp/4.1.0/pulp-4.1.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:37209a7ffaee5c3e463076866f43bb31932f6b49032c6bde1872a9f9ed2f36e7" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pulp/4.1.0/pulp-4.1.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:24c3ee8500e4e9245880132e1c8af40e0bad290efa5f54cc6ef555fa747f815d" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pulp/4.1.0/pulp-4.1.0-cp312-cp312-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:a6ce6105b01bca23371a1d8e8f5cd42ab05cd2bf94058cc6844b6ddb791c4ec4" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pulp/4.1.0/pulp-4.1.0-cp312-cp312-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:8f0092256816d7fc5c7fab0442482ec772bd9f357d01fbebb31abcde162e25b4" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pulp/4.1.0/pulp-4.1.0-cp312-cp312-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:8b6742016b30d262aa610ef85e0b3d9c91964a9d896ef12061f6c582ba9d2853" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pulp/4.1.0/pulp-4.1.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:282eeddb39b52c70b684f858ea1e3cf7718ba4dfaa14a5586b6fa510fb2e63ff" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pulp/4.1.0/pulp-4.1.0-cp312-cp312-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:c3f8ae97a0e132e48a7869bae458598469a4be676b5eb11dadf73fa2ecca1548" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pulp/4.1.0/pulp-4.1.0-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:16f9f6b18901316da7cf8ba5df3b925a02fadcbe726f165bf7ef0f1f58e9b28c" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pulp/4.1.0/pulp-4.1.0-cp312-cp312-musllinux_1_2_armv7l.whl", hash = "sha256:2fefda0a94c8a2e22909b31cfe3925674a6442f8cf6f3f4c4ac3e522862911d0" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pulp/4.1.0/pulp-4.1.0-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:f9ca72939de0525b3425372d3f0a27ab5f225cb260e20377c2874ee10c2205c7" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pulp/4.1.0/pulp-4.1.0-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:f2c77d283cafa4cc80167e18e19044d83460cca3b8e15b5007553df95fe11209" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pulp/4.1.0/pulp-4.1.0-cp312-cp312-win_amd64.whl", hash = "sha256:cdee700df456d923cfa7c00dc0183d59740aff24db829e858e3a456e0097cc90" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pulp/4.1.0/pulp-4.1.0-cp312-cp312-win_arm64.whl", hash = "sha256:4c9b5c59a3ad520e18411c02fd09d990b86d419c939409158b9a2962cf4d0aa6" },
+    { url = "https://reposerver.w10external.com/repository/pypi/packages/pulp/2.9.0/PuLP-2.9.0-py3-none-any.whl", hash = "sha256:ad6a9b566d8458f4d05f4bfe2cea59e32885dd1da6929a361be579222107987c" },
 ]
 
 [[package]]
@@ -1077,51 +1051,6 @@ source = { registry = "https://reposerver.w10external.com/repository/pypi/simple
 sdist = { url = "https://reposerver.w10external.com/repository/pypi/packages/pycparser/3.11/pycparser-3.11.tar.gz", hash = "sha256:d875f09c3507d00e1aba0eecc6dcadc1352f30fff09dc6bff2f1c2935e97c2bc" }
 wheels = [
     { url = "https://reposerver.w10external.com/repository/pypi/packages/pycparser/3.11/pycparser-3.11-py3-none-any.whl", hash = "sha256:51d5a8ba2be0bbe440b99d2112604c95bbbc3c2748a64260186c541e1729cd80" },
-]
-
-[[package]]
-name = "pydantic"
-version = "2.14.1"
-source = { registry = "https://reposerver.w10external.com/repository/pypi/simple" }
-dependencies = [
-    { name = "annotated-types" },
-    { name = "pydantic-core" },
-    { name = "typing-extensions" },
-    { name = "typing-inspection" },
-]
-sdist = { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic/2.14.1/pydantic-2.14.1.tar.gz", hash = "sha256:94f478203dd03404682a1ada216965651dd74b1d2d5ffd62e00e0837caab5c26" }
-wheels = [
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic/2.14.1/pydantic-2.14.1-py3-none-any.whl", hash = "sha256:9195d967ec791692a04438115466764fb8b9a27b31f14a760437694f40d6b454" },
-]
-
-[[package]]
-name = "pydantic-core"
-version = "2.50.1"
-source = { registry = "https://reposerver.w10external.com/repository/pypi/simple" }
-dependencies = [
-    { name = "typing-extensions" },
-]
-sdist = { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1.tar.gz", hash = "sha256:e50d7b94baac6c7d09927fa5ca5800a0c7ee5015c7fcff65beb3a1931b5a6e09" }
-wheels = [
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-cp312-cp312-macosx_10_12_x86_64.whl", hash = "sha256:704075d10b74f2f3c6e15407c696d88701df35fc8953f434a431add0d0074db0" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:e8e1d6ce820aa23317e8209a86bd65a540973c12dc7552b48a4f6c8e9926815e" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:c18db21573bd2c6489f9a544b7499f0df2853958c568e5e783536ee1f690af41" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-cp312-cp312-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:cb57f304525a5e3c13333b772bf9a473f36326e9c821b2e8e1b2fd36f80ae2c3" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-cp312-cp312-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:a27c09d86600f1bf2fe3f37e1ae697faf3143931c09322cd799da94deee923b5" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-cp312-cp312-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:46b3301d3b5c886f77de7546e47274a5842c622ea2020b8c6524c6b66913b4a6" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:93ba4e9d8210d941c200431a56b2c0400b131865947903937ed3ec5404307d2e" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-cp312-cp312-manylinux_2_31_riscv64.whl", hash = "sha256:e5faeaee74a57d32b3ab3aebad2e348f06d3ba946fc5d28c1728455f00a3d13a" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-cp312-cp312-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:a3cda0e538208e5d722bbf3698b24f19c0a7d05bc8d5f8a7f9b121ea7fa243d9" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-cp312-cp312-musllinux_1_1_aarch64.whl", hash = "sha256:57f51b31ff826e2859120cf4737c5a758a48d96f3e97da40ccee1796d58078ff" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-cp312-cp312-musllinux_1_1_armv7l.whl", hash = "sha256:8daa7ee75245d43ad7d747e5c9ecc1b1d06552f72b14887e9276f787d57375f4" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-cp312-cp312-musllinux_1_1_x86_64.whl", hash = "sha256:acbf31f37c53a5ac0c34706c80b4f5107ba20b05fdd3816124bf236ef0c57dd2" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-cp312-cp312-win32.whl", hash = "sha256:45b11cac094aa25725581d9304eee93c9028516b9ea80dd9e175e13a5a2c840e" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-cp312-cp312-win_amd64.whl", hash = "sha256:132529c83901437ff642f585216831bf5fd7a91df66829907e155192ead62498" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-cp312-cp312-win_arm64.whl", hash = "sha256:4e834f6a8e4ff772dcc34f58ef5504147a3ea5b0f4eeb13b0f8eb2ca75ac57f1" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-graalpy312-graalpy250_312_native-macosx_10_12_x86_64.whl", hash = "sha256:76e2e83fa6ec8cdc972d438dafc2522b3a47bee4ec0ae668b29cfb1977ab5242" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-graalpy312-graalpy250_312_native-macosx_11_0_arm64.whl", hash = "sha256:a51eee75939cf811ac09b278745a6cee7dc873ccfbc8b9af3cc88fe4b7ce25b5" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-graalpy312-graalpy250_312_native-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:ae28183297fb0d2b8dc46a1f01d51f5e45825fc5afe76a835a6cb7fb34821295" },
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/pydantic-core/2.50.1/pydantic_core-2.50.1-graalpy312-graalpy250_312_native-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:88e492e8b9d0312e7dc13667c30222abf284dc3b79b5302b3607b41a5784ce61" },
 ]
 
 [[package]]
@@ -1406,18 +1335,6 @@ source = { registry = "https://reposerver.w10external.com/repository/pypi/simple
 sdist = { url = "https://reposerver.w10external.com/repository/pypi/packages/typing-extensions/4.16.0/typing_extensions-4.16.0.tar.gz", hash = "sha256:dc983d19a509c94dba722ee6abd33940f7c05a89e243c47e907eb4db6f1a43e5" }
 wheels = [
     { url = "https://reposerver.w10external.com/repository/pypi/packages/typing-extensions/4.16.0/typing_extensions-4.16.0-py3-none-any.whl", hash = "sha256:481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8" },
-]
-
-[[package]]
-name = "typing-inspection"
-version = "0.4.4"
-source = { registry = "https://reposerver.w10external.com/repository/pypi/simple" }
-dependencies = [
-    { name = "typing-extensions" },
-]
-sdist = { url = "https://reposerver.w10external.com/repository/pypi/packages/typing-inspection/0.4.4/typing_inspection-0.4.4.tar.gz", hash = "sha256:547274fa6b0a561ccf549cc9524b999a578e737d015d8709d021f9d0d13bea47" }
-wheels = [
-    { url = "https://reposerver.w10external.com/repository/pypi/packages/typing-inspection/0.4.4/typing_inspection-0.4.4-py3-none-any.whl", hash = "sha256:65b8397ba37ccbce054456aaccddfc91e6e3083c92824df348d96ca832f3f147" },
 ]
 
 [[package]]

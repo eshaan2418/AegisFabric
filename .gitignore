@@ -15,3 +15,5 @@ paper/*.bbl
 paper/*.blg
 .DS_Store
 formal/**/states/
+.claude/
+scratch_*.sh

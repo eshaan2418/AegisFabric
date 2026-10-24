@@ -16,7 +16,7 @@ GIT_DIRTY := $(shell test -n "$$(git status --porcelain --untracked-files=no 2>/
 LAB_RUN := docker run --rm --privileged --cgroupns=host -e AEGIS_GIT_COMMIT=$(GIT_COMMIT) -e AEGIS_GIT_DIRTY=$(GIT_DIRTY) \
 	-v $(CURDIR):/work -v aegis-cargo-target:/work/ckpt/target $(LAB_IMAGE)
 
-.PHONY: setup lab-image lint test test-py test-rust test-lab ci lab-shell probe data \
+.PHONY: setup lab-image lint test test-py test-rust test-formal test-lab ci lab-shell probe data \
 	reproduce-quick reproduce-full paper audit clean
 
 setup:
@@ -45,10 +45,13 @@ test-py:
 test-rust:
 	@if [ -f ckpt/Cargo.toml ]; then cd ckpt && cargo test -q --release; fi
 
+test-formal:
+	bash formal/get_tools.sh && $(UV) run pytest -q -m slow -o addopts="" tests/test_formal.py
+
 test-lab:
 	$(LAB_RUN) bash -lc 'pytest -q -m "netlab" -o addopts="" tests'
 
-ci: lint test test-lab
+ci: lint test test-formal test-lab
 
 lab-shell:
 	docker run --rm -it --privileged --cgroupns=host -v $(CURDIR):/work $(LAB_IMAGE) bash
