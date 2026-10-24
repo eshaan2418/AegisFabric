@@ -12,7 +12,7 @@ COMMIT="$(git rev-parse HEAD 2>/dev/null || echo unknown)"
 DIRTY="$(test -n "$(git status --porcelain --untracked-files=no 2>/dev/null)" && echo 1 || echo 0)"
 docker image inspect "$IMAGE" >/dev/null 2>&1 || make lab-image
 LAB() { docker run --rm --privileged --cgroupns=host -e AEGIS_GIT_COMMIT="$COMMIT" -e AEGIS_GIT_DIRTY="$DIRTY" \
-          -v "$PWD":/work -v aegis-cargo-target:/work/ckpt/target "$IMAGE" bash -lc "$*"; }
+          -v "$PWD":/work -v aegis-cargo-target:/work/ckpt/target "$IMAGE" bash -c "$*"; }
 step() { echo; echo "=== [$MODE] $* ==="; }
 
 if [ "$MODE" = "quick" ]; then
