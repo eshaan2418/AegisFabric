@@ -22,6 +22,7 @@ dependencies = [
 
 [project.optional-dependencies]
 media = ["aiortc>=1.9", "av>=12"]
+kernels = ["jax>=0.4.30", "jaxlib>=0.4.30"]
 posttrain = ["opacus>=1.5", "scikit-learn>=1.5"]
 dev = ["pytest>=8.3", "ruff>=0.6", "grpcio-tools>=1.66", "hypothesis>=6.112"]
 

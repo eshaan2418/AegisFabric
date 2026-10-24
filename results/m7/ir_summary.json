@@ -1,0 +1,142 @@
+{
+  "meta": {
+    "git": {
+      "commit": "2ea0e9c17065aff6149eeef170e89265d8d7c8c6",
+      "dirty": false
+    },
+    "hardware": {
+      "platform": "Linux-7.0.12-linuxkit-aarch64-with-glibc2.36",
+      "machine": "aarch64",
+      "python": "3.12.15",
+      "cpu_count": 18,
+      "host_label": "lab-container",
+      "mem_gb": 47.0,
+      "torch": "2.14.1+cpu",
+      "torch_threads": 18
+    },
+    "seed": null,
+    "config": {},
+    "command": "kernels_ir.py",
+    "timestamp": "2026-10-24T17:09:17+00:00"
+  },
+  "data": {
+    "triton": "3.8.0",
+    "configs": [
+      {
+        "config": {
+          "arch": 80,
+          "d": 64,
+          "block_m": 64,
+          "block_n": 32,
+          "dtype": "fp16",
+          "num_warps": 4,
+          "hints": false
+        },
+        "stages": [
+          "cubin",
+          "llir",
+          "ptx",
+          "source",
+          "ttgir",
+          "ttir"
+        ],
+        "metadata": {
+          "shared_bytes": 12288,
+          "num_warps": 4
+        },
+        "error": null,
+        "ptx_stats": {
+          "ld.global": 67,
+          "st.global": 33,
+          "ld.shared": 33,
+          "st.shared": 69,
+          "cp.async": 0,
+          "ldmatrix": 12,
+          "mma": 32,
+          "ex2": 18,
+          "bar.sync": 8,
+          "ld.global vector widths": []
+        },
+        "ttgir_local_allocs": 2
+      },
+      {
+        "config": {
+          "arch": 80,
+          "d": 64,
+          "block_m": 64,
+          "block_n": 32,
+          "dtype": "fp16",
+          "num_warps": 4,
+          "hints": true
+        },
+        "stages": [
+          "cubin",
+          "llir",
+          "ptx",
+          "source",
+          "ttgir",
+          "ttir"
+        ],
+        "metadata": {
+          "shared_bytes": 24576,
+          "num_warps": 4
+        },
+        "error": null,
+        "ptx_stats": {
+          "ld.global": 7,
+          "st.global": 5,
+          "ld.shared": 1,
+          "st.shared": 9,
+          "cp.async": 20,
+          "ldmatrix": 24,
+          "mma": 32,
+          "ex2": 18,
+          "bar.sync": 7,
+          "ld.global vector widths": [
+            "v4x32"
+          ]
+        },
+        "ttgir_local_allocs": 3
+      },
+      {
+        "config": {
+          "arch": 80,
+          "d": 64,
+          "block_m": 64,
+          "block_n": 32,
+          "dtype": "fp32",
+          "num_warps": 4,
+          "hints": true
+        },
+        "stages": [
+          "cubin",
+          "llir",
+          "ptx",
+          "source",
+          "ttgir",
+          "ttir"
+        ],
+        "metadata": {
+          "shared_bytes": 49152,
+          "num_warps": 4
+        },
+        "error": null,
+        "ptx_stats": {
+          "ld.global": 11,
+          "st.global": 9,
+          "ld.shared": 73,
+          "st.shared": 17,
+          "cp.async": 32,
+          "ldmatrix": 24,
+          "mma": 64,
+          "ex2": 18,
+          "bar.sync": 7,
+          "ld.global vector widths": [
+            "v4x32"
+          ]
+        },
+        "ttgir_local_allocs": 3
+      }
+    ]
+  }
+}

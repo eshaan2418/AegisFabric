@@ -1,0 +1,248 @@
+{
+  "meta": {
+    "git": {
+      "commit": "2ea0e9c17065aff6149eeef170e89265d8d7c8c6",
+      "dirty": false
+    },
+    "hardware": {
+      "platform": "Linux-7.0.12-linuxkit-aarch64-with-glibc2.36",
+      "machine": "aarch64",
+      "python": "3.12.15",
+      "cpu_count": 18,
+      "host_label": "lab-container",
+      "mem_gb": 47.0,
+      "torch": "2.14.1+cpu",
+      "torch_threads": 4
+    },
+    "seed": 0,
+    "config": {
+      "device": "cpu",
+      "threads": 4,
+      "trials": 10,
+      "shapes": "model,large",
+      "dtypes": null,
+      "seed": 0
+    },
+    "command": "kernels_perf.py --device cpu --threads 4 --trials 10",
+    "timestamp": "2026-10-24T17:11:00+00:00"
+  },
+  "data": {
+    "device": "cpu",
+    "threads": 4,
+    "note": "dev run, machine shared",
+    "peak_copy": {
+      "bytes": 1073741824,
+      "GBps": {
+        "n": 10,
+        "mean": 51.83881472592179,
+        "std": 13.884946489728259,
+        "ci95_lo": 41.90612236546154,
+        "ci95_hi": 61.771507086382044,
+        "median": 49.51105134409657,
+        "p99": null
+      }
+    },
+    "cases": [
+      {
+        "shape": "model",
+        "dtype": "fp32",
+        "impl": "eager_unfused",
+        "latency_ms": {
+          "n": 10,
+          "mean": 31.810634580001533,
+          "std": 11.763901361002032,
+          "ci95_lo": 23.395246500251027,
+          "ci95_hi": 40.22602265975204,
+          "median": 29.24926040000173,
+          "p99": null
+        },
+        "max_abs_err": 8.580929302670626e-07,
+        "eff_GBps_fused_min": 0.16571665638239358,
+        "frac_of_peak": 0.0031967678516292854,
+        "traffic": {
+          "fused_min": 5271552,
+          "fused_tiled": 12742656,
+          "unfused_padded_lb": 57617552,
+          "padding_waste": 0.35906374501992033
+        },
+        "seqlens_total": 2574,
+        "max_len": 251
+      },
+      {
+        "shape": "model",
+        "dtype": "fp32",
+        "impl": "sdpa_mask",
+        "latency_ms": {
+          "n": 10,
+          "mean": 12.08018791999848,
+          "std": 3.8027959837837337,
+          "ci95_lo": 9.359831551001278,
+          "ci95_hi": 14.800544288995681,
+          "median": 11.414847950004514,
+          "p99": null
+        },
+        "max_abs_err": 8.372330103645353e-07,
+        "eff_GBps_fused_min": 0.4363799665130262,
+        "frac_of_peak": 0.008418015898322924,
+        "traffic": {
+          "fused_min": 5271552,
+          "fused_tiled": 12742656,
+          "unfused_padded_lb": 57617552,
+          "padding_waste": 0.35906374501992033
+        },
+        "seqlens_total": 2574,
+        "max_len": 251
+      },
+      {
+        "shape": "model",
+        "dtype": "fp32",
+        "impl": "torch_compile",
+        "latency_ms": {
+          "n": 10,
+          "mean": 19.66787250999687,
+          "std": 6.761198894345434,
+          "ci95_lo": 14.83120218828564,
+          "ci95_hi": 24.504542831708097,
+          "median": 21.538362449996384,
+          "p99": null
+        },
+        "max_abs_err": 8.580929302670626e-07,
+        "eff_GBps_fused_min": 0.26802858302648414,
+        "frac_of_peak": 0.005170422673504097,
+        "traffic": {
+          "fused_min": 5271552,
+          "fused_tiled": 12742656,
+          "unfused_padded_lb": 57617552,
+          "padding_waste": 0.35906374501992033
+        },
+        "seqlens_total": 2574,
+        "max_len": 251
+      },
+      {
+        "shape": "model",
+        "dtype": "fp32",
+        "impl": "jax_jit",
+        "latency_ms": {
+          "n": 10,
+          "mean": 7.9294954200054235,
+          "std": 4.431081511243915,
+          "ci95_lo": 4.75969066001816,
+          "ci95_hi": 11.099300179992687,
+          "median": 6.643760450015179,
+          "p99": null
+        },
+        "max_abs_err": 8.580929302670626e-07,
+        "eff_GBps_fused_min": 0.6648029566547622,
+        "frac_of_peak": 0.012824424327015527,
+        "traffic": {
+          "fused_min": 5271552,
+          "fused_tiled": 12742656,
+          "unfused_padded_lb": 57617552,
+          "padding_waste": 0.35906374501992033
+        },
+        "seqlens_total": 2574,
+        "max_len": 251
+      },
+      {
+        "shape": "large",
+        "dtype": "fp32",
+        "impl": "eager_unfused",
+        "latency_ms": {
+          "n": 10,
+          "mean": 766.5708586999926,
+          "std": 255.0417599923817,
+          "ci95_lo": 584.1249743785296,
+          "ci95_hi": 949.0167430214557,
+          "median": 666.810823249989,
+          "p99": null
+        },
+        "max_abs_err": 1.1977039623412011e-06,
+        "eff_GBps_fused_min": 0.22598853326330037,
+        "frac_of_peak": 0.004359446381213182,
+        "traffic": {
+          "fused_min": 173236224,
+          "fused_tiled": 1185767424,
+          "unfused_padded_lb": 3379096704,
+          "padding_waste": 0.3404752994011976
+        },
+        "seqlens_total": 21147,
+        "max_len": 1002
+      },
+      {
+        "shape": "large",
+        "dtype": "fp32",
+        "impl": "sdpa_mask",
+        "latency_ms": {
+          "n": 10,
+          "mean": 531.6788315500503,
+          "std": 75.82453077078684,
+          "ci95_lo": 477.43722982118277,
+          "ci95_hi": 585.9204332789178,
+          "median": 525.71656300006,
+          "p99": null
+        },
+        "max_abs_err": 1.076987398485052e-06,
+        "eff_GBps_fused_min": 0.32582870281848375,
+        "frac_of_peak": 0.006285419613491942,
+        "traffic": {
+          "fused_min": 173236224,
+          "fused_tiled": 1185767424,
+          "unfused_padded_lb": 3379096704,
+          "padding_waste": 0.3404752994011976
+        },
+        "seqlens_total": 21147,
+        "max_len": 1002
+      },
+      {
+        "shape": "large",
+        "dtype": "fp32",
+        "impl": "torch_compile",
+        "latency_ms": {
+          "n": 10,
+          "mean": 799.4361523500174,
+          "std": 236.922989104933,
+          "ci95_lo": 629.9516559105911,
+          "ci95_hi": 968.9206487894438,
+          "median": 756.089354500034,
+          "p99": null
+        },
+        "max_abs_err": 1.1977039623412011e-06,
+        "eff_GBps_fused_min": 0.21669801083020315,
+        "frac_of_peak": 0.004180226958812856,
+        "traffic": {
+          "fused_min": 173236224,
+          "fused_tiled": 1185767424,
+          "unfused_padded_lb": 3379096704,
+          "padding_waste": 0.3404752994011976
+        },
+        "seqlens_total": 21147,
+        "max_len": 1002
+      },
+      {
+        "shape": "large",
+        "dtype": "fp32",
+        "impl": "jax_jit",
+        "latency_ms": {
+          "n": 10,
+          "mean": 514.0062378999687,
+          "std": 69.69505934990622,
+          "ci95_lo": 464.14939588197797,
+          "ci95_hi": 563.8630799179595,
+          "median": 524.8733337499516,
+          "p99": null
+        },
+        "max_abs_err": 1.1789961664732118e-06,
+        "eff_GBps_fused_min": 0.3370313650429155,
+        "frac_of_peak": 0.006501525291904182,
+        "traffic": {
+          "fused_min": 173236224,
+          "fused_tiled": 1185767424,
+          "unfused_padded_lb": 3379096704,
+          "padding_waste": 0.3404752994011976
+        },
+        "seqlens_total": 21147,
+        "max_len": 1002
+      }
+    ]
+  }
+}
