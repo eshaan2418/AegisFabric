@@ -1,0 +1,232 @@
+TLC2 Version 2026.10.24.013619 (rev: 2ef2af8)
+Running breadth-first search Model-Checking with fp 49 and seed -3275753816355493232 with 4 workers on 18 cores with 10923MB heap and 64MB offheap memory [pid: 60279] (Mac OS X 27.0.1 aarch64, Homebrew 27.0.1.0.2 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/ckpt/MC.tla
+Parsing file /Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/ckpt/CkptStore.tla
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-13331834922480771809/_TLCTrace.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-13331834922480771809/Naturals.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-13331834922480771809/Sequences.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-13331834922480771809/FiniteSets.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-13331834922480771809/TLC.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-13331834922480771809/TLCExt.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-13331834922480771809/Integers.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CkptStore
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module MC
+Linting of module CkptStore
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module MC
+Starting... (2026-10-24 13:11:34)
+Implied-temporal checking--satisfiability problem has 1 branches.
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-10-24 13:11:34.
+Error: Invariant I3 is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ epoch = 0
+/\ index = {}
+/\ walVol = <<>>
+/\ pendIdx = {}
+/\ req = [m1 |-> {}, m2 |-> {}]
+/\ segVol = {}
+/\ gc = [active |-> FALSE, start |-> 0, live |-> {}, victims |-> {}]
+/\ walDur = <<>>
+/\ crashes = 0
+/\ gcs = 0
+/\ idxEpoch = [c1 |-> 0, c2 |-> 0, c3 |-> 0]
+/\ up = TRUE
+/\ acked = [m1 |-> {}, m2 |-> {}]
+/\ client = [m1 |-> "up", m2 |-> "up"]
+/\ segDur = {}
+/\ recovered = [m |-> "none", err |-> FALSE]
+
+State 2: <Put("m1","c2") line 58, col 3 to line 69, col 98 of module CkptStore>
+/\ epoch = 0
+/\ index = {}
+/\ walVol = <<>>
+/\ pendIdx = {}
+/\ req = [m1 |-> {"c2"}, m2 |-> {}]
+/\ segVol = {"c2"}
+/\ gc = [active |-> FALSE, start |-> 0, live |-> {}, victims |-> {}]
+/\ walDur = <<>>
+/\ crashes = 0
+/\ gcs = 0
+/\ idxEpoch = [c1 |-> 0, c2 |-> 0, c3 |-> 0]
+/\ up = TRUE
+/\ acked = [m1 |-> {}, m2 |-> {}]
+/\ client = [m1 |-> "up", m2 |-> "up"]
+/\ segDur = {}
+/\ recovered = [m |-> "none", err |-> FALSE]
+
+State 3: <Put("m1","c1") line 58, col 3 to line 69, col 98 of module CkptStore>
+/\ epoch = 0
+/\ index = {}
+/\ walVol = <<>>
+/\ pendIdx = {}
+/\ req = [m1 |-> {"c1", "c2"}, m2 |-> {}]
+/\ segVol = {"c1", "c2"}
+/\ gc = [active |-> FALSE, start |-> 0, live |-> {}, victims |-> {}]
+/\ walDur = <<>>
+/\ crashes = 0
+/\ gcs = 0
+/\ idxEpoch = [c1 |-> 0, c2 |-> 0, c3 |-> 0]
+/\ up = TRUE
+/\ acked = [m1 |-> {}, m2 |-> {}]
+/\ client = [m1 |-> "up", m2 |-> "up"]
+/\ segDur = {}
+/\ recovered = [m |-> "none", err |-> FALSE]
+
+State 4: <Fsync line 73, col 3 to line 75, col 110 of module CkptStore>
+/\ epoch = 0
+/\ index = {}
+/\ walVol = <<>>
+/\ pendIdx = {"c1", "c2"}
+/\ req = [m1 |-> {"c1", "c2"}, m2 |-> {}]
+/\ segVol = {}
+/\ gc = [active |-> FALSE, start |-> 0, live |-> {}, victims |-> {}]
+/\ walDur = <<>>
+/\ crashes = 0
+/\ gcs = 0
+/\ idxEpoch = [c1 |-> 0, c2 |-> 0, c3 |-> 0]
+/\ up = TRUE
+/\ acked = [m1 |-> {}, m2 |-> {}]
+/\ client = [m1 |-> "up", m2 |-> "up"]
+/\ segDur = {"c1", "c2"}
+/\ recovered = [m |-> "none", err |-> FALSE]
+
+State 5: <IndexInsert("c1") line 79, col 3 to line 82, col 109 of module CkptStore>
+/\ epoch = 0
+/\ index = {"c1"}
+/\ walVol = <<>>
+/\ pendIdx = {"c2"}
+/\ req = [m1 |-> {"c1", "c2"}, m2 |-> {}]
+/\ segVol = {}
+/\ gc = [active |-> FALSE, start |-> 0, live |-> {}, victims |-> {}]
+/\ walDur = <<>>
+/\ crashes = 0
+/\ gcs = 0
+/\ idxEpoch = [c1 |-> 0, c2 |-> 0, c3 |-> 0]
+/\ up = TRUE
+/\ acked = [m1 |-> {}, m2 |-> {}]
+/\ client = [m1 |-> "up", m2 |-> "up"]
+/\ segDur = {"c1", "c2"}
+/\ recovered = [m |-> "none", err |-> FALSE]
+
+State 6: <Ack("m1","c1") line 86, col 3 to line 89, col 46 of module CkptStore>
+/\ epoch = 0
+/\ index = {"c1"}
+/\ walVol = <<>>
+/\ pendIdx = {"c2"}
+/\ req = [m1 |-> {"c1", "c2"}, m2 |-> {}]
+/\ segVol = {}
+/\ gc = [active |-> FALSE, start |-> 0, live |-> {}, victims |-> {}]
+/\ walDur = <<>>
+/\ crashes = 0
+/\ gcs = 0
+/\ idxEpoch = [c1 |-> 0, c2 |-> 0, c3 |-> 0]
+/\ up = TRUE
+/\ acked = [m1 |-> {"c1"}, m2 |-> {}]
+/\ client = [m1 |-> "up", m2 |-> "up"]
+/\ segDur = {"c1", "c2"}
+/\ recovered = [m |-> "none", err |-> FALSE]
+
+State 7: <IndexInsert("c2") line 79, col 3 to line 82, col 109 of module CkptStore>
+/\ epoch = 0
+/\ index = {"c1", "c2"}
+/\ walVol = <<>>
+/\ pendIdx = {}
+/\ req = [m1 |-> {"c1", "c2"}, m2 |-> {}]
+/\ segVol = {}
+/\ gc = [active |-> FALSE, start |-> 0, live |-> {}, victims |-> {}]
+/\ walDur = <<>>
+/\ crashes = 0
+/\ gcs = 0
+/\ idxEpoch = [c1 |-> 0, c2 |-> 0, c3 |-> 0]
+/\ up = TRUE
+/\ acked = [m1 |-> {"c1"}, m2 |-> {}]
+/\ client = [m1 |-> "up", m2 |-> "up"]
+/\ segDur = {"c1", "c2"}
+/\ recovered = [m |-> "none", err |-> FALSE]
+
+State 8: <Ack("m1","c2") line 86, col 3 to line 89, col 46 of module CkptStore>
+/\ epoch = 0
+/\ index = {"c1", "c2"}
+/\ walVol = <<>>
+/\ pendIdx = {}
+/\ req = [m1 |-> {"c1", "c2"}, m2 |-> {}]
+/\ segVol = {}
+/\ gc = [active |-> FALSE, start |-> 0, live |-> {}, victims |-> {}]
+/\ walDur = <<>>
+/\ crashes = 0
+/\ gcs = 0
+/\ idxEpoch = [c1 |-> 0, c2 |-> 0, c3 |-> 0]
+/\ up = TRUE
+/\ acked = [m1 |-> {"c1", "c2"}, m2 |-> {}]
+/\ client = [m1 |-> "up", m2 |-> "up"]
+/\ segDur = {"c1", "c2"}
+/\ recovered = [m |-> "none", err |-> FALSE]
+
+State 9: <GcMark line 130, col 3 to line 135, col 41 of module CkptStore>
+/\ epoch = 1
+/\ index = {"c1", "c2"}
+/\ walVol = <<>>
+/\ pendIdx = {}
+/\ req = [m1 |-> {"c1", "c2"}, m2 |-> {}]
+/\ segVol = {}
+/\ gc = [active |-> TRUE, start |-> 1, live |-> {}, victims |-> {"c1", "c2"}]
+/\ walDur = <<>>
+/\ crashes = 0
+/\ gcs = 1
+/\ idxEpoch = [c1 |-> 0, c2 |-> 0, c3 |-> 0]
+/\ up = TRUE
+/\ acked = [m1 |-> {"c1", "c2"}, m2 |-> {}]
+/\ client = [m1 |-> "up", m2 |-> "up"]
+/\ segDur = {"c1", "c2"}
+/\ recovered = [m |-> "none", err |-> FALSE]
+
+State 10: <Commit("m1") line 102, col 3 to line 112, col 97 of module CkptStore>
+/\ epoch = 1
+/\ index = {"c1", "c2"}
+/\ walVol = <<"m1">>
+/\ pendIdx = {}
+/\ req = [m1 |-> {"c1", "c2"}, m2 |-> {}]
+/\ segVol = {}
+/\ gc = [active |-> TRUE, start |-> 1, live |-> {}, victims |-> {"c1", "c2"}]
+/\ walDur = <<>>
+/\ crashes = 0
+/\ gcs = 1
+/\ idxEpoch = [c1 |-> 1, c2 |-> 1, c3 |-> 0]
+/\ up = TRUE
+/\ acked = [m1 |-> {"c1", "c2"}, m2 |-> {}]
+/\ client = [m1 |-> "wait", m2 |-> "up"]
+/\ segDur = {"c1", "c2"}
+/\ recovered = [m |-> "none", err |-> FALSE]
+
+State 11: <GcSweep("c1") line 141, col 3 to line 150, col 32 of module CkptStore>
+/\ epoch = 1
+/\ index = {"c2"}
+/\ walVol = <<"m1">>
+/\ pendIdx = {}
+/\ req = [m1 |-> {"c1", "c2"}, m2 |-> {}]
+/\ segVol = {}
+/\ gc = [active |-> TRUE, start |-> 1, live |-> {}, victims |-> {"c2"}]
+/\ walDur = <<>>
+/\ crashes = 0
+/\ gcs = 1
+/\ idxEpoch = [c1 |-> 1, c2 |-> 1, c3 |-> 0]
+/\ up = TRUE
+/\ acked = [m1 |-> {"c1", "c2"}, m2 |-> {}]
+/\ client = [m1 |-> "wait", m2 |-> "up"]
+/\ segDur = {"c2"}
+/\ recovered = [m |-> "none", err |-> FALSE]
+
+30804 states generated, 9611 distinct states found, 3824 states left on queue.
+The depth of the complete state graph search is 11.
+Finished in 02s at (2026-10-24 13:11:36)
+Trace exploration spec path: ./MC_TTrace_1792861894.tla

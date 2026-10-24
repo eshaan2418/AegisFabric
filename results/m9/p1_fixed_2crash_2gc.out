@@ -1,0 +1,37 @@
+TLC2 Version 2026.10.24.013619 (rev: 2ef2af8)
+Running breadth-first search Model-Checking with fp 5 and seed -1780742621181179288 with 4 workers on 18 cores with 10923MB heap and 64MB offheap memory [pid: 60117] (Mac OS X 27.0.1 aarch64, Homebrew 27.0.1.0.2 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/ckpt/MC.tla
+Parsing file /Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/ckpt/CkptStore.tla
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-7417060054577966416/_TLCTrace.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-7417060054577966416/Naturals.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-7417060054577966416/Sequences.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-7417060054577966416/FiniteSets.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-7417060054577966416/TLC.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-7417060054577966416/TLCExt.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-7417060054577966416/Integers.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CkptStore
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module MC
+Linting of module CkptStore
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module MC
+Starting... (2026-10-24 13:11:11)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-10-24 13:11:12.
+Progress(16) at 2026-10-24 13:11:15: 646,855 states generated (646,855 s/min), 163,952 distinct states found (163,952 ds/min), 47,431 states left on queue.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.5E-7
+  based on the actual fingerprints:  val = 3.3E-8
+4266321 states generated, 827630 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 46.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 11 and the 95th percentile is 3).
+Finished in 17s at (2026-10-24 13:11:28)

@@ -1,0 +1,130 @@
+TLC2 Version 2026.10.24.013619 (rev: 2ef2af8)
+Running breadth-first search Model-Checking with fp 8 and seed 3072115763264918068 with 4 workers on 18 cores with 10923MB heap and 64MB offheap memory [pid: 60891] (Mac OS X 27.0.1 aarch64, Homebrew 27.0.1.0.2 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/rotation/MC.tla
+Parsing file /Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/rotation/CertRotation.tla
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-11326833391077427468/_TLCTrace.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-11326833391077427468/Integers.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-11326833391077427468/FiniteSets.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-11326833391077427468/Naturals.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-11326833391077427468/Sequences.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-11326833391077427468/TLC.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /private/var/folders/cy/q3bj1h6x6_sbt_vkq2pc7psr0000gn/T/tlc-11326833391077427468/TLCExt.tla (jar:file:/Users/eshaan.kapooswalla/AegisFabric/.claude/worktrees/agent-a2e9a2f3e09bc2e87/formal/tools/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CertRotation
+Semantic processing of module TLC
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module MC
+Linting of module CertRotation
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module MC
+Starting... (2026-10-24 13:12:36)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Finished computing initial states: 81 distinct states generated at 2026-10-24 13:12:36.
+Error: Invariant R1 is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ now = 0
+/\ bundle = [v1 |-> {"ca1"}, v2 |-> {"ca1"}]
+/\ fails = 0
+/\ rot = "pre"
+/\ rotAt = 0
+/\ ca1MaxNa = 7
+/\ retryAt = 0
+/\ held = {[nb |-> -5, ca |-> "ca1", na |-> 7]}
+/\ off = [v1 |-> -1, v2 |-> -1, ca |-> -1, w |-> 1]
+/\ pend = [active |-> FALSE, at |-> 0, fail |-> FALSE]
+/\ issuer = "ca1"
+
+State 2: <Publish line 74, col 3 to line 76, col 81 of module CertRotation>
+/\ now = 0
+/\ bundle = [v1 |-> {"ca1"}, v2 |-> {"ca1"}]
+/\ fails = 0
+/\ rot = "published"
+/\ rotAt = 0
+/\ ca1MaxNa = 7
+/\ retryAt = 0
+/\ held = {[nb |-> -5, ca |-> "ca1", na |-> 7]}
+/\ off = [v1 |-> -1, v2 |-> -1, ca |-> -1, w |-> 1]
+/\ pend = [active |-> FALSE, at |-> 0, fail |-> FALSE]
+/\ issuer = "ca1"
+
+State 3: <AddToBundle("v1") line 79, col 3 to line 81, col 85 of module CertRotation>
+/\ now = 0
+/\ bundle = [v1 |-> {"ca1", "ca2"}, v2 |-> {"ca1"}]
+/\ fails = 0
+/\ rot = "published"
+/\ rotAt = 0
+/\ ca1MaxNa = 7
+/\ retryAt = 0
+/\ held = {[nb |-> -5, ca |-> "ca1", na |-> 7]}
+/\ off = [v1 |-> -1, v2 |-> -1, ca |-> -1, w |-> 1]
+/\ pend = [active |-> FALSE, at |-> 0, fail |-> FALSE]
+/\ issuer = "ca1"
+
+State 4: <AddToBundle("v2") line 79, col 3 to line 81, col 85 of module CertRotation>
+/\ now = 0
+/\ bundle = [v1 |-> {"ca1", "ca2"}, v2 |-> {"ca1", "ca2"}]
+/\ fails = 0
+/\ rot = "published"
+/\ rotAt = 0
+/\ ca1MaxNa = 7
+/\ retryAt = 0
+/\ held = {[nb |-> -5, ca |-> "ca1", na |-> 7]}
+/\ off = [v1 |-> -1, v2 |-> -1, ca |-> -1, w |-> 1]
+/\ pend = [active |-> FALSE, at |-> 0, fail |-> FALSE]
+/\ issuer = "ca1"
+
+State 5: <Switch line 84, col 3 to line 87, col 80 of module CertRotation>
+/\ now = 0
+/\ bundle = [v1 |-> {"ca1", "ca2"}, v2 |-> {"ca1", "ca2"}]
+/\ fails = 0
+/\ rot = "switched"
+/\ rotAt = 0
+/\ ca1MaxNa = 7
+/\ retryAt = 0
+/\ held = {[nb |-> -5, ca |-> "ca1", na |-> 7]}
+/\ off = [v1 |-> -1, v2 |-> -1, ca |-> -1, w |-> 1]
+/\ pend = [active |-> FALSE, at |-> 0, fail |-> FALSE]
+/\ issuer = "ca2"
+
+State 6: <StartRemove line 90, col 3 to line 93, col 81 of module CertRotation>
+/\ now = 0
+/\ bundle = [v1 |-> {"ca1", "ca2"}, v2 |-> {"ca1", "ca2"}]
+/\ fails = 0
+/\ rot = "removing"
+/\ rotAt = 0
+/\ ca1MaxNa = 7
+/\ retryAt = 0
+/\ held = {[nb |-> -5, ca |-> "ca1", na |-> 7]}
+/\ off = [v1 |-> -1, v2 |-> -1, ca |-> -1, w |-> 1]
+/\ pend = [active |-> FALSE, at |-> 0, fail |-> FALSE]
+/\ issuer = "ca2"
+
+State 7: <RemoveFromBundle("v1") line 96, col 3 to line 98, col 85 of module CertRotation>
+/\ now = 0
+/\ bundle = [v1 |-> {"ca2"}, v2 |-> {"ca1", "ca2"}]
+/\ fails = 0
+/\ rot = "removing"
+/\ rotAt = 0
+/\ ca1MaxNa = 7
+/\ retryAt = 0
+/\ held = {[nb |-> -5, ca |-> "ca1", na |-> 7]}
+/\ off = [v1 |-> -1, v2 |-> -1, ca |-> -1, w |-> 1]
+/\ pend = [active |-> FALSE, at |-> 0, fail |-> FALSE]
+/\ issuer = "ca2"
+
+6572 states generated, 4482 distinct states found, 1741 states left on queue.
+The depth of the complete state graph search is 7.
+Finished in 00s at (2026-10-24 13:12:36)
+Trace exploration spec path: ./MC_TTrace_1792861955.tla
