@@ -8,6 +8,12 @@
 
 SHELL := /bin/bash
 export PATH := $(HOME)/.cargo/bin:/opt/homebrew/opt/openjdk/bin:$(PATH)
+# librocksdb-sys (ckpt/) runs bindgen, which needs libclang; macOS keeps it off the default dyld path.
+# DYLD_* is stripped by SIP when make spawns /bin/bash, so it is set inline on the cargo command.
+ifeq ($(shell uname -s),Darwin)
+CLANG_LIB ?= /Library/Developer/CommandLineTools/usr/lib
+CARGO_ENV := LIBCLANG_PATH=$(CLANG_LIB) DYLD_FALLBACK_LIBRARY_PATH=$(CLANG_LIB)
+endif
 UV ?= uv
 PY := $(UV) run python
 LAB_IMAGE ?= aegis-lab:latest
@@ -34,16 +40,16 @@ data:
 lint:
 	$(UV) run ruff check .
 	$(UV) run ruff format --check .
-	@if [ -f ckpt/Cargo.toml ]; then cd ckpt && cargo fmt --check && cargo clippy -q --all-targets -- -D warnings; fi
+	@if [ -f ckpt/Cargo.toml ]; then cd ckpt && cargo fmt --check && $(CARGO_ENV) cargo clippy -q --all-targets -- -D warnings; fi
 	$(PY) -m bench.secret_scan
 
-test: test-py test-rust
+test: test-rust test-py
 
 test-py:
 	$(UV) run pytest -q
 
 test-rust:
-	@if [ -f ckpt/Cargo.toml ]; then cd ckpt && cargo test -q --release; fi
+	@if [ -f ckpt/Cargo.toml ]; then cd ckpt && $(CARGO_ENV) cargo test -q --release; fi
 
 test-lab:
 	$(LAB_RUN) bash -lc 'pytest -q -m "netlab" -o addopts="" tests'
