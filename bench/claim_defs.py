@@ -270,3 +270,44 @@ def _m3_crashes(d):
 @claim("mThreeTimedOut", "m3/summary.json", "{:d}")
 def _m3_to(d):
     return sum(r["timed_out"] for sc in d["table"].values() for r in sc.values())
+
+
+# --- M3 ablations (joint vs joint-without-X; 3 seeds; family "ablations") ------------------------------
+ABL = {
+    "joint-no-util": "NoUtil",
+    "joint-no-speed": "NoSpeed",
+    "joint-no-rtt": "NoRtt",
+    "joint-no-coll": "NoColl",
+    "joint-no-ckpt": "NoCkpt",
+    "joint-nomig": "NoMig",
+}
+ABL_SCEN = {
+    "steady": "Steady",
+    "bw_collapse": "BwCollapse",
+    "latency_spike": "LatSpike",
+    "site_degradation": "SiteDeg",
+}
+for _v, _V in ABL.items():
+    for _sc, _S in ABL_SCEN.items():
+        claim(f"abl{_V}{_S}Total", "m3/summary.json", "{:.0f}")(_row(_sc, _v, "total_s"))
+        claim(
+            f"abl{_V}{_S}Impr", "m3/summary.json", "{:.0f}", "% by which full joint beats the ablated variant"
+        )(
+            (
+                lambda s, v: (
+                    lambda d: 100 * d["tests"]["ablations"]["total_s"][f"{s}|{v}"]["rel_improvement_paired"]
+                )
+            )(_sc, _v)
+        )
+        claim(f"abl{_V}{_S}Holm", "m3/summary.json", "{:.2g}")(
+            (lambda s, v: lambda d: d["tests"]["ablations"]["total_s"][f"{s}|{v}"]["p_holm"])(_sc, _v)
+        )
+    claim(f"abl{_V}Pool", "m3/summary.json", "{:.0f}")(
+        (lambda v: lambda d: 100 * d["pooled"][v]["total_s"]["mean_rel_improvement"])(_v)
+    )
+    claim(f"abl{_V}PoolLo", "m3/summary.json", "{:.0f}")(
+        (lambda v: lambda d: 100 * d["pooled"][v]["total_s"]["ci95_lo"])(_v)
+    )
+    claim(f"abl{_V}PoolHi", "m3/summary.json", "{:.0f}")(
+        (lambda v: lambda d: 100 * d["pooled"][v]["total_s"]["ci95_hi"])(_v)
+    )
