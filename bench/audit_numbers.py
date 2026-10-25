@@ -28,7 +28,7 @@ SKIP_CONTEXT = re.compile(
     r"(M\d+|P\d|I\d|R\d|D-\d+|B-\d+|§|Fig\.?|Figure|Table|Section|Sec\.|seed\s*\d|v\d|\d{4}-\d{2}-\d{2}|"
     r"TLS\s*1\.3|AES-256|SHA-?256|P-256|Ed25519|BLAKE3|X\.509|IPv4|sm_?80|fp(16|32|64)|bf16|"
     r"\\cite\{[^}]*|\\ref\{[^}]*|\\label\{[^}]*|\\cfg\{[^}]*\}|\\texttt\{[^}]*\}|https?://\S+|`[^`]*`|"
-    r"\[cfg:[^\]]*\])"
+    r"\[cfg:[^\]]*\]|95\s*\\?%\s*(CI|confidence|bootstrap)|95% CI|mean ± 95)"
 )
 
 

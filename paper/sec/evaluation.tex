@@ -1,0 +1,40 @@
+\section{Evaluation}
+\label{sec:eval}
+
+\paragraph{Workload.}
+All runs train the \texttt{small} TinyVLM preset with \cfg{6} ranks, a per-rank batch of \cfg{16} and
+\cfg{2} threads per rank. Every lab campaign ran from a frozen checkout at a single commit
+(\texttt{bench/lab\_campaigns.sh}). Means are reported with 95\% confidence half-widths over seeds.
+
+\subsection{Baselines: parallelism over the WAN (M1)}
+\label{sec:eval-m1}
+Table~\ref{tab:m1} compares DDP, FSDP2 and HSDP (shard within a site, replicate across sites) on a single
+namespace (``loopback'', no WAN) and with two ranks per site on the nominal emulated WAN under static
+routing, over \CmOneSeeds{} seeds. Every run reached the target evaluation loss. On loopback the three modes
+are within noise of each other and collectives are a small share of the step. On the WAN, a DDP step takes
+\CmOneWanOverLoDdp$\times$ as long as on loopback, and collectives account for \CmOneWanDdpColl\% of it, so
+this testbed sits in the communication-bound regime the study needs. FSDP2 is the slowest over the WAN,
+because its per-layer all-gathers and reduce-scatters all cross sites. HSDP keeps sharding traffic inside
+a site and matches DDP. We use DDP for the controller study.
+
+\begin{table}[t]
+\centering\small
+\caption{M1 baselines (\CmOneSeeds{} seeds; mean $\pm$ 95\% CI). Time to target is wall-clock time until the
+evaluation loss first reaches the target. MFU is relative to a measured per-rank CPU matmul peak.}
+\label{tab:m1}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrrr}
+\toprule
+net & mode & step (s) & to target (s) & coll.\ (\%) & MFU (\%) \\
+\midrule
+loopback & DDP  & \CmOneLoDdpStep{}$\pm$\CmOneLoDdpStepCi & \CmOneLoDdpTtt{}$\pm$\CmOneLoDdpTttCi & \CmOneLoDdpColl & \CmOneLoDdpMfu \\
+loopback & FSDP2 & \CmOneLoFsdpStep{}$\pm$\CmOneLoFsdpStepCi & \CmOneLoFsdpTtt{}$\pm$\CmOneLoFsdpTttCi & \CmOneLoFsdpColl & \CmOneLoFsdpMfu \\
+loopback & HSDP & \CmOneLoHsdpStep{}$\pm$\CmOneLoHsdpStepCi & \CmOneLoHsdpTtt{}$\pm$\CmOneLoHsdpTttCi & \CmOneLoHsdpColl & \CmOneLoHsdpMfu \\
+WAN & DDP  & \CmOneWanDdpStep{}$\pm$\CmOneWanDdpStepCi & \CmOneWanDdpTtt{}$\pm$\CmOneWanDdpTttCi & \CmOneWanDdpColl & \CmOneWanDdpMfu \\
+WAN & FSDP2 & \CmOneWanFsdpStep{}$\pm$\CmOneWanFsdpStepCi & \CmOneWanFsdpTtt{}$\pm$\CmOneWanFsdpTttCi & \CmOneWanFsdpColl & \CmOneWanFsdpMfu \\
+WAN & HSDP & \CmOneWanHsdpStep{}$\pm$\CmOneWanHsdpStepCi & \CmOneWanHsdpTtt{}$\pm$\CmOneWanHsdpTttCi & \CmOneWanHsdpColl & \CmOneWanHsdpMfu \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% M2, M3, M5-rotation and M10 subsections are added when their campaigns finish.
