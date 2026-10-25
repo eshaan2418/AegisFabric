@@ -50,6 +50,8 @@ PROFILES = {
         rate_kbps=1200,
         rate_schedule=[(8.0, 250.0), (16.0, 1200.0)],
     ),
+    # high delay variation (normal, sd 40 ms; can reorder) with 1% random loss
+    "jitter": LinkProfile("jitter", delay_ms=50, jitter_ms=40, ge_loss_good=0.01, rate_kbps=1500),
 }
 REVERSE = LinkProfile("reverse", delay_ms=30, jitter_ms=2)
 

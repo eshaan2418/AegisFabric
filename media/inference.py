@@ -7,11 +7,11 @@
 * STT: whisper-tiny (openai/whisper-tiny via `transformers`) when available, otherwise
   `SimulatedStt`, which returns the oracle text after a latency calibrated as a real-time factor.
   Results record which one ran.
-* Scheduler: one worker thread is the shared "accelerator" that runs vision and STT/answer jobs.
-  The media path only ever calls non-blocking `submit_*`. Policies:
-    - "fifo":    bounded FIFO (cap 8); when full, the new frame is dropped. STT jobs queue FIFO.
-    - "latest":  one vision slot, latest wins (older pending frame dropped); STT/answer jobs preempt.
-    - "blocking": ablation, a bounded queue whose `put` blocks the caller (media stalls under overload).
+* Scheduler: one asyncio task is the shared single-server "accelerator" for vision and STT jobs
+  (non-preemptive: a running job finishes). Policies:
+    - "fifo":    bounded FIFO (cap 8), and a new frame is dropped when full. STT jobs queue FIFO behind frames.
+    - "latest":  one pending vision slot, latest wins (older pending frame dropped), and STT jobs jump the queue.
+    - "blocking": ablation. The media path awaits queue space (≤2 pending frames), so media stalls under overload.
 """
 
 from __future__ import annotations

@@ -35,6 +35,8 @@ CONDITIONS = [
     ("lossy-joint", "lossy", "joint", 50.0),
     ("bwdrop-independent", "bwdrop", "independent", 50.0),
     ("bwdrop-joint", "bwdrop", "joint", 50.0),
+    ("jitter-independent", "jitter", "independent", 50.0),
+    ("jitter-joint", "jitter", "joint", 50.0),
     ("overload-independent", "clean", "independent", 150.0),
     ("overload-joint", "clean", "joint", 150.0),
     ("overload-blocking", "clean", "blocking", 150.0),
@@ -113,7 +115,7 @@ def aggregate() -> dict:
         agg["conditions"][name]["n"] = len(rs)
         agg["conditions"][name]["stt"] = sorted({r["stt"] for r in rs})
     pvals = {}
-    for grp in ("clean", "lossy", "bwdrop", "overload"):
+    for grp in ("clean", "lossy", "bwdrop", "jitter", "overload"):
         a = [r for r in rows if r["condition"] == f"{grp}-joint"]
         b = [r for r in rows if r["condition"] == f"{grp}-independent"]
         if len(a) >= 2 and len(b) >= 2:
