@@ -1,12 +1,14 @@
-"""Audit: every number in the write-up documents must be backed by a value in results/.
+"""Audit: every number in the write-up documents must be backed by a registered claim.
 
-Scans README.md, RESUME_BULLETS.md, FINAL_REVIEW.md and paper/*.tex. For each numeric token, it looks for a
-value anywhere in results/**/*.json (data *and* recorded config/meta) or results/**/*.md tables that matches
-at the precision shown (e.g. "12.3" matches 12.27 or 12.34; "31%" matches 0.31 or 31.x). Numbers that are
-structural (years, section/figure/milestone indices, citation keys, versions, list ordinals) are skipped by
-pattern; anything else unmatched is reported. Exit 1 if any unbacked number remains.
+Scans README.md, RESUME_BULLETS.md, FINAL_REVIEW.md and paper/*.tex. Each numeric token must match, at the
+precision shown, the value of some claim in results/claims.json (`python -m bench.claims`). Each claim is
+computed from a named result file, so a match traces the number to the run that produced it. "12.3" matches
+12.27 or 12.34; "31%" matches 0.31 or 31.x. Structural numbers (years, section/figure/milestone indices,
+citation keys, versions, list ordinals) are skipped by pattern. Exit 1 if any unbacked number remains.
+`--loose` falls back to matching any value anywhere in results/. It is weaker (coincidental matches), so it
+is only a diagnostic.
 
-    python -m bench.audit_numbers [--verbose]
+    python -m bench.audit_numbers [--verbose] [--loose]
 """
 
 from __future__ import annotations
@@ -27,6 +29,20 @@ SKIP_CONTEXT = re.compile(
     r"TLS\s*1\.3|AES-256|SHA-?256|P-256|Ed25519|BLAKE3|X\.509|IPv4|sm_?80|fp(16|32|64)|bf16|"
     r"\\cite\{[^}]*|\\ref\{[^}]*|\\label\{[^}]*|https?://\S+|`[^`]*`)"
 )
+
+
+def claim_values() -> list[float]:
+    p = REPO_ROOT / "results" / "claims.json"
+    if not p.exists():
+        raise SystemExit("results/claims.json missing: run `python -m bench.claims` first")
+    vals = []
+    for c in json.loads(p.read_text())["data"]["claims"]:
+        for x in (c["value"], c["text"]):
+            if isinstance(x, (int, float)) and not isinstance(x, bool):
+                vals.append(float(x))
+            elif isinstance(x, str):
+                vals += [float(m) for m in re.findall(r"[-+]?\d+(?:\.\d+)?", x.replace(",", ""))]
+    return vals
 
 
 def collect_values() -> list[float]:
@@ -81,8 +97,8 @@ def strip_skips(line: str) -> str:
     return SKIP_CONTEXT.sub(" ", line)
 
 
-def audit(paths: list[Path], verbose: bool = False) -> list[str]:
-    vals = sorted(collect_values())
+def audit(paths: list[Path], verbose: bool = False, loose: bool = False) -> list[str]:
+    vals = sorted(collect_values() if loose else claim_values())
     bad = []
     for p in paths:
         if not p.exists():
@@ -112,9 +128,12 @@ def audit(paths: list[Path], verbose: bool = False) -> list[str]:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--verbose", action="store_true")
+    ap.add_argument("--loose", action="store_true")
     a = ap.parse_args()
-    paths = [REPO_ROOT / d for d in DOCS] + sorted((REPO_ROOT / "paper").glob("*.tex"))
-    bad = audit(paths, a.verbose)
+    paths = [REPO_ROOT / d for d in DOCS] + sorted(
+        p for p in (REPO_ROOT / "paper").glob("*.tex") if p.name != "numbers.tex"
+    )
+    bad = audit(paths, a.verbose, a.loose)
     if bad:
         print(f"audit_numbers: {len(bad)} unbacked number(s):")
         print("\n".join(bad))
