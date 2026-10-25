@@ -1,0 +1,246 @@
+\section{Supporting subsystems and extensions}
+\label{sec:ext}
+
+These subsystems were evaluated separately from the joint-control study, on the same shared, GPU-less
+host (B-001, B-005).
+
+\subsection{Crash-consistent checkpoint engine}
+\label{sec:ext-ckpt}
+
+\texttt{aegis-ckpt} is a Rust storage server implementing P1 (\texttt{docs/protocols.md}): log-structured
+segments whose records carry a BLAKE3 payload digest and a CRC32C header check, a RocksDB chunk index
+written only after the segment fsync, a checksummed manifest WAL with group commit (a commit is acknowledged
+only once durable), and mark/copy/sweep GC with epochs. Writes use io\_uring or \texttt{pwrite}. The Python
+client snapshots tensors (the training stall), flushes in the background, chunks each tensor at a fixed
+size (layouts never shift between steps, so no content-defined chunking; D-016), uploads only missing
+chunks and verifies every chunk on restore.
+
+\paragraph{Crash consistency.} A trial is \emph{ok} if the recovered latest checkpoint is at least the last
+acknowledged one and every retained checkpoint restores bit-exactly, \emph{detected} if recovery or restore
+raises an integrity, rollback or missing-chunk error, and \emph{undetected} otherwise.
+(i)~\CckptKillTrials{} \texttt{kill -9} trials of the server at random times during save or GC
+(\CckptKillSaves{} saves, \CckptKillGcs{} GC cycles, io\_uring and pwrite alternating): all
+\CckptKillOk{} ok. The latest checkpoint was the last acknowledged one in \CckptKillLatestAcked{} trials
+and a durable but unacknowledged newer one in \CckptKillLatestUnacked.
+(ii)~\CckptTornTrials{} truncations of a random store file at a random offset: \CckptTornDetected{}
+detected, \CckptTornOk{} ok, \CckptTornUndetected{} undetected. Every WAL and segment truncation was
+detected. (a cut WAL loses acknowledged commits, which restore reports via a trusted sequence
+high-water mark); index damage was repaired.
+(iii)~\CckptFlipTrials{} trials flipping \cfg{1}--\cfg{3} random bits: \CckptFlipDetected{} detected,
+\CckptFlipOk{} ok, \CckptFlipUndetected{} undetected; the \CckptFlipSegmentOk{} undetected segment flips
+hit bytes that no retained checkpoint references.
+
+\paragraph{Performance.} Table~\ref{tab:ckpt} compares the engine with \texttt{torch.save} and PyTorch
+DCP on XFS for a small TinyVLM with AdamW state (\CckptStateFullMB\,MB; \CckptStateFrozenMB\,MB with frozen
+embeddings and lower blocks). The async engine cuts the stall to the snapshot copy; a synchronous engine
+save stalls \CckptSyncRatioMin--\CckptSyncRatioMax$\times$ longer. The engine is \emph{not} faster to
+durability or recovery at this size: client-side hashing, encryption and a TCP hop cost more than a
+sequential write of a few tens of MB, and training steps run \CckptOverlapMin--\CckptOverlapMax$\times$
+slower during the background flush, which competes for the same \cfg{4} CPUs. On ext4 the stall CIs of engine and
+\texttt{torch.save} overlap. Across
+successive checkpoints of a larger preset (\CckptDedupStateMB\,MB), the logical/uploaded ratio is
+\CckptDedupFull{} for full fine-tuning (AdamW rewrites every parameter and moment), \CckptDedupFrozen{}
+with the lower half frozen and \CckptDedupAdapter{} when only the last block trains
+(\CckptNewFracAdapter\% new bytes per checkpoint), independent of chunk size from \cfg{64}\,KiB to
+\cfg{4}\,MiB.
+
+\begin{table}[t]
+\centering\footnotesize\setlength{\tabcolsep}{3pt}
+\caption{Checkpointing on XFS (mean of \CckptBenchN{} trials; seconds unless stated). ur/pw: engine,
+async, io\_uring/pwrite; sync: io\_uring, synchronous. Engine columns use P2 encryption.}
+\label{tab:ckpt}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+ & torch.save & DCP & ur & pw & sync \\
+\midrule
+stall, full & \CckptStallXfsFullTorch & \CckptStallXfsFullDcp & \CckptStallXfsFullUring & \CckptStallXfsFullPwrite & \CckptStallXfsFullSync \\
+stall, frozen & \CckptStallXfsFrozenTorch & \CckptStallXfsFrozenDcp & \CckptStallXfsFrozenUring & \CckptStallXfsFrozenPwrite & \CckptStallXfsFrozenSync \\
+durable, full & \CckptDurableXfsFullTorch & \CckptDurableXfsFullDcp & \CckptDurableXfsFullUring & \CckptDurableXfsFullPwrite & \CckptDurableXfsFullSync \\
+recovery, full & \CckptRecoveryXfsFullTorch & \CckptRecoveryXfsFullDcp & \CckptRecoveryXfsFullUring & \CckptRecoveryXfsFullPwrite & \CckptRecoveryXfsFullSync \\
+dev./logical, frozen & \CckptWampXfsFrozenTorch & \CckptWampXfsFrozenDcp & \CckptWampXfsFrozenUring & \CckptWampXfsFrozenPwrite & \CckptWampXfsFrozenSync \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Limits.} \texttt{kill -9} spares the page cache, no campaign models a disk that lies about
+fsync, and torn writes hit a quiescent store. The filesystems are loop-mounted images on the Docker Desktop
+VM disk (B-014). CIs are wide under shared load, ext4 and XFS ran at different loads, and at tens of MB
+fixed per-checkpoint costs dominate.
+
+\subsection{Encrypted checkpoints and certificate rotation}
+\label{sec:ext-sec}
+
+\paragraph{Envelope (P2).} Chunks are sealed with a per-job, per-epoch AES-256-GCM key wrapped by a
+key-encryption key; chunk ids are keyed BLAKE3, so dedup works without exposing plaintext hashes; manifests
+are Ed25519-signed and checked against a sequence high-water mark. On a \CenvStateMB\,MB checkpoint (\CenvTrials{} interleaved trials) a cold restore takes
+\CenvColdPtwo\,s with P2 against \CenvColdPlain\,s in plaintext (\CenvColdRatio$\times$; Welch
+$p=\CenvColdP$, Mann-Whitney $p=\CenvColdPmwu$). The difference, about \CenvColdAbs\,s, sits in the
+verify/decrypt phase (\CenvVerifyPlain\,s$\to$\CenvVerifyPtwo\,s, Welch $p=\CenvVerifyP$). Encryption adds
+\CenvSaveEncrypt\,s per save. The anti-rollback mark still lives in the client, not the controller as P2
+specifies.
+
+\paragraph{Rotation (P3).} Workload certificates (ECDSA P-256, SPIFFE URI SANs) have lifetime $T$ and a
+\texttt{notBefore} backdated by $2S$, where $S$ bounds clock skew. Workloads renew at the midpoint of the
+current certificate's validity and retry on failure. Servers reload credentials per handshake; clients open
+a new channel on renewal. CA rotation has two phases: the new CA reaches every verifier's bundle before it
+signs, and the old CA leaves only after all its certificates have expired (plus $S$). Both the backdating
+and this ordering came from TLC counterexamples (\S\ref{sec:ext-formal}).
+% TODO(main): rotation results
+Results of the live rotation campaign under injected skew are pending.
+
+\subsection{Formal checks}
+\label{sec:ext-formal}
+
+TLA+~\citep{tla} models of P1 and P3 are checked with TLC. Fixed protocols must pass; buggy variants and
+non-vacuity checks must produce counterexamples. All \CtlcModels{} models behave as expected
+(\CtlcPassing{} pass, \CtlcViolating{} counterexamples; longest run \CtlcMaxWall\,s).
+
+\paragraph{P1.} Uploads with dedup, group commit, COMMIT, WAL fsync, crashes anywhere (any subset of
+unsynced chunks and prefix of unsynced WAL survives), recovery and concurrent GC. Invariants: committed
+manifests reference only durable chunks (I1), recovery returns the latest commit (I2), GC never removes a
+chunk of a retained or accepted commit (I3), acknowledged commits survive, and liveness. Bounds: \cfg{3} chunks,
+\cfg{2} manifests sharing one, $K=1$, one crash and one GC (\CtlcPoneFixedStates{} distinct states), and
+two of each for safety (\CtlcPoneBigStates). As first written, GC snapshotted the live set at mark time.
+TLC found that a commit accepted but not yet fsync'd was swept (I3, \CtlcPoneAsWrittenTrace-state trace), and
+that a commit landing between mark and sweep lost its deduplicated chunk, so that after the WAL fsync a
+committed manifest referenced a deleted chunk (I1, \CtlcPoneAsWrittenCommittedTrace{} states). P1 and the
+engine now refresh the epoch of every referenced chunk at COMMIT under the WAL lock, treat unsynced WAL
+records as live, and re-check epochs at sweep time.
+
+\paragraph{P3.} Discrete time, per-node clock offsets in $[-S,S]$, renewal with failures and back-off, and a
+full CA rotation. R1: every verifier
+accepts the certificate the workload presents, in every state. Bounds: $T=\cfg{10}$, $S=1$, one failed
+issuance, a \cfg{26}-tick horizon (\CtlcPthreeFixedStates{} states). P3 originally set \texttt{notBefore}
+to $\textit{now}-S$; TLC found a \CtlcPthreeAsWrittenTrace-state trace in which a CA running $S$ fast
+issues a certificate that a verifier running $S$ slow rejects. Some held certificate is always still
+accepted, but workloads present their newest one. Backdating by $2S$ fixes it and tightens the
+precondition from retries $<T/2-S$ to $<T/2-2S$; with two failed issuances TLC finds a violation at
+$T=\cfg{10}$ and none at $T=\cfg{16}$. Seeded bugs (late renewal, early CA removal, signing before distribution;
+index-before-fsync and epoch-blind sweep in P1) each yield a counterexample.
+
+\paragraph{Limits.} Bounds are small; the models assume atomic chunk writes, perfect checksums, no clock
+drift and one workload; and TLC checks the models, not the code.
+
+\subsection{Real-time media}
+\label{sec:ext-media}
+
+A live assistant session streams a \cfg{256}$\times$\cfg{256} chart screen-share as AV1 over our own
+RTP/RTCP stack with Opus audio. Speech goes to
+whisper-tiny; vision is a stub (B-010). The
+\emph{independent} policy uses a GCC-style rate controller, fixed frame rate, fixed-rate frame sampling and
+a FIFO inference queue. \emph{Joint} also picks the encoder frame rate from an offline quality table, caps
+sampling at \cfg{0.8} of the measured inference rate, and uses a latest-wins vision slot that speech jobs
+can jump.
+
+\paragraph{Virtual time.} The campaign runs on a virtual clock (D-013): codec, STT and vision really
+execute and are charged their measured CPU time, and the network is a seeded in-process link model, not
+kernel netem. All latencies below are therefore \emph{model-derived}, not wall-clock; wall-clock timing
+was meaningless on this host (load average \CmediaLoadMin--\CmediaLoadMax{} on \cfg{18} cores).
+
+\paragraph{Results (mixed).} \CmediaTrials{} trials: \CmediaConditions{} conditions $\times$
+\CmediaSeeds{} seeds. When inference is the bottleneck (vision service time \cfg{150} instead of
+\cfg{50}\,ms), joint answers in \CmediaOverloadGaJoint\,s against \CmediaOverloadGaIndep\,s (Welch
+$p=\CmediaOverP$), and backpressure drops fall from \CmediaOverDropIndep{} to \CmediaOverDropJoint{} per
+session. After Holm correction over \CmediaTests{} tests only the drop count stays significant
+($p_\text{Holm}=\CmediaOverDropHolm$; latency $p_\text{Holm}=\CmediaOverHolm$), and part of the gain is the
+baseline's fixed sampling rate, which the stub vision cannot sustain. Under a bandwidth collapse joint
+answers in \CmediaBwdropGaJoint\,s against \CmediaBwdropGaIndep\,s ($p=\CmediaBwdropP$,
+$p_\text{Holm}=\CmediaBwdropHolm$); VMAF (\CmediaBwdropVmafJoint{} vs \CmediaBwdropVmafIndep) and stalls
+point the same way but are not significant. Under loss and jitter there is no significant difference, and
+in the clean profile joint is slightly slower (\CmediaCleanGaJoint{} vs \CmediaCleanGaIndep\,s). The
+encoder knob was inert: the quality table rates \cfg{30}\,fps highest at every bitrate (e.g.\ VMAF
+\CmediaCalFourThirty{} vs \CmediaCalFourTen{} at \cfg{10}\,fps, \cfg{400}\,kbps), so joint always chose it.
+Blocking the media path on inference (an ablation) is far worse: \CmediaOverloadStallBlock\,s of stalls
+per session and VMAF \CmediaOverloadVmafBlock. (A reordering jitter profile triggered a NACK storm under both
+policies; our receiver has no reordering tolerance, so we report order-preserving jitter.)
+
+\paragraph{WebRTC leg and limits.} aiortc lacks AV1 RTP (B-008), so a separate aiortc VP8 ingest leg with
+server-side AV1 transcode was measured on localhost, unimpaired, in wall time: \CrtcGsMean\,ms mean
+(\CrtcGsP\,ms p95) glass-to-server, \CrtcDelivery\% of frames delivered, \CrtcTranscode\,ms per frame to
+transcode. The network is emulated, vision is a stub, latencies are model outputs, and power is low.
+
+\subsection{Kernels}
+\label{sec:ext-kern}
+
+No NVIDIA GPU was available (B-001). We wrote a fused, flash-style Triton~\citep{triton,flashattn} kernel
+for variable-length prefix-LM attention over packed sequences (bidirectional image prefix, causal text, no
+cross-sequence attention) and a Metal port of the same algorithm. Against an fp64 reference with max-error
+tolerances $\CkernTolSingle$ (fp32) and $\CkernTolHalf$ (fp16), Triton passes
+\CkernTritonPass/\CkernTritonCases{} cases (worst errors $\CkernTritonErrSingle$, $\CkernTritonErrHalf$)
+and Metal \CkernMetalPass/\CkernMetalCases{} ($\CkernMetalErrSingle$, $\CkernMetalErrHalf$). The Triton runs
+use \texttt{TRITON\_INTERPRET=1}, a NumPy emulator: they check indexing and numerics, not GPU execution.
+
+On the Apple GPU at the model's shape (fp32), the Metal kernel takes \CkernMpsModelSingleMetal\,ms against
+\CkernMpsModelSingleSdpa\,ms for SDPA (overlapping CIs) and \CkernMpsModelSingleEager\,ms for padded eager
+attention. At a larger shape it is \CkernMpsLargeSingleMetalOverSdpa$\times$ (fp32) and
+\CkernMpsLargeHalfMetalOverSdpa$\times$ (fp16) \emph{slower} than SDPA, beating only eager; it uses no
+simdgroup matrix instructions, a likely but untested cause. For CUDA we compiled the Triton kernel offline for
+sm80 and inspected the PTX: with divisibility hints, fp16 code uses \CkernIrHalfHintsCpAsync{}
+\texttt{cp.async} copies (none without), \CkernIrHalfHintsLdmatrix{} \texttt{ldmatrix} (vs
+\CkernIrHalfPlainLdmatrix) and \CkernIrHalfHintsMma{} \texttt{mma} instructions. This shows the compiler
+emits asynchronous tensor-core code; it says nothing about speed on real hardware.
+
+\subsection{Post-training and privacy}
+\label{sec:ext-pt}
+
+All runs use synthetic data and our own char-level transformer (\CptParams{} parameters), as no usable
+pretrained model or GPU was available (B-016). The task is tool-using question answering over a hidden
+synthetic statement, scored by exact match. All methods start from the same per-seed warm start.
+
+\paragraph{Equal compute.} Each method gets the same analytic FLOP budget after the warm start
+(\cfg{2}$N$ per forward and \cfg{6}$N$ per trained token, sampling and scoring included). SFT trains on more
+gold demonstrations; DPO~\citep{dpo} is online with best-vs-worst pairs under a verifiable reward;
+GRPO~\citep{deepseekmath} uses the same reward; GRPO-RM uses a learned reward model. At $\CptLoBudget$
+FLOPs exact match is \CptLoSftEm{} (SFT), \CptLoDpoEm{} (DPO), \CptLoGrpoEm{} (GRPO) and \CptLoGrpoRmEm{}
+(GRPO-RM) against \CptLoWarmEm{} for the warm start; SFT is bimodal across seeds and not significant at
+$n=\CptSeeds$ (Welch $p\le\CptLoSftPmax$). At $\CptHiBudget$ FLOPs SFT reaches \CptHiSftEm{} while DPO
+(\CptHiDpoEm) and GRPO (\CptHiGrpoEm) stay at the warm-start level ($p<\CptHiSftPbound$). The RL methods
+raised tool-call validity (DPO \CptLoDpoTool{} vs \CptLoWarmTool) but not correctness; the warm start never
+solves three of six question types, so outcome rewards rarely see a success there (our interpretation). \emph{Reward hacking:} the reward model is accurate on held-out warm-start rollouts (AUC
+\CptRmAuc), yet under GRPO-RM the training reward rises from \CptRmRewFirstA{} to \CptRmRewLastA{} (seed~0)
+while exact match ends at \CptHiGrpoRmEm{} and tool-call validity collapses on three of five seeds
+(\CptRmToolA, \CptRmToolC, \CptRmToolE; plain GRPO \CptHiGrpoTool).
+
+\paragraph{DP-SGD and membership inference.} We fine-tune a public task model (exact match \CdpBaseEm) on
+a small private set plus random-digit canaries with Opacus DP-SGD~\citep{dpsgd,opacus}: example-level,
+$\delta=\cfg{10}^{\cfg{-5}}$, Poisson rate \CdpRate, \CdpSteps{} steps, RDP accountant with a PRV
+cross-check. Attacks: a loss threshold~\citep{shokri} and offline LiRA with shadows trained on
+same-format reference canaries (our first shadows saw no canaries and saturated LiRA at chance). Utility
+is flat (Table~\ref{tab:dp}): every $\varepsilon$ from \CdpOneRdp{} to \CdpTenTwentyFourRdp{} stays at the
+public model's level, while non-private fine-tuning reaches \CdpNoneEm{} and clipping without noise
+\CdpClipEm, so the noise, not the clipping, removes utility in this small-data, short-schedule regime.
+Leakage still rises with $\varepsilon$: large $\varepsilon$ buys leakage and no utility.
+
+\begin{table}[t]
+\centering\footnotesize\setlength{\tabcolsep}{3pt}
+\caption{DP-SGD: privacy spent, exact match and membership-inference AUC (mean of \CdpSeeds{} seeds;
+LiRA offline, pooled variance).}
+\label{tab:dp}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+$\varepsilon$ (RDP) & $\varepsilon$ (PRV) & $\sigma$ & exact & loss AUC & LiRA AUC \\
+\midrule
+$\infty$ (no DP) & -- & -- & \CdpNoneEm & \CdpNoneLossAuc & \CdpNoneLiraAuc \\
+$\infty$ (clip only) & -- & 0 & \CdpClipEm & \CdpClipLossAuc & \CdpClipLiraAuc \\
+\CdpTenTwentyFourRdp & \CdpTenTwentyFourPrv & \CdpTenTwentyFourSigma & \CdpTenTwentyFourEm & \CdpTenTwentyFourLossAuc & \CdpTenTwentyFourLiraAuc \\
+\CdpTwoFiftySixRdp & \CdpTwoFiftySixPrv & \CdpTwoFiftySixSigma & \CdpTwoFiftySixEm & \CdpTwoFiftySixLossAuc & \CdpTwoFiftySixLiraAuc \\
+\CdpSixtyFourRdp & \CdpSixtyFourPrv & \CdpSixtyFourSigma & \CdpSixtyFourEm & \CdpSixtyFourLossAuc & \CdpSixtyFourLiraAuc \\
+\CdpSixteenRdp & \CdpSixteenPrv & \CdpSixteenSigma & \CdpSixteenEm & \CdpSixteenLossAuc & \CdpSixteenLiraAuc \\
+\CdpFourRdp & \CdpFourPrv & \CdpFourSigma & \CdpFourEm & \CdpFourLossAuc & \CdpFourLiraAuc \\
+\CdpOneRdp & \CdpOnePrv & \CdpOneSigma & \CdpOneEm & \CdpOneLossAuc & \CdpOneLiraAuc \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Federated.} Three in-process non-IID sites run FedAvg~\citep{fedavg} and FedProx for
+\CfedRounds{} rounds of \CfedLocalSteps{} local steps, compared with centralised and local-only training at
+equal SGD steps. FedAvg reaches \CfedAvgEm{} global exact match against \CfedCentralEm{} centralised
+(\CfedAvgOverCentral\%, $p=\CfedCentralP$), below the best local-only site (\CfedLocalUsEm); FedProx does
+not help (\CfedProxEm). It moves \CfedTotalMB\,MB of weights; the raw data are \CfedRawMB\,MB.
+
+\paragraph{Limits.} The model is tiny and the task templated; nothing here transfers to foundation-model
+scale, and the method ranking may change with scale, warm start, reward and budget. Compute matching is
+analytic, and reward-model training is not charged to GRPO-RM. The DP guarantee covers only the private
+fine-tuning step (Opacus secure mode off); few shadow models make the AUCs lower bounds on leakage.
+Envelope encryption protects checkpoints, not what a model reveals through its outputs. Federated averaging
+alone gives no formal privacy, and the simulation has no secure aggregation, stragglers or WAN.
