@@ -8,7 +8,7 @@ All numbers below come from `results/m6/summary.json` (aggregated from `results/
 
 * `media/rtp.py`, `media/av1rtp.py`: RTP/RTCP (SR, RR, REMB, PLI, NACK) and the AV1 RTP payload format
   (aggregation header, OBU fragmentation). There is a receiver jitter buffer with a playout deadline, and A/V
-  sync via RTCP SR NTP↔RTP mapping. Median |A/V skew| is about 2.5 ms in every non-blocking condition.
+  sync via RTCP SR NTP↔RTP mapping. Median |A/V skew| is at most 2.7 ms in every non-blocking condition.
 * `media/codec.py`: AV1 through SVT-AV1 (PyAV, CBR low-delay, 1 thread in the campaign) and dav1d decode.
   Opus carries the audio.
 * `media/adapt.py`: GCC-style loss-based controller (RR fraction lost), receiver delay-gradient estimator
@@ -96,7 +96,7 @@ the same link RNG stream. All are in `summary.json: tests / pooled_tests / ablat
 * **clean, lossy, jitter**: no significant difference in glass-to-answer, VMAF or stalls. In clean and
   jitter, joint is slightly *slower* to answer (+0.07 s and +0.04 s, n.s.).
 * **Pooled over the three impairment profiles** (lossy, bwdrop, jitter; 15 pairs): glass-to-answer 1.07
-  vs 1.26 s (paired p = 0.063, Holm 0.37, n.s.). VMAF 64.8 vs 63.0 (n.s.). Stall time 2.2 vs 2.8 s
+  vs 1.26 s (paired p = 0.062, Holm 0.37, n.s.). VMAF 64.8 vs 63.0 (n.s.). Stall time 2.2 vs 2.8 s
   (n.s.). Glass-to-inference p95 0.36 vs 0.65 s (paired p = 0.007, Holm 0.050). Joint consistently drops
   more frames to backpressure (7.1 vs 0.7, Holm p < 0.001). This is by design: latest-wins replaces a
   stale pending frame instead of queueing it.
