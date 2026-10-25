@@ -5,8 +5,10 @@ compute_s   median step of 6 *concurrent* single-process (local-mode) trainers, 
 grad_bytes  4 · #params (fp32 gradients all-reduced by DDP)
 ckpt_bytes  serialized full training state (params + AdamW moments)
 restart_s   launch → first step of a fresh 6-rank job on the WAN lab (process start, data pool, Gloo init)
-kappa       measured / predicted ring time for a nominal-network static-routing run (initial value; the
-            controller keeps refining it online from collective telemetry)
+kappa_plane measured / predicted ring time per WAN plane: nominal network, default placement, every route
+            pinned to that plane. Trials alternate planes. These are initial values; the controller keeps
+            refining the bottleneck plane's κ online from flush-free step telemetry.
+kappa       = kappa_plane["a"] (the static configuration), kept for compatibility
 
   python -m bench.m3_calibrate --out results/m3
 """
@@ -28,6 +30,7 @@ import torch
 from bench.meta import write_result
 from controller import model as M
 from controller.planner import DEFAULT_PLACEMENT
+from netlab import te
 from netlab.lab import default_lab
 from train.launch import Job, Slot, read_rank_log
 from train.model import PRESETS, TinyVLM
@@ -98,11 +101,19 @@ def main() -> None:
     lab.build()
     lab.start_frr()
     lab.wait_converged()
-    restarts, kappas = [], []
+    restarts: list[float] = []
+    kappas: dict[str, list[float]] = {"a": [], "b": []}
+    preds: dict[str, float] = {}
     job = M.JobSpec(grad_bytes=grad_b, compute_s=float(np.median(comp)), ckpt_every=0)
-    plan = M.make_plan(DEFAULT_PLACEMENT, "mtl", {})
-    pred = M.ring_time(M.NetState.nominal(), job, plan)
-    for trial in range(3):
+    for trial in range(6):
+        plane = "ab"[trial % 2] if (trial // 2) % 2 == 0 else "ba"[trial % 2]
+        dec = te.default_decision(plane)
+        te.apply(lab, dec)
+        deadline = time.time() + 20
+        while te.fib_plane(lab, "tor", "mtl", "compute") != plane and time.time() < deadline:
+            time.sleep(0.2)
+        plan = M.make_plan(DEFAULT_PLACEMENT, "mtl", dec)
+        pred = preds.setdefault(plane, M.ring_time(M.NetState.nominal(), job, plan))
         used: dict = {}
         slots = []
         for s in DEFAULT_PLACEMENT:
@@ -137,7 +148,7 @@ def main() -> None:
         steps = [r for r in recs if r.get("event") == "step"]
         restarts.append(steps[0]["wall"] - steps[0]["step_s"] - t0)
         meas = float(np.median([r["step_s"] for r in steps[5:]])) - job.compute_s
-        kappas.append(meas / pred)
+        kappas[plane].append(meas / pred)
     lab.teardown()
     data = {
         "compute_s": float(np.median(comp)),
@@ -146,9 +157,10 @@ def main() -> None:
         "ckpt_bytes": ckpt_b,
         "restart_s": float(np.median(restarts)),
         "restart_trials": restarts,
-        "kappa": float(np.median(kappas)),
+        "kappa": float(np.median(kappas["a"])),
+        "kappa_plane": {p: float(np.median(v)) for p, v in kappas.items()},
         "kappa_trials": kappas,
-        "predicted_ring_s_nominal_static": pred,
+        "predicted_ring_s_nominal": preds,
     }
     write_result(Path(a.out) / "calibration.json", data, config=vars(a))
     print(json.dumps(data, indent=1))

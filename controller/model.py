@@ -68,7 +68,13 @@ class JobSpec:
     ckpt_every: int = 25
     ckpt_stall_s: float = 0.05
     restart_s: float = 8.0
-    kappa: float = 1.0
+    kappa: float = 1.0  # calibration factor for planes without their own entry
+    # per-plane calibration (measured/predicted ring time differs by plane: shaping/TCP effects the fluid model
+    # misses depend on the rate-delay product), refined online for the plane of the bottleneck edge
+    kappa_plane: dict = dataclasses.field(default_factory=dict)
+
+    def k(self, plane: str | None) -> float:
+        return self.kappa_plane.get(plane, self.kappa) if plane else self.kappa
 
 
 @dataclasses.dataclass(frozen=True)
@@ -156,19 +162,28 @@ def path_latency_s(net: NetState, path: list[tuple[str, str, str]]) -> float:
     return sum(net.links[lk].delay_ms for lk in path) / 1e3
 
 
-def ring_time(net: NetState, job: JobSpec, plan: Plan, extra: list[Flow] | None = None) -> float:
+def ring_bottleneck(
+    net: NetState, job: JobSpec, plan: Plan, extra: list[Flow] | None = None
+) -> tuple[float, str | None]:
+    """(ring time, plane of the bottleneck inter-site edge or None if the ring is LAN-only)."""
     rf = ring_flows(net, job, plan)
     n = len(plan.placement)
     if not rf:
-        return 2 * (n - 1) * (job.grad_bytes / n / LAN_BW)
+        return 2 * (n - 1) * (job.grad_bytes / n / LAN_BW), None
     flows = rf + (extra or [])
     bw = _shares(net, flows)
-    worst = 0.0
+    worst, plane = 0.0, None
     for idx, f in enumerate(rf):
         if not f.path:
-            return float("inf")
-        worst = max(worst, f.nbytes / bw[idx] + path_latency_s(net, f.path))
-    return 2 * (n - 1) * worst * job.kappa
+            return float("inf"), f.path[0][0] if f.path else None
+        t = (f.nbytes / bw[idx] + path_latency_s(net, f.path)) * job.k(f.path[0][0])
+        if t > worst:
+            worst, plane = t, f.path[0][0]
+    return 2 * (n - 1) * worst, plane
+
+
+def ring_time(net: NetState, job: JobSpec, plan: Plan, extra: list[Flow] | None = None) -> float:
+    return ring_bottleneck(net, job, plan, extra)[0]
 
 
 def ckpt_duration(net: NetState, job: JobSpec, plan: Plan, with_ring: bool = True) -> float:

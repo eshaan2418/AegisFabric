@@ -353,6 +353,7 @@ def run(cfg: RunConfig) -> dict:
         ckpt_every=cfg.ckpt_every,
         restart_s=calib["restart_s"],
         kappa=calib["kappa"],
+        kappa_plane=dict(calib.get("kappa_plane", {})),
     )
     planner = make_planner(cfg, job)
     oracle = cfg.method == "oracle"
@@ -410,16 +411,21 @@ def run(cfg: RunConfig) -> dict:
         if planner.replans:
             net = ground_truth(lab, bg_active(sc.bg, t_rel)) if oracle else est.poll()
             if "coll" in cfg.signals or oracle:
-                recs = [r for r in read_rank_log(out / f"seg{mgr.segment}", 0) if r.get("event") == "step"][
-                    -5:
-                ]
+                # flush-free steps only: the comparison is against the flush-free ring prediction
+                recs = [
+                    r
+                    for r in read_rank_log(out / f"seg{mgr.segment}", 0)
+                    if r.get("event") == "step" and not r.get("ckpt_busy")
+                ][-5:]
                 if len(recs) >= 3:
                     meas = float(np.median([r["step_s"] for r in recs])) - job.compute_s
-                    pred = M.ring_time(net, dataclasses.replace(job, kappa=1.0), mgr.plan)
-                    if pred > 0 and meas > 0:
+                    pred, plane = M.ring_bottleneck(
+                        net, dataclasses.replace(job, kappa=1.0, kappa_plane={}), mgr.plan
+                    )
+                    if plane and pred > 0 and meas > 0:
                         k = min(3.0, max(0.5, meas / pred))
-                        job.kappa = 0.8 * job.kappa + 0.2 * k
-                        kappa_hist.append((t_rel, job.kappa))
+                        job.kappa_plane[plane] = 0.8 * job.k(plane) + 0.2 * k
+                        kappa_hist.append((t_rel, plane, job.kappa_plane[plane]))
             if "ckpt" in cfg.signals or oracle:
                 cks = [
                     r for r in read_rank_log(out / f"seg{mgr.segment}", 0) if r.get("event") == "ckpt_done"

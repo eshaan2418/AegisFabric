@@ -107,3 +107,12 @@ been recorded with the buggy version (the smoke output went to `scratch/`).
   (VP8 ingest + AV1 transcode) covers the WebRTC leg.
 - libsvtav1/libaom-av1 in this PyAV build ignore bitrate changes after open, so rate changes re-create the
   encoder (a keyframe), with hysteresis. Details: `results/m6/NOTES.md`.
+
+## D-014 (2026-10-24) Per-plane calibration factor κ
+In the pre-campaign smoke run, measured/predicted ring time was about 1.4 on plane A but about 0.9 on plane
+B. The fluid model misses shaping and TCP effects that depend on each plane's rate-delay product. A single
+global κ, calibrated online on whichever plane the job currently uses, therefore mis-predicts the other
+plane, and that is exactly the comparison the joint planner makes. κ is now per plane: both are calibrated
+(`bench/m3_calibrate.py` pins all routes to A, then to B, alternating trials). Online refinement updates the
+κ of the bottleneck edge's plane using flush-free steps only: the trainer marks steps that overlap a
+checkpoint upload (`ckpt_busy`), and those are excluded.

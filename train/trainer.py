@@ -288,6 +288,7 @@ def main(argv=None) -> int:
         for g in opt.param_groups:
             g["lr"] = lr_at(step, args)
         t0 = time.perf_counter()
+        busy0 = ckptr is not None and ckptr.busy()
         imgs, toks = stream.next()
         loss = lm_loss(model, imgs, toks)
         t_fwd = time.perf_counter()
@@ -317,6 +318,8 @@ def main(argv=None) -> int:
             "tok_s": tok_per_step / dt_step,
             "mfu": fpt * tok_per_step / dt_step / (peak * (world if args.mode != "local" else 1)),
             "coll": coll,
+            # a checkpoint upload was in flight during (part of) this step: its WAN traffic competed
+            "ckpt_busy": bool(busy0 or ck is not None or (ckptr is not None and ckptr.busy())),
         }
         if ck is not None:
             rec["ckpt"] = ck

@@ -69,3 +69,20 @@ def test_joint_replan_hysteresis_blocks_tiny_gains():
     jp = P.JointPlanner(job)
     d = jp.initial(net)
     assert jp.replan(net, d.plan) is None
+
+
+def test_per_plane_kappa_scales_only_that_plane():
+    from controller import model as M
+
+    net = M.NetState.nominal()
+    pl = ("tor", "tor", "tor", "mtl", "mtl", "mtl")
+    keys = M.relevant_route_keys(pl, "tor")
+    plan_a = M.make_plan(pl, "tor", {k: "a" for k in keys})
+    plan_b = M.make_plan(pl, "tor", {k: "b" for k in keys})
+    base = M.JobSpec(ckpt_every=0)
+    ka = M.JobSpec(ckpt_every=0, kappa_plane={"a": 2.0})
+    t_a, plane = M.ring_bottleneck(net, base, plan_a)
+    assert plane == "a"
+    assert abs(M.ring_time(net, ka, plan_a) - 2 * t_a) < 1e-9
+    assert abs(M.ring_time(net, ka, plan_b) - M.ring_time(net, base, plan_b)) < 1e-9
+    assert M.ring_bottleneck(net, base, plan_b)[1] == "b"
