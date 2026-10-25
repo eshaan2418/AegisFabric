@@ -1,0 +1,36 @@
+\section{Background and Problem}
+\label{sec:background}
+
+\paragraph{Synchronous data parallelism over a WAN.}
+In DDP~\citep{fsdp} every step ends with an all-reduce of the full gradient. Gloo's ring all-reduce over
+$n$ ranks runs $2(n-1)$ synchronous rounds; in each round every rank sends $S/n$ bytes to its successor
+in rank order. A round finishes when its slowest ring edge finishes, so step time depends on the
+\emph{worst} inter-site edge the ring order creates. That edge's cost depends on the path routing picks
+for it, and on whatever else (background traffic, checkpoint uploads) shares that path. Sharded variants
+(FSDP2, HSDP) trade all-reduce for all-gather/reduce-scatter but face the same coupling.
+Placement, routing and checkpoint traffic therefore interact, even though they are usually owned by
+different teams.
+
+\paragraph{Traffic engineering without the job.}
+WAN TE systems~\citep{b4,swan} allocate measured demand to paths to keep utilisation low and fair. A TE
+optimiser that minimises maximum link utilisation can move a latency-sensitive collective onto a
+higher-capacity, higher-latency path, which is good for utilisation and bad for a synchronous ring. It also
+does not know that a burst of checkpoint traffic will arrive every $K$ steps, or that the job could move.
+
+\paragraph{Checkpointing.}
+CheckFreq~\citep{checkfreq} splits checkpointing into a snapshot and an asynchronous persist phase.
+Check-N-Run~\citep{checknrun} uses incremental, quantized checkpoints, and Gemini~\citep{gemini}
+checkpoints to remote CPU memory and schedules checkpoint traffic around training traffic. In a
+geo-distributed job, the checkpoint destination $s$ is itself a WAN decision constrained by residency
+policy: here, checkpoints of models trained on Canadian confidential data must stay in Toronto or
+Montr\'eal.
+
+\paragraph{Problem statement.}
+Given a job (ranks, gradient bytes $S$, compute time $C$, checkpoint size $B$ every $K$ steps) and a
+time-varying network state (link capacity, delay, up/down, background load), choose
+$\pi$ (rank$\to$site in ring order), $r$ ((src site, dst site, traffic class)$\to$plane) and
+$s \in \{\text{tor},\text{mtl}\}$ to minimise expected time per step, including amortised checkpoint
+stalls. Re-planning is allowed: route changes are cheap, and re-placement costs a drain, restart and
+restore. Our primary scope is $(\pi, r, s)$. The general objective in the project brief also includes
+inference, media and storage-cost terms; we evaluate media separately (\S\ref{sec:ext}) and do not
+optimise those terms jointly.

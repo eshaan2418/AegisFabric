@@ -1,0 +1,36 @@
+\documentclass[10pt,twocolumn]{article}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{graphicx,booktabs,amsmath,amssymb,hyperref,xcolor,enumitem,microtype}
+\usepackage[numbers,sort&compress]{natbib}
+\setlist{nosep,leftmargin=*}
+\input{numbers}
+% \cfg{x}: a configuration constant or design parameter (not a measured result); the number audit skips it
+\newcommand{\cfg}[1]{#1}
+\IfFileExists{numbers_extra.tex}{\input{numbers_extra}}{}
+
+\title{AegisFabric: Is Joint Placement, Routing and Checkpoint-Storage Control Worth It for\\
+Geo-Distributed Training? A Reproducible Emulation Study}
+\author{AegisFabric artifact (draft)}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\input{sec/abstract}
+\end{abstract}
+
+\input{sec/intro}
+\input{sec/background}
+\input{sec/design}
+\input{sec/implementation}
+\input{sec/evaluation}
+\input{sec/extensions}
+\input{sec/limitations}
+\input{sec/related}
+\input{sec/conclusion}
+
+\small
+\bibliographystyle{plainnat}
+\bibliography{refs}
+\end{document}

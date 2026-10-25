@@ -1,0 +1,52 @@
+\section{Design}
+\label{sec:design}
+
+\subsection{Cost model}
+For ranks $0..n{-}1$ in ring order with sites $\sigma(i)$, the ring time is
+\[
+T_{\text{ring}} = 2(n-1)\,\kappa\,\max_{e}\Big[\frac{S}{n\,b_e} + \ell_e\Big],
+\]
+where edge $e=(\sigma(i),\sigma(i{+}1))$ is a LAN edge if both ranks share a site. Otherwise it uses the
+path $r$ selects for (src, dst, \textsc{compute}). The edge bandwidth $b_e$ is the minimum, over the
+links $l$ of that path, of the fair share $\max(\epsilon, c_l - g_l)/f_l$: capacity minus background
+load, divided among the controlled flows on $l$. $\ell_e$ is the path latency. $\kappa$ is a calibration
+factor, initialised from a measured run and refined online from rank-0 collective timings. Every $K$
+steps, each rank uploads $B/n$ bytes to site $s$ over the path $r$ selects for (site, $s$,
+\textsc{storage}); while that flush is in flight, ring edges that share a link with it get a halved share.
+With flush duration $D$ and $m=\min(K, D/T_{\text{ring,flush}})$ overlapped steps, the expected step time is
+\[
+E[T] = C + \frac{(K-m)\,T_{\text{ring}} + m\,T_{\text{ring,flush}}}{K} + \frac{\text{stall}}{K},
+\]
+where the stall is any part of the flush that does not finish within $K$ steps. Migrating costs a drain
+(final checkpoint), a measured restart time, and a restore in which each rank pulls the state from the
+old storage site. Before relying on the ring structure, we checked it with a microbenchmark:
+interleaving sites in rank order doubles all-reduce time, as the model predicts
+(\texttt{bench/collective\_micro.py}).
+
+\subsection{Joint planner}
+With \cfg{6} ranks, \cfg{3} sites, at most \cfg{3} ranks per site and a residency-constrained $s$, the space is small. It
+contains the contiguous placements and their distinct cyclic orders, \cfg{2} storage sites, and $2^k$ plane
+assignments over the $k\le \cfg{5}$ route keys that a given $(\pi,s)$ actually uses. The planner therefore
+enumerates the space exactly in milliseconds. On every \cfg{1}\,s controller tick it (i) re-optimises routes
+for the current placement, and (ii) proposes a re-placement only if the predicted saving over a
+horizon exceeds $\cfg{1.5}\times$ the predicted migration cost and the per-step gain exceeds \cfg{3}\%. Route changes
+below the same \cfg{3}\% threshold are suppressed to avoid churn.
+
+\subsection{Baselines}
+\begin{itemize}
+\item \textbf{static}: default placement (two ranks per site), checkpoint storage off rank~0's site, base
+BGP policy (plane A, the low-latency ``private wave''); never re-plans.
+\item \textbf{ecmp}: as static, but gateways run iBGP multipath and hash flows across both planes.
+\item \textbf{independent}: placement chosen once by the ML team (the best placement for the nominal network,
+ignoring checkpoints); storage by fixed policy; routes re-optimised continuously by a B4-style TE
+MILP that minimises maximum link utilisation for the \emph{measured} per-prefix demand matrix, with a
+latency tie-break. This is our stand-in for ``independently tuned subsystems''.
+\item \textbf{oracle}: the joint planner fed ground-truth link state and background schedule, an upper
+bound on what the model allows.
+\end{itemize}
+
+\subsection{Signals}
+The controller sees: interface and per-prefix flow counters (\texttt{util}); device-reported link rate and
+oper-status (\texttt{speed}, like ifSpeed via gNMI); \cfg{5}\,Hz RTT probes on every WAN link (\texttt{rtt});
+rank-0 step/collective telemetry (\texttt{coll}, for online $\kappa$); and checkpoint flush statistics
+(\texttt{ckpt}). The ablation removes each signal in turn, and separately disables migration.
