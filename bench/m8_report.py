@@ -186,7 +186,7 @@ def privacy_section() -> list[str]:
     )
     for e in order:
         t = d["table"][e]
-        nm = f"{t['noise_multiplier']:.3f}" if t["noise_multiplier"] else "0"
+        nm = "—" if t["noise_multiplier"] is None else f"{t['noise_multiplier']:.3f}"
         out.append(
             f"| {'∞ (no DP)' if e == 'inf' else ('clip-only, σ=0 (no DP)' if e == 'clip' else e)} | {ci(t['epsilon_rdp'], 2)} | {ci(t['epsilon_prv'], 2)} | {nm} | "
             f"{t['steps']} | {t['sample_rate']:.3f} | {ci(t['utility_exact'])} | {ci(t['mia_loss_auc'])} | "

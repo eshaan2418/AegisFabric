@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "git": {
+      "commit": "8acf420c1d2fe60b2a9615f61133f45d97f449bb",
+      "dirty": false
+    },
+    "hardware": {
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "machine": "arm64",
+      "python": "3.12.14",
+      "cpu_count": 18,
+      "host_label": "darwin",
+      "mem_gb": 48.0,
+      "torch": "2.14.1",
+      "torch_threads": 2
+    },
+    "seed": 1,
+    "config": {
+      "rounds": 16,
+      "local_steps": 5,
+      "batch": 64,
+      "lr": 0.002,
+      "n_per_site": 600,
+      "n_eval_per_site": 100,
+      "fedprox_mu": 0.01,
+      "method": "fedavg",
+      "device": "mps"
+    },
+    "command": "m8_federated.py comm-sweep --seeds 0 1 2 3 4",
+    "timestamp": "2026-10-25T00:46:33+00:00"
+  },
+  "data": {
+    "eval": {
+      "global_exact": 0.14666666666666667,
+      "global_tool_ok": 0.8766666666666666,
+      "per_site_exact": {
+        "TOR": 0.16,
+        "MTL": 0.03,
+        "US": 0.25
+      }
+    },
+    "comm": {
+      "bytes_per_round": 20363304,
+      "rounds": 16,
+      "total_bytes": 325812864,
+      "n_params": 848471
+    },
+    "wall_s": 44.62248137500046
+  }
+}
