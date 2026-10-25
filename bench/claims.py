@@ -45,11 +45,15 @@ def claim(id: str, source: str, fmt: str = "{:.2f}", desc: str = ""):
 
 
 def register_all() -> None:
-    """Import claim definitions (kept in bench/claim_defs.py so this module stays generic)."""
-    try:
-        import bench.claim_defs  # noqa: F401
-    except ModuleNotFoundError:
-        pass
+    """Import claim definitions (bench/claim_defs.py: M1-M3/M5/M10; bench/claim_defs_ext.py: M4-M9)."""
+    import importlib
+
+    for mod in ("bench.claim_defs", "bench.claim_defs_ext"):
+        try:
+            importlib.import_module(mod)
+        except ModuleNotFoundError as e:
+            if e.name != mod:
+                raise
 
 
 def evaluate() -> tuple[list[dict], list[str]]:
