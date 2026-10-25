@@ -29,6 +29,12 @@ class Trainer:
             for n, p in self.model.named_parameters():
                 if any(n == f or n.startswith(f) for f in frozen):
                     p.requires_grad_(False)
+        elif freeze == "adapter":
+            # adapter/head tuning: only the last block, the final norm and the output head train
+            last = f"blocks.{self.cfg.n_layers - 1}."
+            for n, p in self.model.named_parameters():
+                if not (n.startswith(last) or n.startswith("ln_f") or n.startswith("head")):
+                    p.requires_grad_(False)
         params = [p for p in self.model.parameters() if p.requires_grad]
         self.opt = torch.optim.AdamW(params, lr=lr, weight_decay=0.01)
         self.stream = ShardedStream(1234 + seed, 0, 1, batch, self.cfg.text_len, self.cfg.img_size)

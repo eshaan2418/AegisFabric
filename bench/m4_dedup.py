@@ -4,7 +4,8 @@
 Writes results/m4/dedup.json (mean ± 95% CI over seeds).
 
 Workload: TinyVLM (train/model.py) + AdamW, checkpoint = train.trainer.get_full_state (model + optimizer),
-one checkpoint every `--every` optimizer steps. Chunking schemes, all with BLAKE3 content ids (the keyed
+one checkpoint every `--every` optimizer steps. Scenarios: full (all parameters train), frozen (embeddings +
+lower half of the blocks frozen), adapter (only the last block, final norm and head train). Chunking schemes, all with BLAKE3 content ids (the keyed
 variant used under P2 has the same equality structure, so the ratios are identical):
 
 * tensor:  fixed-size chunks within each tensor (what CheckpointClient does)
@@ -76,13 +77,15 @@ def main() -> None:
     ap.add_argument("--preset", default="base")
     ap.add_argument("--sizes", default="65536,262144,1048576,4194304")
     ap.add_argument("--threads", type=int, default=4)
+    ap.add_argument("--scenarios", default="full,frozen,adapter")
     a = ap.parse_args()
     torch.set_num_threads(a.threads)
     sizes = [int(s) for s in a.sizes.split(",")]
     per: dict[str, list[dict]] = {}
-    for scen in ("full", "frozen"):
+    freeze = {"full": "none", "frozen": "half", "adapter": "adapter"}
+    for scen in a.scenarios.split(","):
         for seed in range(a.seeds):
-            tr = Trainer(a.preset, seed=seed, freeze="half" if scen == "frozen" else "none")
+            tr = Trainer(a.preset, seed=seed, freeze=freeze[scen])
             tr.one_step()  # optimizer state exists from the first checkpoint on
             ckpts = []
             for _ in range(a.ckpts):
