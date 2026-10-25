@@ -1,13 +1,19 @@
 """M4 benchmarks: aegis-ckpt (io_uring / pwrite) vs torch.save and torch.distributed.checkpoint, on ext4 and XFS.
 
 Run inside the privileged lab container (needs losetup/mkfs/mount and /proc/sys/vm/drop_caches):
-    python -m bench.ckpt_bench --trials 5 --ckpts 10 --out m4
+    nice -n 19 python -m bench.m4_bench --trials 5 --ckpts 8 --steps 2 --preset base --out m4
+Writes results/m4/bench.json (summary, mean ± 95% CI over trials) and results/m4/bench_raw.json.
 
-Both filesystems are loop-mounted images in the container's /tmp, which lives on the Docker VM's virtio
-disk (host NVMe underneath), so they share one backing device. Device-level bytes are read from
-/sys/block/loopN/stat (sectors written). The workload is a training-like flat state dict: a frozen
-backbone plus trainable adapters/head with Adam moments, with real optimizer steps between
-checkpoints ("frozen" scenario), plus a "full" scenario where every parameter trains (no dedup possible).
+Both filesystems are loop-mounted image files under /var/tmp in the container, i.e. on the container's
+overlay filesystem on the Docker Desktop VM's virtio disk (APFS on the host NVMe underneath), so they
+share one backing device. Device-level bytes are read from /sys/block/loopN/stat (sectors written,
+including journal and metadata). Workload: the real TinyVLM from train/model.py with AdamW and real
+optimizer steps between checkpoints (see `Workload`). Methods run in a seeded random order per trial.
+
+Methods: torch_save (torch.save + fsync), dcp (torch.distributed.checkpoint.save, single process,
+fsync'd), aegis_uring / aegis_pwrite (P2-encrypted, async: snapshot then background flush while
+training continues), aegis_uring_plain (no encryption), aegis_uring_sync (encrypted, training blocked
+until the checkpoint is durable).
 """
 
 from __future__ import annotations
@@ -22,9 +28,9 @@ from pathlib import Path
 
 import numpy as np
 import torch
-import torch.nn as nn
 
 from bench import stats
+from bench.m4_common import loadavg
 from bench.meta import write_result
 from ckpt.client import CheckpointClient
 from ckpt.crypto import CkptCrypto
@@ -32,51 +38,25 @@ from ckpt.server import ServerProcess
 
 
 # --- workload ------------------------------------------------------------------------------------
-class Model(nn.Module):
-    def __init__(self, d: int, layers: int, vocab: int):
-        super().__init__()
-        self.emb = nn.Embedding(vocab, d)
-        self.backbone = nn.ModuleList([nn.Linear(d, d) for _ in range(layers)])
-        self.adapter = nn.Linear(d, d)
-        self.head = nn.Linear(d, vocab // 4)
-
-    def forward(self, x):
-        h = self.emb(x)
-        for lin in self.backbone:
-            h = torch.relu(lin(h))
-        return self.head(h + self.adapter(h))
-
-
 class Workload:
-    def __init__(self, scenario: str, seed: int, d: int = 1536, layers: int = 10, vocab: int = 8192):
-        torch.manual_seed(seed)
-        self.m = Model(d, layers, vocab)
-        if scenario == "frozen":
-            for p in [self.m.emb.weight, *[q for b in self.m.backbone for q in b.parameters()]]:
-                p.requires_grad_(False)
-        self.params = [p for p in self.m.parameters() if p.requires_grad]
-        self.opt = torch.optim.Adam(self.params, lr=1e-4)
-        self.vocab = vocab
-        self.g = torch.Generator().manual_seed(seed)
+    """The real TinyVLM (train/model.py) + AdamW on the synthetic chart/text stream (bench/m4_common).
+
+    Checkpoint = every tensor leaf of `train.trainer.get_full_state` (model + optimizer state, the same
+    state SliceCheckpointer saves; non-tensor leaves such as param_group hyper-parameters are a few
+    hundred bytes and are left out for all methods alike). Scenarios: "full" (every parameter trains,
+    so AdamW touches every byte between checkpoints) and "frozen" (fine-tuning-style: embeddings and the
+    lower half of the blocks frozen, see bench.m4_common.Trainer)."""
+
+    def __init__(self, scenario: str, seed: int, preset: str = "base"):
+        from bench.m4_common import Trainer
+
+        self.tr = Trainer(preset, seed=seed, freeze="half" if scenario == "frozen" else "none")
 
     def step(self) -> float:
-        t0 = time.perf_counter()
-        x = torch.randint(0, self.vocab, (8, 16), generator=self.g)
-        y = torch.randint(0, self.vocab // 4, (8, 16), generator=self.g)
-        loss = nn.functional.cross_entropy(self.m(x).flatten(0, 1), y.flatten())
-        self.opt.zero_grad()
-        loss.backward()
-        self.opt.step()
-        return time.perf_counter() - t0
+        return self.tr.one_step()
 
     def state(self) -> dict[str, torch.Tensor]:
-        out = {f"model.{k}": v for k, v in self.m.state_dict().items()}
-        for i, p in enumerate(self.params):
-            s = self.opt.state.get(p, {})
-            for k in ("exp_avg", "exp_avg_sq"):
-                if k in s:
-                    out[f"opt.{i}.{k}"] = s[k]
-        return out
+        return self.tr.tensors()
 
 
 def nbytes(st: dict[str, torch.Tensor]) -> int:
@@ -226,7 +206,9 @@ def run_engine(
             durable = time.perf_counter() - t0
             per.append(
                 {
-                    "stall_s": s.stall_s,
+                    # sync save: training is blocked until the checkpoint is durable
+                    "stall_s": s.stall_s if overlap_train else durable,
+                    "snapshot_s": s.stall_s,
                     "durable_s": durable,
                     "flush_s": s.flush_s,
                     "logical": s.logical_bytes,
@@ -293,28 +275,43 @@ def main() -> None:
     ap.add_argument("--scenarios", default="frozen,full")
     ap.add_argument("--fs", default="ext4,xfs")
     ap.add_argument(
-        "--methods", default="torch_save,dcp,aegis_uring,aegis_pwrite,aegis_uring_plain,aegis_uring_noovl"
+        "--methods", default="torch_save,dcp,aegis_uring,aegis_pwrite,aegis_uring_plain,aegis_uring_sync"
     )
     ap.add_argument("--threads", type=int, default=4)
-    ap.add_argument("--d", type=int, default=1536)
-    ap.add_argument("--layers", type=int, default=10)
+    ap.add_argument("--preset", default="base", help="train/model.py preset")
     ap.add_argument("--out", default="m4")
     ap.add_argument("--seed", type=int, default=0)
     a = ap.parse_args()
     torch.set_num_threads(a.threads)
-    base = Path(tempfile.mkdtemp(prefix="m4bench-", dir="/tmp"))
-    results: dict = {}
+    rng = np.random.default_rng(a.seed)
+    base = Path(tempfile.mkdtemp(prefix="m4bench-", dir="/var/tmp"))
+    methods = a.methods.split(",")
+    trials: dict[str, list] = {}
     raw: dict = {}
+
+    def flush_results(final: bool = False) -> None:
+        results = {}
+        for key, trs in trials.items():
+            results[key] = {
+                m: stats.summarize([tr[m] for tr in trs if tr.get(m) is not None]).as_dict()
+                for m in trs[0]
+                if m != "loadavg"
+            }
+            results[key]["state_bytes"] = raw[key][0]["per_ckpt"][0]["logical"]
+        write_result(f"{a.out}/bench.json", {"summary": results, "complete": final}, vars(a), a.seed)
+        if final:
+            write_result(f"{a.out}/bench_raw.json", raw, vars(a), a.seed)
+
     try:
         for fsk in a.fs.split(","):
             for scen in a.scenarios.split(","):
-                for meth in a.methods.split(","):
-                    key = f"{fsk}/{scen}/{meth}"
-                    trials = []
-                    for t in range(a.trials):
+                for t in range(a.trials):
+                    # methods interleaved in a seeded random order per trial (shared host, B-005)
+                    for meth in rng.permutation(methods):
+                        key = f"{fsk}/{scen}/{meth}"
                         fs = LoopFS(fsk, 16, base)
                         try:
-                            wl = Workload(scen, a.seed + t, d=a.d, layers=a.layers)
+                            wl = Workload(scen, a.seed + t, preset=a.preset)
                             if meth == "torch_save":
                                 r = run_torch_save(fs, wl, a.ckpts, a.steps)
                             elif meth == "dcp":
@@ -328,25 +325,23 @@ def main() -> None:
                                     a.steps,
                                     io,
                                     encrypt="plain" not in meth,
-                                    overlap_train="noovl" not in meth,
+                                    overlap_train="sync" not in meth,
                                 )
                         finally:
                             fs.close()
-                        trials.append(summarize_trial(r))
+                        r["loadavg"] = loadavg()
+                        tr = summarize_trial(r)
+                        tr["loadavg"] = r["loadavg"]
+                        trials.setdefault(key, []).append(tr)
                         raw.setdefault(key, []).append(r)
                         print(
                             key,
                             t,
-                            {k: round(v, 4) if isinstance(v, float) else v for k, v in trials[-1].items()},
+                            {k: round(v, 4) if isinstance(v, float) else v for k, v in tr.items()},
                             flush=True,
                         )
-                    results[key] = {
-                        m: stats.summarize([tr[m] for tr in trials if tr.get(m) is not None]).as_dict()
-                        for m in trials[0]
-                    }
-                    results[key]["state_bytes"] = raw[key][0]["per_ckpt"][0]["logical"]
-                    write_result(f"{a.out}/ckpt_bench.json", {"summary": results}, vars(a), a.seed)
-        write_result(f"{a.out}/ckpt_bench_raw.json", raw, vars(a), a.seed)
+                    flush_results()
+        flush_results(final=True)
     finally:
         shutil.rmtree(base, ignore_errors=True)
 
