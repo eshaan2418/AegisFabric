@@ -147,6 +147,23 @@ def posttrain_section() -> list[str]:
         "",
         "![posttrain](figs/posttrain_exact.png)",
     ]
+    p2 = RESULTS / "m8/posttrain/budget1.6e13/summary.json"
+    if p2.exists():
+        d2 = read_result(p2)["data"]
+        out += [
+            "",
+            f"Second budget, 4x larger (`results/m8/posttrain/budget1.6e13/summary.json`, n={d2['n_seeds']} seeds, "
+            "same warm starts, LRs reused from the 4e12 tuning):",
+            "",
+            "| method | exact match (mean [95% CI]) | tool-call success | FLOPs used | wall-clock s (shared machine) |",
+            "|---|---|---|---|---|",
+        ]
+        for m, t in d2["table"].items():
+            out.append(
+                f"| {m} | {ci(t['exact'])} | {ci(t['tool_ok'])} | {t['flops']['mean']:.2e} | "
+                f"{t['wall_s']['mean']:.0f} |"
+            )
+        out += ["", "![budget](figs/posttrain_budget.png)"]
     return out
 
 
