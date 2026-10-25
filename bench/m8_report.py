@@ -208,8 +208,16 @@ def federated_section() -> list[str]:
         "",
         f"Communication (accounted, fp32, no compression): {comm['bytes_per_round'] / 1e6:.2f} MB per round "
         f"(3 sites × up+down × {comm['n_params']} params), {comm['total_bytes'] / 1e6:.1f} MB total.",
-        "",
     ]
+    s0 = RESULTS / "m8/federated/seed0.json"
+    if s0.exists():
+        raw = read_result(s0)["data"]["central"]["comm"].get("raw_data_bytes_pooled")
+        if raw:
+            out.append(
+                f"For comparison, pooling the raw site episodes for centralized training moves {raw / 1e6:.2f} MB "
+                "(seed 0) — the toy data are far smaller than the model, so FL does not save bytes here."
+            )
+    out += ["", "![fed](figs/federated_exact.png)", ""]
     for k, v in d["tests"].items():
         out.append(f"- {k}: rel. diff {v['rel_diff']:+.3f}, Welch p = {v['p_welch']:.3g}")
     return out
