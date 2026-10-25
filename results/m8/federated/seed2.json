@@ -1,0 +1,118 @@
+{
+  "meta": {
+    "git": {
+      "commit": "65bcf0b1b3a4cd6516e16e76de311a9eb94b6a5a",
+      "dirty": false
+    },
+    "hardware": {
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "machine": "arm64",
+      "python": "3.12.14",
+      "cpu_count": 18,
+      "host_label": "darwin",
+      "mem_gb": 48.0,
+      "torch": "2.14.1",
+      "torch_threads": 2
+    },
+    "seed": 2,
+    "config": {
+      "rounds": 8,
+      "local_steps": 10,
+      "batch": 64,
+      "lr": 0.002,
+      "n_per_site": 600,
+      "n_eval_per_site": 100,
+      "fedprox_mu": 0.01,
+      "device": "mps"
+    },
+    "command": "m8_federated.py run --seeds 0 1 2 3 4",
+    "timestamp": "2026-10-25T00:29:21+00:00"
+  },
+  "data": {
+    "fedavg": {
+      "eval": {
+        "global_exact": 0.16,
+        "global_tool_ok": 0.8266666666666667,
+        "per_site_exact": {
+          "TOR": 0.13,
+          "MTL": 0.04,
+          "US": 0.31
+        }
+      },
+      "comm": {
+        "bytes_per_round": 20363304,
+        "rounds": 8,
+        "total_bytes": 162906432,
+        "n_params": 848471
+      },
+      "wall_s": 52.64999174999957
+    },
+    "fedprox": {
+      "eval": {
+        "global_exact": 0.14,
+        "global_tool_ok": 0.7799999999999999,
+        "per_site_exact": {
+          "TOR": 0.11,
+          "MTL": 0.05,
+          "US": 0.26
+        }
+      },
+      "comm": {
+        "bytes_per_round": 20363304,
+        "rounds": 8,
+        "total_bytes": 162906432,
+        "n_params": 848471
+      },
+      "wall_s": 36.268352334000156
+    },
+    "central": {
+      "eval": {
+        "global_exact": 0.5466666666666667,
+        "global_tool_ok": 0.89,
+        "per_site_exact": {
+          "TOR": 0.54,
+          "MTL": 0.36,
+          "US": 0.74
+        }
+      },
+      "comm": {
+        "raw_data_bytes_pooled": 168520,
+        "note": "centralized training moves every site's raw episodes to one place"
+      },
+      "wall_s": 36.10911212499923
+    },
+    "local_TOR": {
+      "eval": {
+        "global_exact": 0.11333333333333334,
+        "global_tool_ok": 0.82,
+        "per_site_exact": {
+          "TOR": 0.25,
+          "MTL": 0.02,
+          "US": 0.07
+        }
+      }
+    },
+    "local_MTL": {
+      "eval": {
+        "global_exact": 0.06,
+        "global_tool_ok": 0.5599999999999999,
+        "per_site_exact": {
+          "TOR": 0.08,
+          "MTL": 0.05,
+          "US": 0.05
+        }
+      }
+    },
+    "local_US": {
+      "eval": {
+        "global_exact": 0.17666666666666667,
+        "global_tool_ok": 0.7600000000000001,
+        "per_site_exact": {
+          "TOR": 0.12,
+          "MTL": 0.06,
+          "US": 0.35
+        }
+      }
+    }
+  }
+}

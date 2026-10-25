@@ -1,0 +1,118 @@
+{
+  "meta": {
+    "git": {
+      "commit": "65bcf0b1b3a4cd6516e16e76de311a9eb94b6a5a",
+      "dirty": false
+    },
+    "hardware": {
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "machine": "arm64",
+      "python": "3.12.14",
+      "cpu_count": 18,
+      "host_label": "darwin",
+      "mem_gb": 48.0,
+      "torch": "2.14.1",
+      "torch_threads": 2
+    },
+    "seed": 3,
+    "config": {
+      "rounds": 8,
+      "local_steps": 10,
+      "batch": 64,
+      "lr": 0.002,
+      "n_per_site": 600,
+      "n_eval_per_site": 100,
+      "fedprox_mu": 0.01,
+      "device": "mps"
+    },
+    "command": "m8_federated.py run --seeds 0 1 2 3 4",
+    "timestamp": "2026-10-25T00:32:29+00:00"
+  },
+  "data": {
+    "fedavg": {
+      "eval": {
+        "global_exact": 0.1366666666666667,
+        "global_tool_ok": 0.7866666666666666,
+        "per_site_exact": {
+          "TOR": 0.16,
+          "MTL": 0.05,
+          "US": 0.2
+        }
+      },
+      "comm": {
+        "bytes_per_round": 20363304,
+        "rounds": 8,
+        "total_bytes": 162906432,
+        "n_params": 848471
+      },
+      "wall_s": 35.9373613329999
+    },
+    "fedprox": {
+      "eval": {
+        "global_exact": 0.10333333333333333,
+        "global_tool_ok": 0.6866666666666666,
+        "per_site_exact": {
+          "TOR": 0.08,
+          "MTL": 0.03,
+          "US": 0.2
+        }
+      },
+      "comm": {
+        "bytes_per_round": 20363304,
+        "rounds": 8,
+        "total_bytes": 162906432,
+        "n_params": 848471
+      },
+      "wall_s": 34.21069295899997
+    },
+    "central": {
+      "eval": {
+        "global_exact": 0.49666666666666676,
+        "global_tool_ok": 0.85,
+        "per_site_exact": {
+          "TOR": 0.49,
+          "MTL": 0.32,
+          "US": 0.68
+        }
+      },
+      "comm": {
+        "raw_data_bytes_pooled": 166528,
+        "note": "centralized training moves every site's raw episodes to one place"
+      },
+      "wall_s": 32.35164658299982
+    },
+    "local_TOR": {
+      "eval": {
+        "global_exact": 0.11666666666666665,
+        "global_tool_ok": 0.8533333333333334,
+        "per_site_exact": {
+          "TOR": 0.22,
+          "MTL": 0.02,
+          "US": 0.11
+        }
+      }
+    },
+    "local_MTL": {
+      "eval": {
+        "global_exact": 0.05666666666666667,
+        "global_tool_ok": 0.7333333333333334,
+        "per_site_exact": {
+          "TOR": 0.09,
+          "MTL": 0.05,
+          "US": 0.03
+        }
+      }
+    },
+    "local_US": {
+      "eval": {
+        "global_exact": 0.19999999999999998,
+        "global_tool_ok": 0.6766666666666666,
+        "per_site_exact": {
+          "TOR": 0.17,
+          "MTL": 0.06,
+          "US": 0.37
+        }
+      }
+    }
+  }
+}

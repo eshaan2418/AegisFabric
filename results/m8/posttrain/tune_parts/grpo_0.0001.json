@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "git": {
+      "commit": "65bcf0b1b3a4cd6516e16e76de311a9eb94b6a5a",
+      "dirty": false
+    },
+    "hardware": {
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "machine": "arm64",
+      "python": "3.12.14",
+      "cpu_count": 18,
+      "host_label": "darwin",
+      "mem_gb": 48.0,
+      "torch": "2.14.1",
+      "torch_threads": 2
+    },
+    "seed": 100,
+    "config": {
+      "budget": 4000000000000.0,
+      "warm": {
+        "n_sft": 2000,
+        "pretrain_steps": 150,
+        "sft_steps": 200,
+        "batch": 64
+      },
+      "tuning_seed": 100,
+      "dev_seed": 998,
+      "device": "mps"
+    },
+    "command": "m8_posttrain.py tune --method grpo --lr 0.0001",
+    "timestamp": "2026-10-25T00:23:25+00:00"
+  },
+  "data": {
+    "row": {
+      "method": "grpo",
+      "lr": 0.0001,
+      "dev_exact": 0.31640625,
+      "dev_tool_ok": 0.96875,
+      "flops": 4090931774514.0,
+      "wall_s": 196.98491133300013,
+      "iters": 31,
+      "mean_train_reward_first": [
+        0.25273437499999996,
+        0.33749999999999997,
+        0.257421875
+      ],
+      "mean_train_reward_last": [
+        0.34843749999999996,
+        0.34140625,
+        0.36484374999999997
+      ]
+    },
+    "warm_dev": {
+      "exact": 0.3203125,
+      "tool_ok": 0.9453125,
+      "by_type": {
+        "closing": 0.0,
+        "count": 0.8947368421052632,
+        "diff": 0.0,
+        "largest_a": 0.0,
+        "largest_m": 0.9795918367346939,
+        "total": 0.0
+      },
+      "n": 256
+    }
+  }
+}

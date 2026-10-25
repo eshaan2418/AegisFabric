@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "git": {
+      "commit": "7ad543983804f4b46fde34f8f9d609c1c763567c",
+      "dirty": false
+    },
+    "hardware": {
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "machine": "arm64",
+      "python": "3.12.14",
+      "cpu_count": 18,
+      "host_label": "darwin",
+      "mem_gb": 48.0,
+      "torch": "2.14.1",
+      "torch_threads": 4
+    },
+    "seed": 1,
+    "config": {
+      "eps": "4",
+      "shadows": "shadows_v2_eps4.json"
+    },
+    "command": "m8_privacy.py rescore",
+    "timestamp": "2026-10-25T01:22:56+00:00"
+  },
+  "data": {
+    "mia_lira_offline": {
+      "auc": 0.5414000000000001,
+      "auc_boot_ci95": [
+        0.46372959561581156,
+        0.6202084300112526
+      ],
+      "tpr@1%fpr": 0.01,
+      "tpr@5%fpr": 0.01,
+      "tpr@10%fpr": 0.07
+    },
+    "mia_lira_offline_globalvar": {
+      "auc": 0.5387000000000001,
+      "auc_boot_ci95": [
+        0.45864438250442147,
+        0.6203728170292989
+      ],
+      "tpr@1%fpr": 0.01,
+      "tpr@5%fpr": 0.01,
+      "tpr@10%fpr": 0.08
+    },
+    "mia_shadow_calibrated": {
+      "auc": 0.5376000000000001,
+      "auc_boot_ci95": [
+        0.45750046551632406,
+        0.6192695084725863
+      ],
+      "tpr@1%fpr": 0.01,
+      "tpr@5%fpr": 0.01,
+      "tpr@10%fpr": 0.08
+    },
+    "shadow_canary_loss_mean": 3.4557367849349974,
+    "target_file": "seed1_eps4.json"
+  }
+}

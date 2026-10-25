@@ -1,0 +1,16 @@
+## Findings (each quoted from the summaries above; details and caveats in `results/m8/NOTES.md`)
+
+- **Post-training at equal analytic FLOPs**: only SFT on gold demonstrations improved exact match (4e12: 0.543,
+  bimodal across seeds; 1.6e13: 0.865). DPO and GRPO with the verifiable reward raised tool-call validity
+  but not exact match at either budget. The warm start scores 0 on three of six question types, so on-policy
+  outcome rewards rarely see a success there (interpretation, not measured per type).
+- **Reward hacking**: GRPO with the learned reward model (97% accurate on warm-start rollouts) drove its
+  training reward to 0.67–1.0, while true exact match stayed flat or fell and tool validity collapsed on 3/5
+  seeds (1.6e13 budget).
+- **DP-SGD**: at every ε from 1 to 1024 (δ=1e-5, RDP; PRV agrees or is tighter), utility stays at the public
+  model's level (0.33). Non-private fine-tuning gives 0.499 and clip-only (σ=0) gives 0.676, so the noise,
+  not the clipping, removes the utility in this small-data, short-schedule regime. Offline-LiRA MIA AUC
+  rises from 0.52 (ε=1) to 0.67 (ε=1024), against 0.76 non-private.
+- **Federated (3 non-IID sites)**: FedAvg reaches 0.148 global EM vs 0.511 centralized, below the best
+  local-only site, and moves 163 MB of weights against 0.17 MB of raw data. FedProx(0.01) and more frequent
+  averaging do not help.

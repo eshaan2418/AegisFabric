@@ -1,0 +1,198 @@
+{
+  "meta": {
+    "git": {
+      "commit": "bdac93e91487eedd0c546b997c3e632fb8779384",
+      "dirty": false
+    },
+    "hardware": {
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "machine": "arm64",
+      "python": "3.12.14",
+      "cpu_count": 18,
+      "host_label": "darwin",
+      "mem_gb": 48.0,
+      "torch": "2.14.1",
+      "torch_threads": 2
+    },
+    "seed": 1,
+    "config": {
+      "budget": 4000000000000.0,
+      "warm": {
+        "n_sft": 2000,
+        "pretrain_steps": 150,
+        "sft_steps": 200,
+        "batch": 64
+      },
+      "lrs": {
+        "sft": 0.001,
+        "dpo": 0.0003,
+        "grpo": 0.0001,
+        "grpo_rm": 0.0001
+      },
+      "eval_seed": 777,
+      "n_eval": 500,
+      "model": {
+        "d_model": 128,
+        "n_layers": 4,
+        "n_heads": 4,
+        "max_len": 256,
+        "vocab": 87,
+        "value_head": false
+      },
+      "threads": 2,
+      "device": "mps"
+    },
+    "command": "m8_posttrain.py run --seeds 0 1",
+    "timestamp": "2026-10-25T01:09:58+00:00"
+  },
+  "data": {
+    "warm": {
+      "eval": {
+        "exact": 0.31,
+        "tool_ok": 0.89,
+        "by_type": {
+          "closing": 0.0,
+          "count": 0.855072463768116,
+          "diff": 0.0,
+          "largest_a": 0.0,
+          "largest_m": 1.0,
+          "total": 0.0
+        },
+        "n": 500
+      },
+      "compute": {
+        "flops": 18625616725638.0,
+        "train_tokens": 3658663,
+        "fwd_tokens": 0,
+        "wall_s": 68.25160204200074
+      },
+      "pretrain_final_loss": 0.9233779668807983,
+      "sft_final_loss": 0.36412106156349183,
+      "n_params": 848471
+    },
+    "reward_model": {
+      "rm_test_accuracy": 0.971,
+      "rm_test_auc": 0.993623206858501,
+      "rm_test_pos_rate": 0.252,
+      "rm_compute": {
+        "flops": 5029783249778.0,
+        "train_tokens": 870834,
+        "fwd_tokens": 385685,
+        "wall_s": 228.64495712499956
+      }
+    },
+    "sft": {
+      "eval": {
+        "exact": 0.326,
+        "tool_ok": 0.99,
+        "by_type": {
+          "closing": 0.0,
+          "count": 0.9710144927536232,
+          "diff": 0.0,
+          "largest_a": 0.0,
+          "largest_m": 1.0,
+          "total": 0.0
+        },
+        "n": 500
+      },
+      "compute": {
+        "flops": 4037126834520.0,
+        "train_tokens": 793020,
+        "fwd_tokens": 0,
+        "wall_s": 22.72128524999971
+      },
+      "lr": 0.001
+    },
+    "dpo": {
+      "eval": {
+        "exact": 0.308,
+        "tool_ok": 0.998,
+        "by_type": {
+          "closing": 0.0,
+          "count": 0.855072463768116,
+          "diff": 0.0,
+          "largest_a": 0.0,
+          "largest_m": 0.9895833333333334,
+          "total": 0.0
+        },
+        "n": 500
+      },
+      "compute": {
+        "flops": 4042141298130.0,
+        "train_tokens": 217072,
+        "fwd_tokens": 1730799,
+        "wall_s": 336.84024150000005
+      },
+      "lr": 0.0003,
+      "rounds": 69,
+      "pairs": 1153
+    },
+    "grpo": {
+      "eval": {
+        "exact": 0.312,
+        "tool_ok": 0.942,
+        "by_type": {
+          "closing": 0.0,
+          "count": 0.8695652173913043,
+          "diff": 0.0,
+          "largest_a": 0.0,
+          "largest_m": 1.0,
+          "total": 0.0
+        },
+        "n": 500
+      },
+      "compute": {
+        "flops": 4030412035026.0,
+        "train_tokens": 399574,
+        "fwd_tokens": 1176381,
+        "wall_s": 231.1379083339998
+      },
+      "lr": 0.0001,
+      "iters": 32,
+      "mean_train_reward_first": [
+        0.3578125,
+        0.35312499999999997,
+        0.33085937499999996
+      ],
+      "mean_train_reward_last": [
+        0.332421875,
+        0.299609375,
+        0.3679687499999999
+      ]
+    },
+    "grpo_rm": {
+      "eval": {
+        "exact": 0.312,
+        "tool_ok": 0.936,
+        "by_type": {
+          "closing": 0.0,
+          "count": 0.8695652173913043,
+          "diff": 0.0,
+          "largest_a": 0.0,
+          "largest_m": 1.0,
+          "total": 0.0
+        },
+        "n": 500
+      },
+      "compute": {
+        "flops": 4002279615608.0,
+        "train_tokens": 385195,
+        "fwd_tokens": 1208321,
+        "wall_s": 94.11647662500036
+      },
+      "lr": 0.0001,
+      "iters": 17,
+      "mean_train_reward_first": [
+        0.361873135341375,
+        0.3565871113068169,
+        0.30689879647804896
+      ],
+      "mean_train_reward_last": [
+        0.36916529960426486,
+        0.4825830368686638,
+        0.38090726865420943
+      ]
+    },
+    "total_wall_s": 1051.174959125
+  }
+}
