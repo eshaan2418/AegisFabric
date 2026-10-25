@@ -1,10 +1,11 @@
 """M8 federated fine-tuning: FedAvg / FedProx vs centralized vs local-only, 3 non-IID sites.
 
-  uv run python -m bench.m8_federated run --seeds 0 1 2 3 4
+  AEGIS_DEVICE=mps nice -n 19 uv run python -m bench.m8_federated run --seeds 0 1 2 3 4
   uv run python -m bench.m8_federated summarize
 
 Equal work: every method processes the same total number of local SGD steps (rounds × local_steps × 3 sites)
-at the same batch size, starting from the same public base model as the privacy experiment.
+at the same batch size, starting from the public LM-only base (`bench.m8_privacy.base_model`: pretrained on
+public synthetic statements/transcripts, never on tool-use episodes), so all task skill comes from site data.
 """
 
 from __future__ import annotations
@@ -56,7 +57,10 @@ def cmd_run(a):
         m = central_train(base, pooled, total_steps, HP["batch"], HP["lr"], seed)
         res["central"] = {
             "eval": evaluate_sites(m, evals),
-            "comm": {"bytes_raw_data_moved": "all site data pooled"},
+            "comm": {
+                "raw_data_bytes_pooled": int(sum(len(e.prompt) + len(e.gold_completion) for e in pooled)),
+                "note": "centralized training moves every site's raw episodes to one place",
+            },
             "wall_s": time.perf_counter() - t0,
         }
         for s in SITES:

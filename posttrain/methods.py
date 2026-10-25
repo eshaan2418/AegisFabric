@@ -59,7 +59,7 @@ def dpo(
     c = Compute()
     g = torch.Generator().manual_seed(seed)
     rng = np.random.default_rng(seed)
-    pool = qa.make_split(20_000, seed=30_000 + seed)
+    pool = qa.make_split(5_000, seed=30_000 + seed)
     rounds, n_pairs, t0 = 0, 0, time.perf_counter()
     while c.flops < budget:
         sel = [pool[i] for i in rng.choice(len(pool), prompts, replace=False)]
@@ -115,7 +115,7 @@ def grpo(
     c = Compute()
     g = torch.Generator().manual_seed(seed)
     rng = np.random.default_rng(seed)
-    pool = qa.make_split(20_000, seed=40_000 + seed)
+    pool = qa.make_split(5_000, seed=40_000 + seed)
     iters, mean_r, t0 = 0, [], time.perf_counter()
     while c.flops < budget:
         sel = [pool[i] for i in rng.choice(len(pool), prompts, replace=False)]

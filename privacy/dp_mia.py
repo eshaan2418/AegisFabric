@@ -174,7 +174,9 @@ def attack_metrics(scores: np.ndarray, is_member: np.ndarray, n_boot: int = 2000
     }
 
 
-def lira_offline_scores(target_loss: np.ndarray, shadow_losses: np.ndarray) -> np.ndarray:
+def lira_offline_scores(
+    target_loss: np.ndarray, shadow_losses: np.ndarray, global_var: bool = False
+) -> np.ndarray:
     """Offline LiRA. Confidence φ = log(p/(1−p)) with p = exp(−loss) (mean per-token prob proxy).
     shadow_losses: (K, n) OUT losses. Score = one-sided Gaussian test that φ_target exceeds OUT."""
     from scipy.stats import norm
@@ -184,5 +186,9 @@ def lira_offline_scores(target_loss: np.ndarray, shadow_losses: np.ndarray) -> n
         return np.log(p) - np.log1p(-p)
 
     out = phi(shadow_losses)
-    mu, sd = out.mean(0), out.std(0, ddof=1) + 1e-3
+    mu = out.mean(0)
+    if global_var:  # fixed variance pooled over canaries: recommended when few shadows (Carlini et al. 2022)
+        sd = np.full_like(mu, (out - mu).std(ddof=1) + 1e-3)
+    else:
+        sd = out.std(0, ddof=1) + 1e-3
     return norm.logcdf(phi(target_loss), loc=mu, scale=sd)  # higher = more member-like

@@ -1,7 +1,8 @@
 """M8: SFT vs DPO vs GRPO (+GRPO with learned RM) at equal analytic compute on the tool-use task.
 
-  uv run python -m bench.m8_posttrain tune  --budget 4e12            # LR sweep on dev split, tuning seed 100
-  uv run python -m bench.m8_posttrain run   --seeds 0 1 2 3 4 --budget 4e12
+  AEGIS_DEVICE=mps nice -n 19 uv run python -m bench.m8_posttrain tune --budget 4e12   # LR grid, dev split, seed 100
+  uv run python -m bench.m8_posttrain tune-merge
+  AEGIS_DEVICE=mps nice -n 19 uv run python -m bench.m8_posttrain run --seeds 0 1 2 3 4 --budget 4e12
   uv run python -m bench.m8_posttrain summarize
 
 Compute budget = analytic FLOPs (2N/token forward incl. sampling & reference/RM passes, 6N/token for
@@ -44,41 +45,62 @@ def run_method(name: str, model, seed: int, budget: float, lr: float, rm=None):
     raise ValueError(name)
 
 
+TUNE_GRID = {"sft": [3e-4, 1e-3], "dpo": [3e-4, 1e-3], "grpo": [1e-4, 3e-4]}
+TUNE_SEED = 100
+
+
 def cmd_tune(a):
-    seed = 100
+    """Run one (method, lr) tuning config, or the whole grid if --method is omitted. Each config writes
+    `tune_parts/<method>_<lr>.json`; `tune-merge` picks the best LR per method into `tune.json`."""
+    seed = TUNE_SEED
     warm, wc, info = task.warm_start(seed, ModelConfig(), **WARM)
     dev = qa.make_split(256, seed=DEV_SEED)
-    grid = {"sft": [3e-4, 1e-3], "dpo": [3e-4, 1e-3], "grpo": [1e-4, 3e-4]}
-    rows = []
-    for name, lrs in grid.items():
-        for lr in lrs:
-            m = copy.deepcopy(warm)
-            torch.manual_seed(seed)
-            c, extra = run_method(name, m, seed, a.budget, lr)
-            ev = task.evaluate(m, dev)
-            rows.append(
-                {
-                    "method": name,
-                    "lr": lr,
-                    "dev_exact": ev["exact"],
-                    "dev_tool_ok": ev["tool_ok"],
-                    "flops": c.flops,
-                    "wall_s": c.wall_s,
-                    **extra,
-                }
-            )
-            print(rows[-1], flush=True)
+    configs = [(a.method, a.lr)] if a.method else [(m, lr) for m, lrs in TUNE_GRID.items() for lr in lrs]
+    for name, lr in configs:
+        m = copy.deepcopy(warm)
+        torch.manual_seed(seed)
+        c, extra = run_method(name, m, seed, a.budget, lr)
+        ev = task.evaluate(m, dev)
+        row = {
+            "method": name,
+            "lr": lr,
+            "dev_exact": ev["exact"],
+            "dev_tool_ok": ev["tool_ok"],
+            "flops": c.flops,
+            "wall_s": c.wall_s,
+            **extra,
+        }
+        print(row, flush=True)
+        write_result(
+            f"{OUT}/tune_parts/{name}_{lr:g}.json",
+            {"row": row, "warm_dev": task.evaluate(warm, dev)},
+            config={
+                "budget": a.budget,
+                "warm": WARM,
+                "tuning_seed": seed,
+                "dev_seed": DEV_SEED,
+                "device": str(DEVICE),
+            },
+            seed=seed,
+        )
+
+
+def cmd_tune_merge(a):
+    parts = [read_result(f) for f in sorted((RESULTS / OUT / "tune_parts").glob("*.json"))]
+    rows = [p["data"]["row"] for p in parts]
     best = {}
-    for name in grid:
-        r = max((x for x in rows if x["method"] == name), key=lambda x: x["dev_exact"])
-        best[name] = r["lr"]
+    for name in TUNE_GRID:
+        cand = [x for x in rows if x["method"] == name]
+        assert len(cand) == len(TUNE_GRID[name]), f"missing tuning parts for {name}"
+        best[name] = max(cand, key=lambda x: x["dev_exact"])["lr"]
     best["grpo_rm"] = best["grpo"]
     write_result(
         f"{OUT}/tune.json",
-        {"rows": rows, "best_lr": best, "warm_dev": task.evaluate(warm, dev)},
-        config={"budget": a.budget, "warm": WARM, "tuning_seed": seed, "dev_seed": DEV_SEED},
-        seed=seed,
+        {"rows": rows, "best_lr": best, "warm_dev": parts[0]["data"]["warm_dev"]},
+        config=parts[0]["meta"]["config"],
+        seed=TUNE_SEED,
     )
+    print(best)
 
 
 def cmd_run(a):
@@ -178,8 +200,13 @@ def _plot(table):
     names = list(table)
     mean = [table[n]["exact"]["mean"] for n in names]
     err = [(table[n]["exact"]["ci95_hi"] - table[n]["exact"]["ci95_lo"]) / 2 for n in names]
+    from bench import plotstyle
+
+    plotstyle.apply()
     fig, ax = plt.subplots(figsize=(5, 3))
-    ax.bar(names, mean, yerr=err, capsize=4, color="#4C72B0")
+    ax.bar(names, mean, yerr=err, capsize=4, color=plotstyle.SLOTS[0])
+    for i, v in enumerate(mean):
+        ax.text(i, v + 0.02, f"{v:.2f}", ha="center", fontsize=8)
     ax.set_ylabel("held-out exact match")
     ax.set_ylim(0, 1)
     ax.set_title("Post-training at equal compute (mean ± 95% CI)")
@@ -190,13 +217,15 @@ def _plot(table):
 def main():
     torch.set_num_threads(int(os.environ.get("AEGIS_THREADS", "3")))
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["tune", "run", "summarize"])
+    ap.add_argument("cmd", choices=["tune", "tune-merge", "run", "summarize"])
+    ap.add_argument("--method", default=None)
+    ap.add_argument("--lr", type=float, default=None)
     ap.add_argument("--budget", type=float, default=4e12)
     ap.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2, 3, 4])
     ap.add_argument("--methods", nargs="+", default=["sft", "dpo", "grpo", "grpo_rm"])
     ap.add_argument("--n-eval", type=int, default=500)
     a = ap.parse_args()
-    {"tune": cmd_tune, "run": cmd_run, "summarize": cmd_summarize}[a.cmd](a)
+    {"tune": cmd_tune, "tune-merge": cmd_tune_merge, "run": cmd_run, "summarize": cmd_summarize}[a.cmd](a)
 
 
 if __name__ == "__main__":

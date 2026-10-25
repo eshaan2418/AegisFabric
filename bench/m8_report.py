@@ -160,8 +160,8 @@ def privacy_section() -> list[str]:
         f"batch {hp['batch']} (Poisson, rate in table), {hp['epochs']} epochs, lr {hp['lr']}, Opacus RDP accountant "
         "(PRV accountant as cross-check).",
         "",
-        "| target ε | ε spent (RDP) | ε (PRV) | σ (noise mult.) | steps | q | task exact match | loss-threshold MIA AUC | offline-LiRA AUC | LiRA TPR@5%FPR | seeds |",
-        "|---|---|---|---|---|---|---|---|---|---|---|",
+        "| target ε | ε spent (RDP) | ε (PRV) | σ (noise mult.) | steps | q | task exact match | loss-threshold MIA AUC | offline-LiRA AUC (per-canary var) | offline-LiRA AUC (global var) | shadow-calibrated AUC | LiRA TPR@5%FPR | seeds |",
+        "|---|---|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     order = sorted(d["table"], key=lambda e: float("inf") if e == "inf" else float(e), reverse=True)
     for e in order:
@@ -170,8 +170,17 @@ def privacy_section() -> list[str]:
         out.append(
             f"| {'∞ (no DP)' if e == 'inf' else e} | {ci(t['epsilon_rdp'], 2)} | {ci(t['epsilon_prv'], 2)} | {nm} | "
             f"{t['steps']} | {t['sample_rate']:.3f} | {ci(t['utility_exact'])} | {ci(t['mia_loss_auc'])} | "
-            f"{ci(t['mia_lira_auc'])} | {ci(t['lira_tpr@5%fpr'])} | {t['n_seeds']} |"
+            f"{ci(t['mia_lira_auc'])} | {ci(t['mia_lira_globalvar_auc'])} | {ci(t['mia_calibrated_auc'])} | "
+            f"{ci(t['lira_tpr@5%fpr'])} | {t['n_seeds']} |"
         )
+    be = RESULTS / "m8/privacy/base_eval.json"
+    if be.exists():
+        u = read_result(be)["data"]["utility"]
+        out += [
+            "",
+            f"Public task model *before* the private step (`results/m8/privacy/base_eval.json`): exact match "
+            f"{u['exact']:.3f}, tool-call success {u['tool_ok']:.3f}.",
+        ]
     out += ["", "![dp](figs/dp_mia_utility.png)"]
     return out
 

@@ -121,7 +121,7 @@ def generate(
     prompts: list[str],
     env_fns: list,
     temperature: float = 0.0,
-    max_new: int = 160,
+    max_new: int = 140,
     generator: torch.Generator | None = None,
 ) -> list[dict]:
     """Batched decoding with tool interleaving.
