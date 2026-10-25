@@ -8,17 +8,18 @@ Status values: `todo / in-progress / done / blocked-with-fallback`.
 | M1 | Baseline distributed training | in-progress | code: `train/`, driver `bench/m1_baselines.py`; campaign pending |
 | M2 | Network laboratory | in-progress | code: `netlab/`, lab tests `tests/test_netlab.py` (4/4 in container); `bench/m2_convergence.py` campaign pending |
 | M3 | Adaptive placement & routing controller (primary) | in-progress | code: `controller/`, `bench/wan_run.py`, `bench/m3_*.py`; calibration + campaign pending |
-| M4 | Crash-consistent checkpoint engine | in-progress | delegated to worktree branch (Rust `ckpt/`, envelope encryption) |
-| M5 | Security layer | in-progress | CA/mTLS/rotation code in `security/`; `bench/m5_rotation.py` pending; envelope part with M4 |
-| M6 | Real-time multimodal media pipeline | in-progress | delegated to worktree branch |
+| M4 | Crash-consistent checkpoint engine | done | `results/m4/` (crash campaign 0 undetected/2000, bench, dedup), `results/m4/NOTES.md` |
+| M5 | Security layer | in-progress | CA/mTLS/rotation in `security/`; envelope done (`results/m5/envelope_overhead.json`); rotation campaign queued |
+| M6 | Real-time multimodal media pipeline | done | `results/m6/summary.json`, `results/m6/NOTES.md` (virtual time; mixed result) |
 | M7 | Compiler/kernel extension | done | `results/m7/` (correctness, perf CPU+MPS, sm80 IR) |
-| M8 | Post-training & privacy | in-progress | delegated to worktree branch |
+| M8 | Post-training & privacy | done | `results/m8/REPORT.md`, `results/m8/NOTES.md` |
 | M9 | Formal checks (TLA+) | done | `results/m9/summary.json`, `formal/` |
 | M10 | Integration, reproduction, write-up | todo | `bench/reproduce.sh`, `bench/make_figures.py`, `bench/audit_numbers.py` drafted |
 
 ## Next action
-Run the lab campaigns sequentially (M1 → M2 → M3 calibrate → M3 main → M3 ablations → M5 rotation), merge the
-M4/M6/M8 branches, then M10 (integration demo, paper, README, resume bullets, audit, FINAL_REVIEW).
+Lab campaigns are running from a frozen worktree `../AegisFabric-campaign` at e204f85
+(`bench/lab_campaigns.sh`: m1 → m2 → m3cal → ring → m3 → m3abl → m5). Copy `results/{m1,m2,m3,m5}` back
+when done. Meanwhile: M10 (integration demo, paper, README, resume bullets, claims, FINAL_REVIEW).
 
 ## Campaign plan
 - M1: `bench.m1_baselines --seeds 5` (DDP/FSDP2/HSDP × loopback/WAN).

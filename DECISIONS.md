@@ -116,3 +116,40 @@ plane, and that is exactly the comparison the joint planner makes. κ is now per
 (`bench/m3_calibrate.py` pins all routes to A, then to B, alternating trials). Online refinement updates the
 κ of the bottleneck edge's plane using flush-free steps only: the trainer marks steps that overlap a
 checkpoint upload (`ckpt_busy`), and those are excluded.
+
+## D-015 (2026-10-24) M4 checkpoint engine design
+Rust `aegis-ckpt`: log-structured append-only segments (`MAGIC|len|id|blake3|payload|crc32c`). A RocksDB index
+`chunk_id → (segment, offset, len, epoch)` is written only after the segment fsync. The manifest WAL carries
+BLAKE3 record checksums and uses group commit. GC is mark/copy/sweep with the TLC-found epoch refresh and a
+sweep-time re-check (P1 as fixed in 1e7b428). I/O backends: `io_uring` (Linux; batched WRITE SQEs followed by
+FDATASYNC) and a `pwrite` thread pool (portable fallback, `--io`).
+
+## D-016 (2026-10-24) M4 chunking and client-side encryption
+Fixed-size chunks per tensor, no content-defined chunking: tensor byte layouts never shift between steps, so
+CDC cannot find more duplicates; `bench/m4_dedup.py` confirms chunk-size insensitivity. Chunk ids are
+computed client-side (keyed BLAKE3 under P2), so only missing chunks cross the WAN and the server never sees
+plaintext. `EngineBackend` adapts the engine to `SliceCheckpointer`'s put/get (one committed manifest per
+blob).
+
+## D-017 (2026-10-24) P2 implementation (`ckpt/crypto.py`, re-exported as `security/envelope.py`)
+One AES-256-GCM DEK per (job, key epoch), wrapped by the KEK with AD = job‖epoch. Each chunk gets a fresh
+96-bit nonce with AD = chunk_id‖epoch. The Ed25519-signed manifest binds the chunk list (a deduplicated
+chunk belongs to many manifests) and carries every wrapped DEK its chunks need. Anti-rollback is a
+client-held high-water mark of the manifest version.
+
+## D-018 (2026-10-24) M8 post-training comparison rule
+Methods are compared at equal analytic post-warm-start FLOPs (2N per forward token, 6N per fwd+bwd token),
+all starting from the same per-seed warm start. RM training cost is reported separately. SFT/iterative
+DPO/GRPO/RM are our own implementations: TRL was unavailable offline and the model is a tool-interleaved char
+model. Verifiable reward = EM + 0.1·tool_ok.
+
+## D-019 (2026-10-24) M8 DP step and MIA design
+DP-SGD (Opacus; RDP accountant with PRV cross-check, Poisson sampling, C=1, δ=1e-5) is applied only to the
+private supervised fine-tuning step, at example level. Membership is measured on 16-digit random canaries
+inserted once. Offline LiRA shadows contain same-format reference canaries from a disjoint pool (v1 shadows
+without them saturated at AUC 0.5). A clip-only (σ=0) ablation separates clipping from noise.
+
+## D-020 (2026-10-24) M8 federated simulation
+In-process FedAvg/FedProx over 3 non-IID sites. Communication is accounted as fp32 weight bytes, not
+measured on a wire. Compared with centralized and local-only training at equal total local steps, plus a
+rounds × local-steps sweep at fixed local work.

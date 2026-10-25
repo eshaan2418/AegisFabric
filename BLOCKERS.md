@@ -13,3 +13,9 @@
 | B-009 | 2026-10-24 | Shared-host load breaks real-time media timing | Virtual-time execution with CPU-time-charged compute (D-013) | M6 latencies are model-derived, not wall clock |
 | B-010 | 2026-10-24 | No offline vision model of useful size | Stub vision (compute proxy + deterministic chart reader); STT is real whisper-tiny | No claims about vision accuracy |
 | B-011 | 2026-10-24 | SVT-AV1/libaom ignore runtime bitrate changes | Encoder re-creation with hysteresis | Extra keyframes on each rate change (both policies) |
+| B-012 | 2026-10-24 | Private crate mirror quarantines `cc` 1.10.0 | `Cargo.lock` pins `cc` 1.2.x | None |
+| B-013 | 2026-10-24 | `librocksdb-sys` bindgen needs libclang off the default macOS dyld path | Makefile sets `LIBCLANG_PATH`/`DYLD_FALLBACK_LIBRARY_PATH` on Darwin | None |
+| B-014 | 2026-10-24 | No raw block device / NVMe; ext4/XFS are loop-mounted images on the Docker Desktop VM disk | Loopback images inside the privileged container; device bytes from `/sys/block/loopN/stat` | Absolute M4 throughput/latency include virtio + host APFS; fsync durability only as good as Docker Desktop's flush semantics; relative comparisons within one filesystem hold |
+| B-015 | 2026-10-24 | M4/M8 benchmarks ran concurrently with other experiments on the shared host | `nice -n 19`, CPU caps, seeded interleaving, `small` preset for the M4 matrix | Absolute M4 timings pessimistic, CIs wide; ext4 ran before XFS while load fell, so do not compare across filesystems |
+| B-016 | 2026-10-24 | No usable HF model/TRL offline, no GPU | Own 848k-param char transformer and own SFT/DPO/GRPO/RM, unit-tested | No claims about real LLM post-training |
+| B-017 | 2026-10-24 | 1Password SSH signing failed for ~40 min during M4/M8 wrap-up | Work staged; committed once signing recovered | None |
