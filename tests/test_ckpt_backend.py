@@ -92,6 +92,24 @@ def test_put_get_incremental_and_rollback(srv, tmp_path):
         b.get("k1")
 
 
+@pytest.mark.netlab
+def test_engine_backend_io_uring_in_lab(tmp_path):
+    """Linux lab only: the io_uring backend end to end, plus kill -9 durability of an acked put."""
+    s = ServerProcess(tmp_path / "u", io="uring").start()
+    try:
+        assert s.recovery is not None
+        b = EngineBackend(s.addr, crypto=CkptCrypto.generate("lab"))
+        assert b.cli.stats()["io"] == "uring"
+        x = os.urandom(3 << 20)
+        b.put("ckpt_lab_00000001_slice0of1", x)
+        s.kill9()
+        s.start()
+        b2 = EngineBackend(s.addr, crypto=b.cli.crypto, trusted=b.trusted)
+        assert b2.get("ckpt_lab_00000001_slice0of1") == x
+    finally:
+        s.stop()
+
+
 def test_tampered_store_detected(srv):
     b = EngineBackend(srv.addr, chunk_size=4096)
     b.put("k", os.urandom(50_000))

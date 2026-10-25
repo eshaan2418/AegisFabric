@@ -55,7 +55,7 @@ test-formal:
 	bash formal/get_tools.sh && $(UV) run pytest -q -m slow -o addopts="" tests/test_formal.py
 
 test-lab:
-	$(LAB_RUN) bash -c 'pytest -q -m "netlab" -o addopts="" tests'
+	$(LAB_RUN) bash -c '(cd ckpt && cargo build -q --release) && pytest -q -m "netlab" -o addopts="" tests'
 
 ci: lint test test-formal test-lab
 
