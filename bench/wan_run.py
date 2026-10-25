@@ -24,7 +24,7 @@ from pathlib import Path
 
 import numpy as np
 
-from bench.meta import write_result
+from bench.meta import resolve, write_result
 from bench.scenarios import make as make_scenario
 from controller import model as M
 from controller import planner as PL
@@ -326,7 +326,7 @@ def summarize_run(
 
 
 def run(cfg: RunConfig) -> dict:
-    out = Path(cfg.out) / "raw" / cfg.scenario / cfg.label / f"seed{cfg.seed}"
+    out = resolve(cfg.out) / "raw" / cfg.scenario / cfg.label / f"seed{cfg.seed}"
     shutil.rmtree(out, ignore_errors=True)
     out.mkdir(parents=True)
     load0 = os.getloadavg()
@@ -341,19 +341,18 @@ def run(cfg: RunConfig) -> dict:
     rtt = RttProbes(lab, out / "rtt")
     rtt.start(duration=sc.horizon_s + 400)
     est = Estimator(lab, signals=cfg.signals, rtt=rtt)
-    calib = (
-        json.loads(Path(cfg.out, "calibration.json").read_text())["data"]
-        if Path(cfg.out, "calibration.json").exists()
-        else {}
-    )
+    cal_path = resolve(cfg.out) / "calibration.json"
+    if not cal_path.exists():
+        raise FileNotFoundError(f"{cal_path}: run `python -m bench.m3_calibrate --out {cfg.out}` first")
+    calib = json.loads(cal_path.read_text())["data"]
     job = M.JobSpec(
         n_ranks=6,
-        grad_bytes=calib.get("grad_bytes", 19.7e6),
-        compute_s=calib.get("compute_s", 0.3),
-        ckpt_bytes=calib.get("ckpt_bytes", 59e6),
+        grad_bytes=calib["grad_bytes"],
+        compute_s=calib["compute_s"],
+        ckpt_bytes=calib["ckpt_bytes"],
         ckpt_every=cfg.ckpt_every,
-        restart_s=calib.get("restart_s", 10.0),
-        kappa=calib.get("kappa", 1.0),
+        restart_s=calib["restart_s"],
+        kappa=calib["kappa"],
     )
     planner = make_planner(cfg, job)
     oracle = cfg.method == "oracle"

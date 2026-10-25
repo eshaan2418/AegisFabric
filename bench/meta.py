@@ -10,6 +10,7 @@ import datetime as _dt
 import json
 import os
 import platform
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -73,13 +74,22 @@ def metadata(config: dict[str, Any] | None = None, seed: int | None = None) -> d
     }
 
 
+def resolve(path: str | Path) -> Path:
+    """Absolute paths stay; `results/...` and other repo-relative paths (e.g. `scratch/...`) resolve against
+    the repo root; bare milestone paths (`m7/...`) resolve under results/."""
+    p = Path(path)
+    if p.is_absolute():
+        return p
+    if p.parts and re.fullmatch(r"m\d+|quick", p.parts[0]):
+        return RESULTS / p
+    return REPO_ROOT / p
+
+
 def write_result(
     path: str | Path, data: Any, config: dict[str, Any] | None = None, seed: int | None = None
 ) -> Path:
     """Write `data` with provenance metadata to `path` (JSON). Returns the path."""
-    p = Path(path)
-    if not p.is_absolute():
-        p = RESULTS / p
+    p = resolve(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     payload = {"meta": metadata(config, seed), "data": data}
     tmp = p.with_suffix(p.suffix + ".tmp")
@@ -89,9 +99,7 @@ def write_result(
 
 
 def read_result(path: str | Path) -> dict[str, Any]:
-    p = Path(path)
-    if not p.is_absolute():
-        p = RESULTS / p
+    p = resolve(path)
     return json.loads(p.read_text())
 
 

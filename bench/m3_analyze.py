@@ -18,7 +18,7 @@ from pathlib import Path
 import numpy as np
 
 from bench import plotstyle
-from bench.meta import write_result
+from bench.meta import resolve, write_result
 from bench.stats import holm, summarize, welch
 
 BASELINES = ["static", "ecmp", "independent", "oracle"]
@@ -45,7 +45,7 @@ def main() -> None:
     ap.add_argument("--out", default="results/m3")
     ap.add_argument("--target-loss", type=float, default=0.9)
     a = ap.parse_args()
-    out = Path(a.out)
+    out = resolve(a.out)
     runs = load(out)
     table: dict = {}
     for sc, by_m in runs.items():
