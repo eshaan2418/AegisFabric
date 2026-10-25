@@ -32,7 +32,7 @@ requires = ["setuptools>=70"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = { find = { include = ["train*", "controller*", "netlab*", "security*", "media*", "kernels*", "posttrain*", "privacy*", "bench*", "data*"] } }
+packages = { find = { include = ["ckpt*", "train*", "controller*", "netlab*", "security*", "media*", "kernels*", "posttrain*", "privacy*", "bench*", "data*"] } }
 
 [tool.ruff]
 line-length = 110

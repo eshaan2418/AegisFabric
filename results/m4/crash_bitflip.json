@@ -1,0 +1,3556 @@
+{
+  "meta": {
+    "git": {
+      "commit": "a0e6ce46a47a5c6e968ef11cc4f5ee5160681447",
+      "dirty": false
+    },
+    "hardware": {
+      "platform": "Linux-7.0.12-linuxkit-aarch64-with-glibc2.36",
+      "machine": "aarch64",
+      "python": "3.12.15",
+      "cpu_count": 18,
+      "host_label": "lab-container",
+      "mem_gb": 47.0,
+      "torch": "2.14.1+cpu",
+      "torch_threads": 18
+    },
+    "seed": 2,
+    "config": {
+      "kill_trials": 1000,
+      "torn_trials": 500,
+      "flip_trials": 500,
+      "seed": 0,
+      "out": "m4"
+    },
+    "command": "m4_crash.py --kill-trials 1000 --torn-trials 500 --flip-trials 500 --seed 0",
+    "timestamp": "2026-10-25T01:30:39+00:00"
+  },
+  "data": {
+    "trials": 500,
+    "outcomes": {
+      "ok": 327,
+      "detected": 173,
+      "undetected": 0
+    },
+    "by_target": {
+      "index": {
+        "ok": 319,
+        "detected": 0,
+        "undetected": 0
+      },
+      "segment": {
+        "ok": 8,
+        "detected": 117,
+        "undetected": 0
+      },
+      "wal": {
+        "ok": 0,
+        "detected": 56,
+        "undetected": 0
+      }
+    },
+    "wall_s": 73.32906889915466,
+    "trials_detail": [
+      {
+        "trial": 0,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [5705]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 1,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [6, 24, 4]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 2,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [5058]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 3,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [7618885, 2987750, 378840]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError"
+      },
+      {
+        "trial": 4,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [6514, 5434]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 5,
+        "target": "wal",
+        "fault": "flip 2 bits in manifest.wal at [37718, 18955]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
+      },
+      {
+        "trial": 6,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [13, 33]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 7,
+        "target": "wal",
+        "fault": "flip 2 bits in manifest.wal at [35651, 104]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
+      },
+      {
+        "trial": 8,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [4587, 4487]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 9,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [4054337]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 10,
+        "target": "index",
+        "fault": "flip 2 bits in CURRENT at [9, 5]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 11,
+        "target": "index",
+        "fault": "flip 3 bits in CURRENT at [10, 4, 5]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 12,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [19, 32, 23]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 13,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [2886559]",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 14,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [6, 39, 50]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 15,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [8031]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 16,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [1528526]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError"
+      },
+      {
+        "trial": 17,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [1717, 12058]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 18,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [1523326, 905055]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError"
+      },
+      {
+        "trial": 19,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [2750126]",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 20,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [7478, 8755, 7340]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 21,
+        "target": "index",
+        "fault": "flip 2 bits in CURRENT at [0, 12]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 22,
+        "target": "index",
+        "fault": "flip 3 bits in 000004.log at [1809, 3600, 486]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 23,
+        "target": "index",
+        "fault": "flip 3 bits in CURRENT at [14, 0, 11]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 24,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [30, 117]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 25,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [623, 8120, 3753]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 26,
+        "target": "index",
+        "fault": "flip 3 bits in 000004.log at [2799, 2034, 9117]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 27,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [5]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 28,
+        "target": "index",
+        "fault": "flip 2 bits in CURRENT at [7, 13]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 29,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [121, 45]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 30,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [8562, 409, 3091]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 31,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [15013, 27254, 37100]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
+      },
+      {
+        "trial": 32,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [7773, 4489, 520]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 33,
+        "target": "index",
+        "fault": "flip 3 bits in CURRENT at [3, 3, 14]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 34,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [34563, 18250, 22937]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
+      },
+      {
+        "trial": 35,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [6671]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 36,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [247, 8381]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 37,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [5]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 38,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [415004]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 39,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [6986433, 216963]",
+        "outcome": "detected",
+        "detail": "seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError"
+      },
+      {
+        "trial": 40,
+        "target": "index",
+        "fault": "flip 2 bits in IDENTITY at [18, 19]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 41,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [115, 18]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 42,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [185, 4537, 6223]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 43,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [1504661, 3221807]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError"
+      },
+      {
+        "trial": 44,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [118798]",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError"
+      },
+      {
+        "trial": 45,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [6298]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 46,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [8889, 6519]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 47,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [1]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 48,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [54]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 49,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [11]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 50,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [9, 115]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 51,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [7582414]",
+        "outcome": "detected",
+        "detail": "seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError"
+      },
+      {
+        "trial": 52,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [3, 30, 3]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 53,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [28]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 54,
+        "target": "index",
+        "fault": "flip 2 bits in IDENTITY at [15, 21]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 55,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [4794, 7018, 3271]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 56,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [2010160]",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 57,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [11440, 34683, 4300]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
+      },
+      {
+        "trial": 58,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [2159224, 2825261, 200219]",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 59,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [25522, 1727, 21784]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
+      },
+      {
+        "trial": 60,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [10202, 2168]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 61,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [11268]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 62,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [1214229, 2906710]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 63,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [1218, 5620, 6321]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 64,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [2664]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 65,
+        "target": "index",
+        "fault": "flip 3 bits in CURRENT at [14, 15, 7]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 66,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [3332759, 1835456, 1757542]",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 67,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [1948]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 68,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [14336]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 69,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [23, 34, 7]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 70,
+        "target": "index",
+        "fault": "flip 3 bits in CURRENT at [1, 4, 4]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 71,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [39]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 72,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [6]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 73,
+        "target": "wal",
+        "fault": "flip 1 bits in manifest.wal at [37403]",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=7 acked=8: RollbackError"
+      },
+      {
+        "trial": 74,
+        "target": "wal",
+        "fault": "flip 1 bits in manifest.wal at [15471]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
+      },
+      {
+        "trial": 75,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [1812330, 2467224, 475663]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 76,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [10330, 12924]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 77,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [10943, 6336, 6054]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
+      },
+      {
+        "trial": 78,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [6956107, 2548143, 370122]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError"
+      },
+      {
+        "trial": 79,
+        "target": "index",
+        "fault": "flip 3 bits in 000004.log at [13399, 5012, 39]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 80,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [8646, 1525, 2623]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 81,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [12592, 4854]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 82,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [2392794, 1925266]",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 83,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [1241483, 3284120, 3119590]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 84,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [9667]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 85,
+        "target": "index",
+        "fault": "flip 2 bits in IDENTITY at [20, 6]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 86,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [10196]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 87,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [1983163]",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 88,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [2063482, 1043254, 1426336]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError"
+      },
+      {
+        "trial": 89,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [8430]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 90,
+        "target": "wal",
+        "fault": "flip 1 bits in manifest.wal at [35061]",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=7 acked=8: RollbackError"
+      },
+      {
+        "trial": 91,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [1672]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 92,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [7629104]",
+        "outcome": "detected",
+        "detail": "seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError"
+      },
+      {
+        "trial": 93,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [18, 10, 11]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 94,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [3282381, 358343]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 95,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [14]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 96,
+        "target": "index",
+        "fault": "flip 3 bits in 000004.log at [5416, 7897, 1532]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 97,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [4438962]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError"
+      },
+      {
+        "trial": 98,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [8]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 99,
+        "target": "index",
+        "fault": "flip 2 bits in IDENTITY at [13, 33]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 100,
+        "target": "index",
+        "fault": "flip 3 bits in 000004.log at [9233, 14059, 6984]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 101,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [5]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 102,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [7052, 6976]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 103,
+        "target": "index",
+        "fault": "flip 2 bits in IDENTITY at [27, 20]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 104,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [6952]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 105,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [47, 124]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 106,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [412, 7382]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 107,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [7726431, 2489962]",
+        "outcome": "detected",
+        "detail": "seq5:IntegrityError"
+      },
+      {
+        "trial": 108,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [1497, 7042]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 109,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [82728, 1509690]",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError"
+      },
+      {
+        "trial": 110,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [2016964, 3270420, 2992466]",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 111,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [5979293, 3747972, 7109395]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 112,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [116, 65]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 113,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [2924]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 114,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [3249261, 267172]",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 115,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [28, 25, 10]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 116,
+        "target": "index",
+        "fault": "flip 3 bits in 000004.log at [12936, 9075, 5976]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 117,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [8942, 4646, 8774]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 118,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [37, 101, 95]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 119,
+        "target": "index",
+        "fault": "flip 3 bits in 000004.log at [12288, 4366, 8723]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 120,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [8878, 8144, 3855]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 121,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [40, 120, 100]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 122,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [1085, 1055, 2352]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 123,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [7729274, 7891148]",
+        "outcome": "detected",
+        "detail": "seq5:IntegrityError;seq6:IntegrityError"
+      },
+      {
+        "trial": 124,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [85, 46, 28]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 125,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [31, 17, 9]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 126,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [33, 104]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 127,
+        "target": "index",
+        "fault": "flip 2 bits in IDENTITY at [2, 27]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 128,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [8808, 3342, 5318]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 129,
+        "target": "index",
+        "fault": "flip 3 bits in CURRENT at [8, 2, 4]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 130,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [4450228]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError"
+      },
+      {
+        "trial": 131,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [4507]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 132,
+        "target": "index",
+        "fault": "flip 3 bits in 000004.log at [12532, 11780, 11123]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 133,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [12299, 5503]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 134,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [3086267, 689022, 1146149]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 135,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [129079, 2199521, 1413678]",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 136,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [37667, 31912, 33856]",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=7 acked=8: RollbackError"
+      },
+      {
+        "trial": 137,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [4423529, 6652331, 3683176]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 138,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [20]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 139,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [122, 123, 119]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 140,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [8174]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 141,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [38053, 10024, 20641]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
+      },
+      {
+        "trial": 142,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [37, 12, 10]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 143,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [4219048, 7843666]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 144,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [74]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 145,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [1396330]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError"
+      },
+      {
+        "trial": 146,
+        "target": "index",
+        "fault": "flip 2 bits in IDENTITY at [7, 26]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 147,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [12866, 3910]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 148,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [7, 56]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 149,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [1606, 3092]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 150,
+        "target": "index",
+        "fault": "flip 2 bits in CURRENT at [1, 4]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 151,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [363, 3738]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 152,
+        "target": "index",
+        "fault": "flip 3 bits in 000004.log at [6297, 3097, 9246]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 153,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [38066, 36383, 14840]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
+      },
+      {
+        "trial": 154,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [5164, 3435]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 155,
+        "target": "index",
+        "fault": "flip 3 bits in CURRENT at [0, 11, 1]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 156,
+        "target": "index",
+        "fault": "flip 3 bits in CURRENT at [9, 1, 6]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 157,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [108]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 158,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [850695, 2924989, 2814029]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 159,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [1800925, 1320405, 7109351]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 160,
+        "target": "index",
+        "fault": "flip 2 bits in CURRENT at [4, 11]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 161,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [1554321, 2931745, 897047]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 162,
+        "target": "index",
+        "fault": "flip 3 bits in CURRENT at [3, 4, 10]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 163,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [3267, 8346]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 164,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [100]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 165,
+        "target": "index",
+        "fault": "flip 3 bits in 000004.log at [9097, 7283, 8423]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 166,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [1457024, 946975]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError"
+      },
+      {
+        "trial": 167,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [0]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 168,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [3474925, 500144]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 169,
+        "target": "index",
+        "fault": "flip 3 bits in CURRENT at [14, 14, 4]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 170,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [4863130, 3371901, 629975]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 171,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [2067]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 172,
+        "target": "index",
+        "fault": "flip 3 bits in 000004.log at [5727, 11863, 5074]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 173,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [4553, 6659, 6583]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 174,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [3518, 4674]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 175,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [60, 118, 113]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 176,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [7000009]",
+        "outcome": "detected",
+        "detail": "seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError"
+      },
+      {
+        "trial": 177,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [3052265, 1473318, 450676]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 178,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [1165, 9040]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 179,
+        "target": "index",
+        "fault": "flip 2 bits in IDENTITY at [35, 12]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 180,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [514879, 466851]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 181,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [13558]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 182,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [29, 25, 5]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 183,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [968382]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError"
+      },
+      {
+        "trial": 184,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [549656]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError"
+      },
+      {
+        "trial": 185,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [17, 18, 30]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 186,
+        "target": "index",
+        "fault": "flip 2 bits in CURRENT at [9, 3]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 187,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [11]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 188,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [802864]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError"
+      },
+      {
+        "trial": 189,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [6]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 190,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [9962, 34123, 9726]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
+      },
+      {
+        "trial": 191,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [19841, 36022, 15017]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
+      },
+      {
+        "trial": 192,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [57]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 193,
+        "target": "index",
+        "fault": "flip 2 bits in IDENTITY at [20, 9]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 194,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [116, 28, 72]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 195,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [5080948, 7793081]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError"
+      },
+      {
+        "trial": 196,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [2792303, 2136364]",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 197,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [21]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 198,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [1040414]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 199,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [3233]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 200,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [1120, 2083]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 201,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [5047, 1102]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 202,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [87]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 203,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [6425494, 4656962]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError"
+      },
+      {
+        "trial": 204,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [34]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 205,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [4107, 883]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 206,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [6, 11, 26]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 207,
+        "target": "index",
+        "fault": "flip 2 bits in CURRENT at [3, 4]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 208,
+        "target": "index",
+        "fault": "flip 2 bits in CURRENT at [14, 11]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 209,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [19275, 7735, 33994]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
+      },
+      {
+        "trial": 210,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [109, 106, 35]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 211,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [7026878]",
+        "outcome": "detected",
+        "detail": "seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError"
+      },
+      {
+        "trial": 212,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [10096]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 213,
+        "target": "wal",
+        "fault": "flip 2 bits in manifest.wal at [12248, 19485]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
+      },
+      {
+        "trial": 214,
+        "target": "index",
+        "fault": "flip 2 bits in IDENTITY at [12, 23]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 215,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [3118245, 4172553, 1076630]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 216,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [7188]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 217,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [292223, 1569108, 2614680]",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 218,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [4051, 864]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 219,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [1]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 220,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [2819]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 221,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [36]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 222,
+        "target": "index",
+        "fault": "flip 3 bits in CURRENT at [6, 10, 9]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 223,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [34, 104, 5]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 224,
+        "target": "index",
+        "fault": "flip 2 bits in CURRENT at [13, 7]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 225,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [13071]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 226,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [741, 3397]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 227,
+        "target": "wal",
+        "fault": "flip 2 bits in manifest.wal at [37307, 34066]",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=7 acked=8: RollbackError"
+      },
+      {
+        "trial": 228,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [0, 35, 21]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 229,
+        "target": "index",
+        "fault": "flip 3 bits in 000004.log at [3593, 12859, 5717]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 230,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [28, 23, 25]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 231,
+        "target": "index",
+        "fault": "flip 2 bits in IDENTITY at [17, 22]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 232,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [8398, 11934]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 233,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [37, 50, 79]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 234,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [20, 15, 11]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 235,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [5272, 25008, 32459]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
+      },
+      {
+        "trial": 236,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [5158535, 1801825, 5867057]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 237,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [80, 33]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 238,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [1821154, 348491, 1800122]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 239,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [6503]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 240,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [4593, 4772]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 241,
+        "target": "index",
+        "fault": "flip 3 bits in CURRENT at [8, 10, 1]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 242,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [8081248]",
+        "outcome": "detected",
+        "detail": "seq5:IntegrityError"
+      },
+      {
+        "trial": 243,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [800761]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError"
+      },
+      {
+        "trial": 244,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [16]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 245,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [3752, 7098]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 246,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [107, 63, 31]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 247,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [2979780]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 248,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [3040570, 2504346]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 249,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [3958, 11143]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 250,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [101, 48, 31]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 251,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [110, 103]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 252,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [70, 77]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 253,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [14]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 254,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [22]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 255,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [4551, 32391, 21127]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
+      },
+      {
+        "trial": 256,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [1261190, 1753809]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError"
+      },
+      {
+        "trial": 257,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [6255, 1745]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 258,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [6695835, 7724650, 1222543]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 259,
+        "target": "wal",
+        "fault": "flip 1 bits in manifest.wal at [6692]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
+      },
+      {
+        "trial": 260,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [5628]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 261,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [11]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 262,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [2752558, 6392283]",
+        "outcome": "detected",
+        "detail": "seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError"
+      },
+      {
+        "trial": 263,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [5057]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 264,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [12576]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 265,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [9231, 1949]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 266,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [12424]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 267,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [1623248, 1175186, 1855441]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 268,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [707654, 6396637, 488751]",
+        "outcome": "detected",
+        "detail": "seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError"
+      },
+      {
+        "trial": 269,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [12512, 6785]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 270,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [1371624, 2117753]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 271,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [2573]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 272,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [31, 16, 10]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 273,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [4465933, 5567214]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError"
+      },
+      {
+        "trial": 274,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [16554, 27529, 12694]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
+      },
+      {
+        "trial": 275,
+        "target": "index",
+        "fault": "flip 2 bits in CURRENT at [6, 3]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 276,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [118]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 277,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [86, 69, 75]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 278,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [2697063, 756066, 3129038]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 279,
+        "target": "index",
+        "fault": "flip 3 bits in 000004.log at [3392, 9870, 4577]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 280,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [1413484]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError"
+      },
+      {
+        "trial": 281,
+        "target": "index",
+        "fault": "flip 2 bits in IDENTITY at [15, 19]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 282,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [2354, 5388, 2120]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 283,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [6877, 1166, 5470]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 284,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [2201920, 631617]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 285,
+        "target": "index",
+        "fault": "flip 3 bits in 000004.log at [5970, 13710, 2604]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 286,
+        "target": "wal",
+        "fault": "flip 2 bits in manifest.wal at [21155, 6919]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
+      },
+      {
+        "trial": 287,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [10483]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 288,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [12, 19, 18]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 289,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [2461295]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 290,
+        "target": "wal",
+        "fault": "flip 1 bits in manifest.wal at [872]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
+      },
+      {
+        "trial": 291,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [35, 1, 57]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 292,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [1475388, 1822487, 2248926]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 293,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [788794, 4416845, 6256483]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 294,
+        "target": "wal",
+        "fault": "flip 1 bits in manifest.wal at [23196]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 19037 invalid but later records exist"
+      },
+      {
+        "trial": 295,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [13]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 296,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [2, 11, 6]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 297,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [110, 47]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 298,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [7]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 299,
+        "target": "wal",
+        "fault": "flip 2 bits in manifest.wal at [28037, 6503]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
+      },
+      {
+        "trial": 300,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [5453749, 2632702, 3691706]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 301,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [36343, 30597, 36107]",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=6 acked=8: RollbackError"
+      },
+      {
+        "trial": 302,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [43]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 303,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [9363]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 304,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [40, 4, 67]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 305,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [119, 93]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 306,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [4, 10, 27]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 307,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [12]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 308,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [24644, 23513, 4561]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
+      },
+      {
+        "trial": 309,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [6]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 310,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [315506, 4122491, 8163708]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 311,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [3917]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 312,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [2979355, 1841824]",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 313,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [4]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 314,
+        "target": "index",
+        "fault": "flip 2 bits in IDENTITY at [3, 21]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 315,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [2986693, 112081, 296825]",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 316,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [6649982]",
+        "outcome": "detected",
+        "detail": "seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError"
+      },
+      {
+        "trial": 317,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [2575492, 3206042, 1202556]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 318,
+        "target": "index",
+        "fault": "flip 3 bits in CURRENT at [7, 12, 2]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 319,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [6952025, 3713764, 5752090]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 320,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [2212, 465, 520]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 321,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [35737, 17796, 33353]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
+      },
+      {
+        "trial": 322,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [80]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 323,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [26]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 324,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [2706]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 325,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [88]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 326,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [22, 10, 25]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 327,
+        "target": "index",
+        "fault": "flip 2 bits in CURRENT at [8, 3]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 328,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [542, 7502, 31733]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
+      },
+      {
+        "trial": 329,
+        "target": "wal",
+        "fault": "flip 1 bits in manifest.wal at [26907]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 25383 invalid but later records exist"
+      },
+      {
+        "trial": 330,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [1463482, 2525284, 1995491]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 331,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [1, 24, 17]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 332,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [1312898]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError"
+      },
+      {
+        "trial": 333,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [12548, 889]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 334,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [620342, 301222]",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError"
+      },
+      {
+        "trial": 335,
+        "target": "index",
+        "fault": "flip 2 bits in IDENTITY at [22, 25]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 336,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [169299, 3140140, 2223500]",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 337,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [8096623, 1963745]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 338,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [1463387, 471449, 2393992]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 339,
+        "target": "wal",
+        "fault": "flip 2 bits in manifest.wal at [23440, 10301]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
+      },
+      {
+        "trial": 340,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [18]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 341,
+        "target": "index",
+        "fault": "flip 2 bits in IDENTITY at [33, 13]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 342,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [2234649, 1363665]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 343,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [3551684, 5516734]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError"
+      },
+      {
+        "trial": 344,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [7035]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 345,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [9037]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 346,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [5]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 347,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [9428]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 348,
+        "target": "wal",
+        "fault": "flip 2 bits in manifest.wal at [34234, 33137]",
+        "outcome": "detected",
+        "detail": "rollback-detected latest=7 acked=8: RollbackError"
+      },
+      {
+        "trial": 349,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [8797, 3434, 6773]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 350,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [1661116, 490820, 915345]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 351,
+        "target": "index",
+        "fault": "flip 3 bits in CURRENT at [4, 8, 1]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 352,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [16, 34, 9]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 353,
+        "target": "index",
+        "fault": "flip 3 bits in 000004.log at [35, 13811, 2741]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 354,
+        "target": "index",
+        "fault": "flip 2 bits in CURRENT at [8, 14]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 355,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [1161029, 2406967]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 356,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [6270, 7425, 4516]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 357,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [2006]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 358,
+        "target": "wal",
+        "fault": "flip 1 bits in manifest.wal at [7190]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
+      },
+      {
+        "trial": 359,
+        "target": "index",
+        "fault": "flip 2 bits in IDENTITY at [21, 26]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 360,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [3194128]",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 361,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [5058, 5416]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 362,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [42]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 363,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [25925, 9687, 22733]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
+      },
+      {
+        "trial": 364,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [3]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 365,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [81]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 366,
+        "target": "wal",
+        "fault": "flip 2 bits in manifest.wal at [3402, 1559]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
+      },
+      {
+        "trial": 367,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [1100126, 2597393, 1027037]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 368,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [86, 13]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 369,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [24]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 370,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [4569]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 371,
+        "target": "index",
+        "fault": "flip 2 bits in CURRENT at [13, 4]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 372,
+        "target": "wal",
+        "fault": "flip 1 bits in manifest.wal at [11401]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
+      },
+      {
+        "trial": 373,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [65, 1, 33]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 374,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [39, 14]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 375,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [2357, 1311]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 376,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [58938, 3182521]",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 377,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [2726270, 628603, 82958]",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 378,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [5]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 379,
+        "target": "index",
+        "fault": "flip 2 bits in CURRENT at [14, 10]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 380,
+        "target": "wal",
+        "fault": "flip 1 bits in manifest.wal at [7195]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
+      },
+      {
+        "trial": 381,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [1242]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 382,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [17]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 383,
+        "target": "index",
+        "fault": "flip 3 bits in CURRENT at [3, 11, 12]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 384,
+        "target": "wal",
+        "fault": "flip 1 bits in manifest.wal at [10540]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
+      },
+      {
+        "trial": 385,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [6987]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 386,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [6030]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 387,
+        "target": "wal",
+        "fault": "flip 2 bits in manifest.wal at [16732, 33093]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
+      },
+      {
+        "trial": 388,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [2285, 1885]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 389,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [5375, 4550, 8215]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 390,
+        "target": "index",
+        "fault": "flip 3 bits in 000004.log at [12033, 12729, 10081]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 391,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [518732, 2720009, 2559220]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 392,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [4]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 393,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [10213]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 394,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [13193]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 395,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [12]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 396,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [3517, 2920]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 397,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [1499956, 41285, 941021]",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError;seq7:IntegrityError"
+      },
+      {
+        "trial": 398,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [1]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 399,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [1498, 34510, 15518]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
+      },
+      {
+        "trial": 400,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [4958047]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError"
+      },
+      {
+        "trial": 401,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [2447959, 725742]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 402,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [80, 90, 101]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 403,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [2053, 7236]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 404,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [104, 108, 101]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 405,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [6744068, 6773694]",
+        "outcome": "detected",
+        "detail": "seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError"
+      },
+      {
+        "trial": 406,
+        "target": "wal",
+        "fault": "flip 1 bits in manifest.wal at [6066]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
+      },
+      {
+        "trial": 407,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [119, 98]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 408,
+        "target": "index",
+        "fault": "flip 3 bits in 000004.log at [4737, 9954, 9893]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 409,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [92, 65, 24]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 410,
+        "target": "index",
+        "fault": "flip 3 bits in CURRENT at [5, 0, 9]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 411,
+        "target": "wal",
+        "fault": "flip 2 bits in manifest.wal at [17815, 1127]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
+      },
+      {
+        "trial": 412,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [2391277, 5099157, 2921497]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError"
+      },
+      {
+        "trial": 413,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [18187, 33241, 37830]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
+      },
+      {
+        "trial": 414,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [2692230]",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 415,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [37, 49, 99]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 416,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [71]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 417,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [21]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 418,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [4311]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 419,
+        "target": "wal",
+        "fault": "flip 1 bits in manifest.wal at [26593]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 25383 invalid but later records exist"
+      },
+      {
+        "trial": 420,
+        "target": "wal",
+        "fault": "flip 2 bits in manifest.wal at [31895, 2160]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
+      },
+      {
+        "trial": 421,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [1260901, 875350]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError"
+      },
+      {
+        "trial": 422,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [28]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 423,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [2648, 2725]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 424,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [717054, 4506095, 6124518]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 425,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [1125, 2276]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 426,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [2152, 8422, 3895]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 427,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [1]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 428,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [109522]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError"
+      },
+      {
+        "trial": 429,
+        "target": "wal",
+        "fault": "flip 2 bits in manifest.wal at [12737, 25847]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
+      },
+      {
+        "trial": 430,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [1697437, 1558532]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 431,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [11979]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 432,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [5766105, 6945054, 178798]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 433,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [1771742, 2520754, 1340759]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 434,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [7]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 435,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [11]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 436,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [0]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 437,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [3573]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 438,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [15]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 439,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [2733]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 440,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [2038, 7917]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 441,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000002.log at [1084981, 1505742, 844107]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError"
+      },
+      {
+        "trial": 442,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [3]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 443,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [6770, 10480]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 444,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [5249368, 7866180]",
+        "outcome": "detected",
+        "detail": "seq5:IntegrityError;seq6:IntegrityError"
+      },
+      {
+        "trial": 445,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [21, 81]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 446,
+        "target": "wal",
+        "fault": "flip 2 bits in manifest.wal at [1135, 37271]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
+      },
+      {
+        "trial": 447,
+        "target": "index",
+        "fault": "flip 3 bits in CURRENT at [8, 3, 12]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 448,
+        "target": "wal",
+        "fault": "flip 2 bits in manifest.wal at [10088, 32983]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
+      },
+      {
+        "trial": 449,
+        "target": "index",
+        "fault": "flip 3 bits in CURRENT at [6, 8, 8]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 450,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [6360449]",
+        "outcome": "detected",
+        "detail": "seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 451,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [13, 16, 29]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 452,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [8758]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 453,
+        "target": "index",
+        "fault": "flip 2 bits in CURRENT at [2, 7]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 454,
+        "target": "wal",
+        "fault": "flip 1 bits in manifest.wal at [10506]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
+      },
+      {
+        "trial": 455,
+        "target": "index",
+        "fault": "flip 2 bits in CURRENT at [8, 6]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 456,
+        "target": "index",
+        "fault": "flip 2 bits in IDENTITY at [22, 2]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 457,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [4]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 458,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [45]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 459,
+        "target": "segment",
+        "fault": "flip 3 bits in seg-00000001.log at [3351751, 5119331, 7404231]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError"
+      },
+      {
+        "trial": 460,
+        "target": "wal",
+        "fault": "flip 1 bits in manifest.wal at [14698]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
+      },
+      {
+        "trial": 461,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [7274]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 462,
+        "target": "index",
+        "fault": "flip 2 bits in MANIFEST-000005 at [68, 35]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 463,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [1204049, 2487457]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 464,
+        "target": "index",
+        "fault": "flip 1 bits in CURRENT at [6]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 465,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [537342]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError"
+      },
+      {
+        "trial": 466,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [349]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 467,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [1191, 8869, 6756]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 468,
+        "target": "wal",
+        "fault": "flip 1 bits in manifest.wal at [16502]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
+      },
+      {
+        "trial": 469,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [1273121, 1533152]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError"
+      },
+      {
+        "trial": 470,
+        "target": "index",
+        "fault": "flip 2 bits in OPTIONS-000007 at [7445, 3168]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 471,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [4393]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 472,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [7152695, 7489298]",
+        "outcome": "detected",
+        "detail": "seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError"
+      },
+      {
+        "trial": 473,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [21270, 36617, 11099]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
+      },
+      {
+        "trial": 474,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [6087, 8199]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 475,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [2051789]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError"
+      },
+      {
+        "trial": 476,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [2, 25, 9]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 477,
+        "target": "index",
+        "fault": "flip 2 bits in IDENTITY at [9, 30]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 478,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000001.log at [1859845, 2610745]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError;seq4:IntegrityError;seq5:IntegrityError;seq6:IntegrityError;seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 479,
+        "target": "wal",
+        "fault": "flip 2 bits in manifest.wal at [11389, 36438]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
+      },
+      {
+        "trial": 480,
+        "target": "index",
+        "fault": "flip 2 bits in CURRENT at [7, 10]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 481,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [13]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 482,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [3155220]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 483,
+        "target": "index",
+        "fault": "flip 2 bits in 000004.log at [1728, 2107]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 484,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [249245]",
+        "outcome": "detected",
+        "detail": "seq6:IntegrityError"
+      },
+      {
+        "trial": 485,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [9574]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 486,
+        "target": "index",
+        "fault": "flip 3 bits in MANIFEST-000005 at [36, 26, 54]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 487,
+        "target": "wal",
+        "fault": "flip 1 bits in manifest.wal at [17299]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
+      },
+      {
+        "trial": 488,
+        "target": "index",
+        "fault": "flip 1 bits in OPTIONS-000007 at [4910]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 489,
+        "target": "index",
+        "fault": "flip 1 bits in IDENTITY at [22]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 490,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [2787801, 2189208]",
+        "outcome": "detected",
+        "detail": "seq8:IntegrityError"
+      },
+      {
+        "trial": 491,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [979688]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError"
+      },
+      {
+        "trial": 492,
+        "target": "index",
+        "fault": "flip 1 bits in 000004.log at [10250]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 493,
+        "target": "index",
+        "fault": "flip 3 bits in OPTIONS-000007 at [5743, 4291, 7160]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 494,
+        "target": "index",
+        "fault": "flip 3 bits in IDENTITY at [30, 12, 4]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 495,
+        "target": "segment",
+        "fault": "flip 2 bits in seg-00000002.log at [843310, 3016749]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError;seq8:IntegrityError"
+      },
+      {
+        "trial": 496,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000002.log at [1134611]",
+        "outcome": "detected",
+        "detail": "seq7:IntegrityError"
+      },
+      {
+        "trial": 497,
+        "target": "index",
+        "fault": "flip 1 bits in MANIFEST-000005 at [101]",
+        "outcome": "ok",
+        "detail": "latest=8"
+      },
+      {
+        "trial": 498,
+        "target": "wal",
+        "fault": "flip 3 bits in manifest.wal at [13555, 22033, 27712]",
+        "outcome": "detected",
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
+      },
+      {
+        "trial": 499,
+        "target": "segment",
+        "fault": "flip 1 bits in seg-00000001.log at [1689912]",
+        "outcome": "detected",
+        "detail": "seq3:IntegrityError"
+      }
+    ]
+  }
+}
