@@ -1,0 +1,125 @@
+{
+  "meta": {
+    "git": {
+      "commit": "968685d772ad2ef4e87f6f4f06ba5f3f09cbe8aa",
+      "dirty": true
+    },
+    "hardware": {
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "machine": "arm64",
+      "python": "3.12.14",
+      "cpu_count": 18,
+      "host_label": "darwin",
+      "mem_gb": 48.0,
+      "torch": "2.14.1",
+      "torch_threads": 1
+    },
+    "seed": 1,
+    "config": {
+      "condition": "lossy-independent",
+      "duration_s": 24.0,
+      "vision_ms": 50.0
+    },
+    "command": "media_run.py --trials 5",
+    "timestamp": "2026-10-24T18:41:48+00:00"
+  },
+  "data": {
+    "profile": "lossy",
+    "policy": "independent",
+    "seed": 1,
+    "vision_ms": 50.0,
+    "vmaf_mean": 58.28064965350877,
+    "vmaf_p5": 3.91604035,
+    "sent_kbps": 728.5703333333333,
+    "recv_kbps": 1009.0986666666666,
+    "sent_frames": 720,
+    "decoded_frames": 582,
+    "dropped_network": 138,
+    "late_frames": 153,
+    "retransmits": 1440,
+    "dropped_network_frac": 0.19166666666666668,
+    "dropped_backpressure": 0,
+    "stalls": 2,
+    "stall_time_s": 4.533333333333327,
+    "glass_to_answer_s": [
+      1.343190785507204,
+      0.9281148333867577,
+      1.1889510159126075
+    ],
+    "glass_to_answer_mean_s": 1.1534188782688564,
+    "answered_frac": 1.0,
+    "answer_correct_frac": 0.3333333333333333,
+    "glass_to_inference_p50_s": 0.25212422222671194,
+    "glass_to_inference_p95_s": 0.6136988174876481,
+    "inferred_frames": 163,
+    "chart_err_mean": 0.002405870323589556,
+    "av_skew_ms_median_abs": 2.6241550139616265,
+    "rtt_ms_median": 85.87646484375,
+    "reinits": 8,
+    "keyframes": 24,
+    "plis": 12,
+    "blocked_s": 0.0,
+    "mean_bitrate_decision_kbps": 768.2926829268292,
+    "mean_fps_decision": 30.0,
+    "stt_texts": [
+      "Hi, I'm calling about accounts in 1989-238. Can you tell me how",
+      "and what's my closest thing balance?",
+      "Thanks. Could you flutter the largest charge for review?"
+    ],
+    "stt_service_s": [
+      0.8697489999999561,
+      0.46414100000004055,
+      0.5335619999999608
+    ],
+    "cpu_ms": {
+      "av1_encode": 2.355519444444296,
+      "av1_decode": 0.4916683848796095,
+      "fn": 16.177861445782952,
+      "enc_reinit": 6.50137500000092
+    },
+    "cpu_ms_p95": {
+      "av1_encode": 5.2332499999899085,
+      "av1_decode": 0.9089000000074065,
+      "fn": 11.930500000005395,
+      "enc_reinit": 7.715950000000049
+    },
+    "relay": {
+      "fwd": {
+        "in": 5191,
+        "lost": 122,
+        "qdrop": 544,
+        "out_bytes": 3158539
+      },
+      "rev": {
+        "in": 691,
+        "lost": 0,
+        "qdrop": 0,
+        "out_bytes": 21836
+      }
+    },
+    "profile_cfg": {
+      "name": "lossy",
+      "delay_ms": 40,
+      "jitter_ms": 15,
+      "ge_p": 0.0155,
+      "ge_r": 0.5,
+      "ge_loss_bad": 1.0,
+      "ge_loss_good": 0.0,
+      "rate_kbps": 1500,
+      "queue_ms": 150.0,
+      "rate_schedule": []
+    },
+    "condition": "lossy-independent",
+    "stt": "whisper-tiny",
+    "speech": "say",
+    "wall_s": 68.5171058177948,
+    "loadavg_1m": [
+      106.09033203125,
+      93.1552734375
+    ],
+    "host_cpus": 18,
+    "netem": "in-process emulated link (media/netem.py), virtual time",
+    "mode": "virtual-time; compute latency = measured single-thread CPU time",
+    "machine_note": "dev run, machine shared"
+  }
+}

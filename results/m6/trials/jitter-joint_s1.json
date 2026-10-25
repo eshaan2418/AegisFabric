@@ -1,0 +1,126 @@
+{
+  "meta": {
+    "git": {
+      "commit": "24f4bb1fe53f564cc8639164a39245f355f51444",
+      "dirty": false
+    },
+    "hardware": {
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "machine": "arm64",
+      "python": "3.12.14",
+      "cpu_count": 18,
+      "host_label": "darwin",
+      "mem_gb": 48.0,
+      "torch": "2.14.1",
+      "torch_threads": 1
+    },
+    "seed": 1,
+    "config": {
+      "condition": "jitter-joint",
+      "duration_s": 24.0,
+      "vision_ms": 50.0
+    },
+    "command": "m6_run.py --trials 5",
+    "timestamp": "2026-10-25T00:22:49+00:00"
+  },
+  "data": {
+    "profile": "jitter",
+    "policy": "joint",
+    "seed": 1,
+    "vision_ms": 50.0,
+    "vmaf_mean": 70.05940159216256,
+    "vmaf_p5": 32.692274399999995,
+    "sent_kbps": 244.66366666666664,
+    "recv_kbps": 245.761,
+    "sent_frames": 720,
+    "decoded_frames": 720,
+    "dropped_network": 0,
+    "late_frames": 43,
+    "retransmits": 16,
+    "dropped_network_frac": 0.0,
+    "dropped_backpressure": 7,
+    "stalls": 0,
+    "stall_time_s": 0.0,
+    "glass_to_answer_s": [
+      0.9762994684223258,
+      0.7666818333868832,
+      0.8605215094938785
+    ],
+    "glass_to_answer_mean_s": 0.8678342704343626,
+    "answered_frac": 1.0,
+    "answer_correct_frac": 0.6666666666666666,
+    "glass_to_inference_p50_s": 0.22337322232533552,
+    "glass_to_inference_p95_s": 0.30066155562900576,
+    "inferred_frames": 191,
+    "chart_err_mean": 0.0046915101118981594,
+    "av_skew_ms_median_abs": 2.4987788575003833,
+    "rtt_ms_median": 112.823486328125,
+    "reinits": 12,
+    "keyframes": 19,
+    "plis": 0,
+    "blocked_s": 0.0,
+    "mean_bitrate_decision_kbps": 245.52845528455285,
+    "mean_fps_decision": 30.0,
+    "stt_texts": [
+      "I'm calling about to count to $90,189,238. Can you tell me how",
+      "And what's my closing balance?",
+      "Thanks. Could you flag the largest charge for review?"
+    ],
+    "stt_service_s": [
+      0.42262800000003153,
+      0.29007799999999406,
+      0.3652319999999918
+    ],
+    "cpu_ms": {
+      "av1_encode": 1.9023416666666293,
+      "av1_decode": 0.44245694444428174,
+      "fn": 9.276948453608513,
+      "enc_reinit": 2.3612499999992784
+    },
+    "cpu_ms_p95": {
+      "av1_encode": 4.393600000000219,
+      "av1_decode": 0.7801999999990982,
+      "fn": 5.106200000000882,
+      "enc_reinit": 3.124099999994811
+    },
+    "relay": {
+      "fwd": {
+        "in": 2536,
+        "lost": 21,
+        "qdrop": 0,
+        "out_bytes": 829769
+      },
+      "rev": {
+        "in": 144,
+        "lost": 0,
+        "qdrop": 0,
+        "out_bytes": 13056
+      }
+    },
+    "profile_cfg": {
+      "name": "jitter",
+      "delay_ms": 50,
+      "jitter_ms": 40,
+      "ge_p": 0.0,
+      "ge_r": 1.0,
+      "ge_loss_bad": 1.0,
+      "ge_loss_good": 0.01,
+      "rate_kbps": 1500,
+      "queue_ms": 150.0,
+      "rate_schedule": [],
+      "reorder": false
+    },
+    "condition": "jitter-joint",
+    "stt": "whisper-tiny",
+    "speech": "say",
+    "wall_s": 14.589294910430908,
+    "loadavg_1m": [
+      89.5927734375,
+      87.9482421875
+    ],
+    "host_cpus": 18,
+    "netem": "in-process emulated link (media/netem.py), virtual time",
+    "mode": "virtual-time; compute latency = measured single-thread CPU time",
+    "machine_note": "dev run, machine shared"
+  }
+}

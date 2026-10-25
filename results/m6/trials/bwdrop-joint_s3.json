@@ -1,0 +1,134 @@
+{
+  "meta": {
+    "git": {
+      "commit": "968685d772ad2ef4e87f6f4f06ba5f3f09cbe8aa",
+      "dirty": true
+    },
+    "hardware": {
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "machine": "arm64",
+      "python": "3.12.14",
+      "cpu_count": 18,
+      "host_label": "darwin",
+      "mem_gb": 48.0,
+      "torch": "2.14.1",
+      "torch_threads": 1
+    },
+    "seed": 3,
+    "config": {
+      "condition": "bwdrop-joint",
+      "duration_s": 24.0,
+      "vision_ms": 50.0
+    },
+    "command": "media_run.py --trials 5",
+    "timestamp": "2026-10-24T19:06:50+00:00"
+  },
+  "data": {
+    "profile": "bwdrop",
+    "policy": "joint",
+    "seed": 3,
+    "vision_ms": 50.0,
+    "vmaf_mean": 60.12027884470247,
+    "vmaf_p5": 0.0,
+    "sent_kbps": 377.4326666666667,
+    "recv_kbps": 373.045,
+    "sent_frames": 720,
+    "decoded_frames": 615,
+    "dropped_network": 86,
+    "late_frames": 114,
+    "retransmits": 637,
+    "dropped_network_frac": 0.14583333333333334,
+    "dropped_backpressure": 6,
+    "stalls": 3,
+    "stall_time_s": 3.133333333333332,
+    "glass_to_answer_s": [
+      1.9629361927358104,
+      1.0643698333653901,
+      0.946081500074115
+    ],
+    "glass_to_answer_mean_s": 1.3244625087251052,
+    "answered_frac": 1.0,
+    "answer_correct_frac": 0.6666666666666666,
+    "glass_to_inference_p50_s": 0.20269222223043926,
+    "glass_to_inference_p95_s": 0.4498407555970061,
+    "inferred_frames": 167,
+    "chart_err_mean": 0.003945051074321947,
+    "av_skew_ms_median_abs": 2.542796404782166,
+    "rtt_ms_median": 63.4765625,
+    "reinits": 13,
+    "keyframes": 27,
+    "plis": 8,
+    "blocked_s": 0.0,
+    "mean_bitrate_decision_kbps": 400.0,
+    "mean_fps_decision": 30.0,
+    "stt_texts": [
+      "Hi, I'm calling about the Counts in 21,883, can you tell me how much I",
+      "and what my coaching balance.",
+      "Thanks. Could you flag the largest charge for review?"
+    ],
+    "stt_service_s": [
+      0.8187299999999595,
+      0.41879099999994196,
+      0.5196430000000873
+    ],
+    "cpu_ms": {
+      "av1_encode": 2.232583333332864,
+      "av1_decode": 0.48342113821197785,
+      "fn": 14.945876470585517,
+      "enc_reinit": 9.249076923074776
+    },
+    "cpu_ms_p95": {
+      "av1_encode": 5.139849999986268,
+      "av1_decode": 0.9098000000108174,
+      "fn": 9.912649999998274,
+      "enc_reinit": 16.354199999983614
+    },
+    "relay": {
+      "fwd": {
+        "in": 3517,
+        "lost": 19,
+        "qdrop": 739,
+        "out_bytes": 1213599
+      },
+      "rev": {
+        "in": 308,
+        "lost": 0,
+        "qdrop": 0,
+        "out_bytes": 15672
+      }
+    },
+    "profile_cfg": {
+      "name": "bwdrop",
+      "delay_ms": 30,
+      "jitter_ms": 5,
+      "ge_p": 0.0,
+      "ge_r": 1.0,
+      "ge_loss_bad": 1.0,
+      "ge_loss_good": 0.005,
+      "rate_kbps": 1200,
+      "queue_ms": 150.0,
+      "rate_schedule": [
+        [
+          8.0,
+          250.0
+        ],
+        [
+          16.0,
+          1200.0
+        ]
+      ]
+    },
+    "condition": "bwdrop-joint",
+    "stt": "whisper-tiny",
+    "speech": "say",
+    "wall_s": 91.8235514163971,
+    "loadavg_1m": [
+      159.39892578125,
+      168.81396484375
+    ],
+    "host_cpus": 18,
+    "netem": "in-process emulated link (media/netem.py), virtual time",
+    "mode": "virtual-time; compute latency = measured single-thread CPU time",
+    "machine_note": "dev run, machine shared"
+  }
+}
