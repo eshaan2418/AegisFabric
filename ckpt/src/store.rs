@@ -201,6 +201,7 @@ pub struct Store {
     pub recovery: RecoveryReport,
     /// Test hook: called between GC phases (mark->copy, copy->sweep) to force interleavings.
     pub gc_hook: Mutex<Option<GcHook>>,
+    durable_log: Option<Mutex<File>>,
 }
 
 fn seg_path(root: &Path, id: u32) -> PathBuf {
@@ -448,6 +449,12 @@ impl Store {
             stats: Stats::default(),
             recovery: rep,
             gc_hook: Mutex::new(None),
+            durable_log: match std::env::var_os("AEGIS_CKPT_DURABLE_LOG") {
+                Some(p) => Some(Mutex::new(
+                    OpenOptions::new().create(true).append(true).open(p)?,
+                )),
+                None => None,
+            },
         })
     }
 
@@ -499,6 +506,27 @@ impl Store {
         Ok(())
     }
 
+    /// Crash-test instrumentation: if AEGIS_CKPT_DURABLE_LOG is set, every completed fsync appends
+    /// "<kind> <id> <end>" to that file *after* the fsync and *before* anything depending on it (index
+    /// insert, ack). The crash harness uses it to confine torn-write injection to un-fsync'd bytes.
+    fn log_durable(&self, kind: &str, id: u32, end: u64) {
+        if let Some(f) = self.durable_log.as_ref() {
+            use std::io::Write;
+            let mut f = f.lock().unwrap();
+            let _ = writeln!(f, "{kind} {id} {end}");
+        }
+    }
+
+    fn seg_write_sync(&self, id: u32, file: &File, off: u64, buf: &[u8]) -> Result<()> {
+        self.io.write_sync(file, off, buf)?;
+        self.log_durable("seg", id, off + buf.len() as u64);
+        Ok(())
+    }
+
+    fn seg_write_sync_gc(&self, w: &Writer, buf: &[u8]) -> Result<()> {
+        self.seg_write_sync(w.id, &w.file, w.off - buf.len() as u64, buf)
+    }
+
     /// Append records to the active segment(s) and fdatasync. Returns the location of each record.
     fn flush(&self, batch: &[(ChunkId, Arc<Vec<u8>>)]) -> Result<Vec<(ChunkId, Loc)>> {
         let mut w = self.writer.lock().unwrap();
@@ -509,7 +537,7 @@ impl Store {
             let rl = seg_record_len(data.len()) as u64;
             if w.off > 0 && w.off + rl > self.cfg.seg_max {
                 if !buf.is_empty() {
-                    self.io.write_sync(&w.file, start, &buf)?;
+                    self.seg_write_sync(w.id, &w.file, start, &buf)?;
                     self.stats.data_fsyncs.fetch_add(1, Relaxed);
                     buf.clear();
                 }
@@ -529,7 +557,7 @@ impl Store {
             w.off += rl;
         }
         if !buf.is_empty() {
-            self.io.write_sync(&w.file, start, &buf)?;
+            self.seg_write_sync(w.id, &w.file, start, &buf)?;
             self.stats.data_fsyncs.fetch_add(1, Relaxed);
         }
         let bytes: u64 = batch
@@ -703,6 +731,7 @@ impl Store {
             return Err(anyhow!("WAL append failed: {e}").into());
         }
         m.wal_end += rec.len() as u64;
+        self.log_durable("wal", 0, m.wal_end);
         m.next_seq += 1;
         self.stats
             .wal_bytes_written
@@ -860,6 +889,7 @@ impl Store {
         }
         fs::rename(&tmp, dir.join("manifest.wal"))?;
         sync_dir(&dir)?;
+        self.log_durable("walc", 0, buf.len() as u64);
         m.wal = OpenOptions::new()
             .read(true)
             .write(true)
@@ -914,8 +944,7 @@ impl Store {
             {
                 if let Some(w) = out.as_mut() {
                     if !buf.is_empty() {
-                        self.io
-                            .write_sync(&w.file, w.off - buf.len() as u64, &buf)?;
+                        self.seg_write_sync_gc(w, &buf)?;
                         buf.clear();
                     }
                 }
@@ -942,8 +971,7 @@ impl Store {
         }
         if let Some(w) = out.as_ref() {
             if !buf.is_empty() {
-                self.io
-                    .write_sync(&w.file, w.off - buf.len() as u64, &buf)?;
+                self.seg_write_sync_gc(w, &buf)?;
             }
         }
         let n: u64 = reqs.iter().map(|r| r.buf.len() as u64).sum();
