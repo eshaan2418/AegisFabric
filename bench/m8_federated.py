@@ -2,6 +2,9 @@
 
   AEGIS_DEVICE=mps nice -n 19 uv run python -m bench.m8_federated run --seeds 0 1 2 3 4
   uv run python -m bench.m8_federated summarize
+  AEGIS_DEVICE=mps nice -n 19 uv run python -m bench.m8_federated comm-sweep --seeds 0 1 2 3 4   # FedAvg only
+
+`comm-sweep` keeps rounds × local_steps = 80 local steps per site and varies the split (more rounds = more bytes).
 
 Equal work: every method processes the same total number of local SGD steps (rounds × local_steps × 3 sites)
 at the same batch size, starting from the public LM-only base (`bench.m8_privacy.base_model`: pretrained on
@@ -70,6 +73,58 @@ def cmd_run(a):
         write_result(f"{OUT}/seed{seed}.json", res, config={**HP, "device": str(DEVICE)}, seed=seed)
 
 
+COMM_SWEEP = [(80, 1), (16, 5), (4, 20)]  # (rounds, local_steps); (8, 10) is the main run
+
+
+def cmd_comm_sweep(a):
+    base = base_model()
+    evals = {s: qa.make_site_split(HP["n_eval_per_site"], 888 + i, s) for i, s in enumerate(SITES)}
+    for seed in a.seeds:
+        data = {
+            s: qa.make_site_split(HP["n_per_site"], 80_000 + 10 * seed + i, s) for i, s in enumerate(SITES)
+        }
+        for rounds, local in COMM_SWEEP:
+            torch.manual_seed(seed)
+            t0 = time.perf_counter()
+            m, comm = fed_train(base, data, rounds, local, HP["batch"], HP["lr"], 0.0, seed)
+            res = {"eval": evaluate_sites(m, evals), "comm": comm, "wall_s": time.perf_counter() - t0}
+            print(seed, rounds, local, round(res["eval"]["global_exact"], 3), flush=True)
+            write_result(
+                f"{OUT}/comm_sweep/r{rounds}_l{local}_seed{seed}.json",
+                res,
+                config={
+                    **HP,
+                    "rounds": rounds,
+                    "local_steps": local,
+                    "method": "fedavg",
+                    "device": str(DEVICE),
+                },
+                seed=seed,
+            )
+
+
+def summarize_comm_sweep() -> dict:
+    out = {}
+    main = [json.loads(f.read_text())["data"] for f in sorted((RESULTS / OUT).glob("seed*.json"))]
+    if main:
+        out[f"r{HP['rounds']}_l{HP['local_steps']}"] = {
+            "global_exact": summarize([p["fedavg"]["eval"]["global_exact"] for p in main]).as_dict(),
+            "total_bytes": main[0]["fedavg"]["comm"]["total_bytes"],
+            "n_seeds": len(main),
+        }
+    for rounds, local in COMM_SWEEP:
+        fs = sorted((RESULTS / OUT / "comm_sweep").glob(f"r{rounds}_l{local}_seed*.json"))
+        if not fs:
+            continue
+        ds = [json.loads(f.read_text())["data"] for f in fs]
+        out[f"r{rounds}_l{local}"] = {
+            "global_exact": summarize([d["eval"]["global_exact"] for d in ds]).as_dict(),
+            "total_bytes": ds[0]["comm"]["total_bytes"],
+            "n_seeds": len(ds),
+        }
+    return out
+
+
 def cmd_summarize(a):
     per = [json.loads(f.read_text())["data"] for f in sorted((RESULTS / OUT).glob("seed*.json"))]
     names = list(per[0])
@@ -93,9 +148,13 @@ def cmd_summarize(a):
         ),
     }
     comm = per[0]["fedavg"]["comm"]
+    sweep = summarize_comm_sweep()
     write_result(
-        f"{OUT}/summary.json", {"table": table, "tests": tests, "comm": comm, "n_seeds": len(per), "hp": HP}
+        f"{OUT}/summary.json",
+        {"table": table, "tests": tests, "comm": comm, "n_seeds": len(per), "hp": HP, "comm_sweep": sweep},
     )
+    for k, v in sweep.items():
+        print("comm-sweep", k, round(v["global_exact"]["mean"], 3), f"{v['total_bytes'] / 1e6:.0f} MB")
     for n, t in table.items():
         g = t["global_exact"]
         print(
@@ -108,10 +167,10 @@ def cmd_summarize(a):
 def main():
     torch.set_num_threads(2)
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["run", "summarize"])
+    ap.add_argument("cmd", choices=["run", "summarize", "comm-sweep"])
     ap.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2, 3, 4])
     a = ap.parse_args()
-    {"run": cmd_run, "summarize": cmd_summarize}[a.cmd](a)
+    {"run": cmd_run, "summarize": cmd_summarize, "comm-sweep": cmd_comm_sweep}[a.cmd](a)
 
 
 if __name__ == "__main__":
