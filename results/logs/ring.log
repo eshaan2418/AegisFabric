@@ -1,0 +1,46 @@
+contiguous 0 1.336 pred 1.423
+interleaved 0 2.75 pred 2.736
+interleaved 1 2.694 pred 2.736
+contiguous 1 1.337 pred 1.423
+contiguous 2 1.336 pred 1.423
+interleaved 2 2.743 pred 2.736
+interleaved 3 2.751 pred 2.736
+contiguous 3 1.35 pred 1.423
+contiguous 4 1.336 pred 1.423
+interleaved 4 2.752 pred 2.736
+{
+ "contiguous": {
+  "allreduce_s": {
+   "n": 5,
+   "mean": 1.3390870464994804,
+   "std": 0.006131319886107929,
+   "ci95_lo": 1.3314740073354294,
+   "ci95_hi": 1.3467000856635314,
+   "median": 1.3364598549997027,
+   "p99": null
+  },
+  "pred_s": 1.4229728
+ },
+ "interleaved": {
+  "allreduce_s": {
+   "n": 5,
+   "mean": 2.737773751000714,
+   "std": 0.024903199596898264,
+   "ci95_lo": 2.7068523446211628,
+   "ci95_hi": 2.768695157380265,
+   "median": 2.750132126000608,
+   "p99": null
+  },
+  "pred_s": 2.7359456
+ },
+ "ratio_interleaved_over_contiguous": {
+  "n": 5,
+  "mean": 2.04452785011082,
+  "std": 0.01904214464597113,
+  "ci95_lo": 2.020883904655329,
+  "ci95_hi": 2.068171795566311,
+  "median": 2.053342048624762,
+  "p99": null
+ },
+ "pred_ratio": 1.9226970466336393
+}

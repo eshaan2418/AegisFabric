@@ -17,9 +17,10 @@ Status values: `todo / in-progress / done / blocked-with-fallback`.
 | M10 | Integration, reproduction, write-up | todo | `bench/reproduce.sh`, `bench/make_figures.py`, `bench/audit_numbers.py` drafted |
 
 ## Next action
-Lab campaigns are running from a frozen worktree `../AegisFabric-campaign` at e204f85
-(`bench/lab_campaigns.sh`: m1 → m2 → m3cal → ring → m3 → m3abl → m5). Copy `results/{m1,m2,m3,m5}` back
-when done. Meanwhile: M10 (integration demo, paper, README, resume bullets, claims, FINAL_REVIEW).
+M1/M2/calibration/ring done (frozen at e204f85). M3 main → ablations → M5 rotation are running from frozen
+worktree `../AegisFabric-campaign3` at 337cbbc (after the fixes in D-021/B-019). When done: copy
+`results/{m3,m5}` back, run `bench.m3_analyze`, write the M3/M5 claims and paper sections, run the M10 demo,
+then the README, resume bullets, FINAL_REVIEW, audit, `make ci` and reproduce-quick from a clean clone.
 
 ## Campaign plan
 - M1: `bench.m1_baselines --seeds 5` (DDP/FSDP2/HSDP × loopback/WAN).

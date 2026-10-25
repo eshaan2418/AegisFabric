@@ -1,0 +1,60 @@
+{"kind": "link_down", "seed": 1000, "outage_s": 0.134925479888916, "fib_change_s": 0.1304175853729248, "restore_fib_s": 1.43212798619383, "restore_outage_s": 0.002149219512939453, "loss_frac": 0.0070043103448276245}
+{"kind": "link_down", "seed": 1001, "outage_s": 0.14078676223754882, "fib_change_s": 0.14722514152526855, "restore_fib_s": 1.4281723313708348, "restore_outage_s": 0.002858753204345703, "loss_frac": 0.007167507300238962}
+{"kind": "link_down", "seed": 1002, "outage_s": 0.1305905532836914, "fib_change_s": 0.13315701484680176, "restore_fib_s": 1.4336909919943785, "restore_outage_s": 0.0021566104888916015, "loss_frac": 0.0068908489525909555}
+{"kind": "link_down", "seed": 1003, "outage_s": 0.13649975776672363, "fib_change_s": 0.1355299949645996, "restore_fib_s": 1.4193326372442705, "restore_outage_s": 0.002263660430908203, "loss_frac": 0.00740318906605919}
+{"kind": "link_down", "seed": 1004, "outage_s": 0.13497554779052734, "fib_change_s": 0.12701988220214844, "restore_fib_s": 1.425283036385398, "restore_outage_s": 0.00202667236328125, "loss_frac": 0.007647058823529451}
+{"kind": "link_down", "seed": 1005, "outage_s": 0.12987672805786132, "fib_change_s": 0.1423354148864746, "restore_fib_s": 1.4269188357767888, "restore_outage_s": 0.0019460868835449218, "loss_frac": 0.00753841693244417}
+{"kind": "link_down", "seed": 1006, "outage_s": 0.12965571403503418, "fib_change_s": 0.13515377044677734, "restore_fib_s": 1.4218280912492993, "restore_outage_s": 0.0020574283599853515, "loss_frac": 0.0072182121043864456}
+{"kind": "link_down", "seed": 1007, "outage_s": 0.12995421409606933, "fib_change_s": 0.12641644477844238, "restore_fib_s": 1.42107316964249, "restore_outage_s": 0.001849527359008789, "loss_frac": 0.007263219058686765}
+{"kind": "link_down", "seed": 1008, "outage_s": 0.1299644660949707, "fib_change_s": 0.13207244873046875, "restore_fib_s": 1.4250732366770862, "restore_outage_s": 0.002173299789428711, "loss_frac": 0.0071428571428571175}
+{"kind": "link_down", "seed": 1009, "outage_s": 0.13575303077697753, "fib_change_s": 0.1412360668182373, "restore_fib_s": 1.426261105065878, "restore_outage_s": 0.0019849491119384765, "loss_frac": 0.007573550830177633}
+{"kind": "blackhole", "seed": 1000, "outage_s": 2.685023183822632, "fib_change_s": 2.695081949234009, "restore_fib_s": 1.4251969196807686, "restore_outage_s": 0.0019038867950439452, "loss_frac": 0.1443965517241379}
+{"kind": "blackhole", "seed": 1001, "outage_s": 2.680333490371704, "fib_change_s": 2.6864593029022217, "restore_fib_s": 2.138483744182114, "restore_outage_s": 0.002184743881225586, "loss_frac": 0.14202282983806747}
+{"kind": "blackhole", "seed": 1002, "outage_s": 2.3810509395599366, "fib_change_s": 2.39650559425354, "restore_fib_s": 5.588989225026605, "restore_outage_s": 0.002112741470336914, "loss_frac": 0.13092613009922827}
+{"kind": "blackhole", "seed": 1003, "outage_s": 2.7903288555145265, "fib_change_s": 2.7967922687530518, "restore_fib_s": 1.524424447470711, "restore_outage_s": 0.0021299076080322265, "loss_frac": 0.1585990888382688}
+{"kind": "blackhole", "seed": 1004, "outage_s": 2.771291608810425, "fib_change_s": 2.777937650680542, "restore_fib_s": 2.043118558083396, "restore_outage_s": 0.0020371627807617186, "loss_frac": 0.16264705882352937}
+{"kind": "blackhole", "seed": 1005, "outage_s": 2.2914653968811036, "fib_change_s": 2.305861473083496, "restore_fib_s": 4.369764657157404, "restore_outage_s": 0.00198089599609375, "loss_frac": 0.1325021745433459}
+{"kind": "blackhole", "seed": 1006, "outage_s": 2.5604702186584474, "fib_change_s": 2.571504831314087, "restore_fib_s": 1.8631158472154858, "restore_outage_s": 0.002203102111816406, "loss_frac": 0.1421432537479178}
+{"kind": "blackhole", "seed": 1007, "outage_s": 3.0763539028167726, "fib_change_s": 3.109736680984497, "restore_fib_s": 2.193489284449619, "restore_outage_s": 0.0022202682495117186, "loss_frac": 0.178384660081348}
+{"kind": "blackhole", "seed": 1008, "outage_s": 2.4113920879364015, "fib_change_s": 2.41964054107666, "restore_fib_s": 6.2530744974345325, "restore_outage_s": 0.002454395294189453, "loss_frac": 0.13771428571428568}
+{"kind": "blackhole", "seed": 1009, "outage_s": 2.4801970672607423, "fib_change_s": 2.4879801273345947, "restore_fib_s": 1.6136359353118497, "restore_outage_s": 0.002328510284423828, "loss_frac": 0.14418875618992133}
+{"kind": "flap", "seed": 1000, "outage_s": 0.13114559173583984, "fib_change_s": 0.12958335876464844, "loss_frac": 0.014444444444444482}
+{"kind": "flap", "seed": 1001, "outage_s": 0.13584601402282714, "fib_change_s": 0.13438129425048828, "loss_frac": 0.014629629629629659}
+{"kind": "flap", "seed": 1002, "outage_s": 0.145482177734375, "fib_change_s": 0.14482355117797852, "loss_frac": 0.01518518518518519}
+{"kind": "flap", "seed": 1003, "outage_s": 0.1400953483581543, "fib_change_s": 0.13245677947998047, "loss_frac": 0.01518518518518519}
+{"kind": "flap", "seed": 1004, "outage_s": 0.13607513427734375, "fib_change_s": 0.13965964317321777, "loss_frac": 0.014814814814814836}
+{"kind": "flap", "seed": 1005, "outage_s": 0.13055622100830078, "fib_change_s": 0.12666678428649902, "loss_frac": 0.014444444444444482}
+{"kind": "flap", "seed": 1006, "outage_s": 0.13153254508972168, "fib_change_s": 0.13242459297180176, "loss_frac": 0.014444444444444482}
+{"kind": "flap", "seed": 1007, "outage_s": 0.13018142700195312, "fib_change_s": 0.13527679443359375, "loss_frac": 0.014444444444444482}
+{"kind": "flap", "seed": 1008, "outage_s": 0.13506400108337402, "fib_change_s": 0.13813424110412598, "loss_frac": 0.014629629629629659}
+{"kind": "flap", "seed": 1009, "outage_s": 0.13645517349243164, "fib_change_s": 0.1427004337310791, "loss_frac": 0.014629629629629659}
+{"kind": "bgp_reset", "seed": 1000, "bgp_down_detect_s": 0.06447362899780273, "bgp_reestablish_s": 2.0593533515930176, "outage_s": 0.051226015090942385, "fib_change_s": 0.14457249641418457, "loss_frac": 0.0033333333333332993}
+{"kind": "bgp_reset", "seed": 1001, "bgp_down_detect_s": 0.06497859954833984, "bgp_reestablish_s": 2.0902843475341797, "outage_s": 0.04993283271789551, "fib_change_s": 0.14276123046875, "loss_frac": 0.0033333333333332993}
+{"kind": "bgp_reset", "seed": 1002, "bgp_down_detect_s": 0.06479120254516602, "bgp_reestablish_s": 2.0919029712677, "outage_s": 0.050855274200439456, "fib_change_s": 0.15940451622009277, "loss_frac": 0.0033333333333332993}
+{"kind": "bgp_reset", "seed": 1003, "bgp_down_detect_s": 0.06479573249816895, "bgp_reestablish_s": 2.0654361248016357, "outage_s": 0.050371284484863284, "fib_change_s": 0.14026784896850586, "loss_frac": 0.0033333333333332993}
+{"kind": "bgp_reset", "seed": 1004, "bgp_down_detect_s": 0.06496834754943848, "bgp_reestablish_s": 2.090479612350464, "outage_s": 0.05007922172546387, "fib_change_s": 0.14945387840270996, "loss_frac": 0.0033333333333332993}
+{"kind": "bgp_reset", "seed": 1005, "bgp_down_detect_s": 0.0655062198638916, "bgp_reestablish_s": 4.122270584106445, "outage_s": 0.05077468872070313, "fib_change_s": 0.15415191650390625, "loss_frac": 0.0033333333333332993}
+{"kind": "bgp_reset", "seed": 1006, "bgp_down_detect_s": 0.06407976150512695, "bgp_reestablish_s": 2.088188409805298, "outage_s": 0.05015742301940918, "fib_change_s": 0.15078330039978027, "loss_frac": 0.0033333333333332993}
+{"kind": "bgp_reset", "seed": 1007, "bgp_down_detect_s": 0.0648043155670166, "bgp_reestablish_s": 2.0892913341522217, "outage_s": 0.05531274795532227, "fib_change_s": 0.14864087104797363, "loss_frac": 0.003666666666666707}
+{"kind": "bgp_reset", "seed": 1008, "bgp_down_detect_s": 0.06598424911499023, "bgp_reestablish_s": 2.054781198501587, "outage_s": 0.04899298667907715, "fib_change_s": 0.1421966552734375, "loss_frac": 0.0033333333333332993}
+{"kind": "bgp_reset", "seed": 1009, "bgp_down_detect_s": 0.06453251838684082, "bgp_reestablish_s": 2.070706844329834, "outage_s": 0.054846878051757815, "fib_change_s": 0.15344762802124023, "loss_frac": 0.003666666666666707}
+{"kind": "bw_collapse", "seed": 1000, "rtt_before_ms": 10.618, "tput_before_mbit": 189.45346856125067, "rtt_during_ms": 11.031, "tput_during_mbit": 19.110562260180355}
+{"kind": "bw_collapse", "seed": 1001, "rtt_before_ms": 10.755, "tput_before_mbit": 189.6314968214404, "rtt_during_ms": 11.062, "tput_during_mbit": 19.128476592412614}
+{"kind": "bw_collapse", "seed": 1002, "rtt_before_ms": 10.749, "tput_before_mbit": 189.46284849103318, "rtt_during_ms": 11.254, "tput_during_mbit": 19.12313490981567}
+{"kind": "bw_collapse", "seed": 1003, "rtt_before_ms": 10.094, "tput_before_mbit": 189.5664930619416, "rtt_during_ms": 11.343, "tput_during_mbit": 19.12601136473294}
+{"kind": "bw_collapse", "seed": 1004, "rtt_before_ms": 10.513, "tput_before_mbit": 189.26591723112116, "rtt_during_ms": 10.161, "tput_during_mbit": 19.118902514456387}
+{"kind": "bw_collapse", "seed": 1005, "rtt_before_ms": 11.093, "tput_before_mbit": 189.49759740223848, "rtt_during_ms": 10.445, "tput_during_mbit": 19.115284620407195}
+{"kind": "bw_collapse", "seed": 1006, "rtt_before_ms": 10.635, "tput_before_mbit": 189.34867612471035, "rtt_during_ms": 10.021, "tput_during_mbit": 19.12042334056523}
+{"kind": "bw_collapse", "seed": 1007, "rtt_before_ms": 11.298, "tput_before_mbit": 189.59893979309436, "rtt_during_ms": 11.037, "tput_during_mbit": 19.122925120771836}
+{"kind": "bw_collapse", "seed": 1008, "rtt_before_ms": 10.894, "tput_before_mbit": 189.50855595371584, "rtt_during_ms": 11.197, "tput_during_mbit": 19.128018444195874}
+{"kind": "bw_collapse", "seed": 1009, "rtt_before_ms": 11.032, "tput_before_mbit": 189.49310086926084, "rtt_during_ms": 11.366, "tput_during_mbit": 19.11206943399285}
+{"kind": "latency_spike", "seed": 1000, "rtt_before_ms": 11.039, "tput_before_mbit": 189.27010676698526, "rtt_during_ms": 177.404, "tput_during_mbit": 38.92666168768344}
+{"kind": "latency_spike", "seed": 1001, "rtt_before_ms": 10.86, "tput_before_mbit": 189.4144974218031, "rtt_during_ms": 177.383, "tput_during_mbit": 95.56353262332343}
+{"kind": "latency_spike", "seed": 1002, "rtt_before_ms": 11.184, "tput_before_mbit": 189.52503098997008, "rtt_during_ms": 175.933, "tput_during_mbit": 3.6117784880997656}
+{"kind": "latency_spike", "seed": 1003, "rtt_before_ms": 10.92, "tput_before_mbit": 187.9021513232177, "rtt_during_ms": 175.823, "tput_during_mbit": 29.19315074541551}
+{"kind": "latency_spike", "seed": 1004, "rtt_before_ms": 11.296, "tput_before_mbit": 189.44966689059902, "rtt_during_ms": 178.22, "tput_during_mbit": 95.3379200223393}
+{"kind": "latency_spike", "seed": 1005, "rtt_before_ms": 10.391, "tput_before_mbit": 189.49732774947833, "rtt_during_ms": 175.835, "tput_during_mbit": 95.66863549029397}
+{"kind": "latency_spike", "seed": 1006, "rtt_before_ms": 10.757, "tput_before_mbit": 189.50915477633748, "rtt_during_ms": 176.606, "tput_during_mbit": 5.391548678640943}
+{"kind": "latency_spike", "seed": 1007, "rtt_before_ms": 10.444, "tput_before_mbit": 189.5372441680106, "rtt_during_ms": 176.799, "tput_during_mbit": 97.27005929127697}
+{"kind": "latency_spike", "seed": 1008, "rtt_before_ms": 10.996, "tput_before_mbit": 189.39152339574042, "rtt_during_ms": 174.873, "tput_during_mbit": 95.11055034410269}
+{"kind": "latency_spike", "seed": 1009, "rtt_before_ms": 10.846, "tput_before_mbit": 189.567524514579, "rtt_during_ms": 176.372, "tput_during_mbit": 92.8629425913649}
