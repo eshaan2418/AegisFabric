@@ -18,3 +18,5 @@ formal/**/states/
 .claude/
 scratch_*.sh
 results/claims.json
+paper/numbers.tex
+paper/main.pdf

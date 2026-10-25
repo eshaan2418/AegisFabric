@@ -74,9 +74,11 @@ reproduce-full:
 
 paper:
 	$(PY) -m bench.make_figures
+	$(PY) -m bench.claims
 	cd paper && tectonic -X compile main.tex
 
 audit:
+	$(PY) -m bench.claims
 	$(PY) -m bench.audit_numbers
 
 clean:
