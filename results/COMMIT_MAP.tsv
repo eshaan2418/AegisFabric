@@ -1,0 +1,97 @@
+# Commit map after the authorship rewrite (2026-10-25): result files record the hash they were produced at (left);
+# the same tree is at the right-hand commit in the published history.
+old	new	subject
+99c9577642909c12c0de219d3603c216c5f0c788	f29d8367057f5085d9f1853ab42dc8ef54033280	M0: bootstrap repo skeleton, env probe, synthetic data generators, lab image, CI
+f17548b8b8a787c9bc17fde7e019dd6bd39180fd	69ef4d7fc793695cfe1086d77427a42bac4e2c9a	docs: normative checkpoint, envelope-encryption and rotation protocols
+2ea0e9c17065aff6149eeef170e89265d8d7c8c6	2043ca2909b1eb3cb2bce3d9f23037e6fc4f6a3a	M7: Triton + Metal fused varlen prefix-LM attention, correctness/perf/IR benchma
+3c26f34cd17b5d1c3136c84852c0d78d153ced78	49f9ab7f14911ab822dc288e475ef55fa27ddf13	M9: TLA+ models of checkpoint store (P1) and cert rotation (P3), TLC runner, bug
+53a90fec4ebba565d45a95e2ae9bf9071ff60146	13cbea468c24d82069585ded16fcd49b0daf1a68	M9: TLC results and counterexample traces
+45f0f6f39fb5554c2d46b7c98cbabd0ee18a74fe	b9f8894922dcd27f385ccd7c41c582cc89dbf1b8	M7: correctness, perf (CPU+MPS), offline sm80 IR results and latency figure
+7e36bc1c90414e4094170f98d87da6f6e80f2687	33569078b742a4185320c05abe76984c597f2f1a	M8: tool-use reasoning task, char transformer, SFT/DPO/GRPO/RM, DP-SGD+MIA, fede
+8aae4fbe82ce9f0ea8b1b19089ee78a13d1fcf5f	61d1f5b865d5a345b20b689ebdd827729b81677b	M6: AV1 RTP pipeline (payloader, RTCP SR/RR/REMB/PLI/NACK, jitter buffer), ABR, 
+7070f490ee8b6b073fbeb7f59a354196a3524f1a	2ba0226256279d2db618801c785613b379da8b3b	M6: aiortc WebRTC ingest leg with AV1 transcode and stamp-based latency measurem
+1e7b4284d43901c65100edc21e54730537c3ca06	91a9c28b21d2353b64fa68a2d6be7aa79ae15eaf	docs: apply TLA+-found fixes to P1 (GC epoch refresh) and P3 (2S backdating)
+36c979942a9e632cbbbbe52593812f6d28d35c71	c4ae2d863cc918d2629565c16e8a788f075deb90	Merge branch 'worktree-agent-a2e9a2f3e09bc2e87'
+0c5e4e82acbd9e88bb75c8d268d33bec192e0679	7e6efdc2b2c534f8332b33fb958c86d186d0d1f1	Merge branch 'worktree-agent-a781dc9fddcb3e939'
+6489979cd28164a792907ddc1901f852b4b9c733	7b212fa266f3320568ee2a128a50525a08e67d41	M1/M2/M3 wip: tiny VLM trainer (DDP/FSDP2/HSDP) with telemetry, netns+FRR lab, T
+1696df8f9e9c45d6894d4be7a6ace0f064b5f8c8	5c7b0242020a4816cea4066442dfbde71b736df3	fix lint in collective microbenchmark
+83b66cf3ee843f88a537695db3f3adf547e943f2	d054763fc092b298a95230b6b3d24c9b674903ef	M4: aegis-ckpt Rust store (segments, RocksDB index, WAL, recovery, GC, io_uring/
+92949e84cc9a70475dfeba4539bbec0126c24639	0f017b4cbf5c8703976207cc9d3189744dc2be6f	M8: MPS device support, faster decode loop, report generator, reduced configs fo
+d8b74eeb0c4b68113d06ccd6c3dcbc9079b4fefe	776e499d96f24bf425ccb5e70576634bbf5734e7	ckpt: never regress chunk epochs during GC compaction; bench no-overlap variant 
+fb8d855657587ff9ffe8ac66f2b91d7b9f583e59	e9f0925f5c8cc20b2ebe7dbfe578a50f67b991bd	M2/M3: experiment harness (scenarios, job manager with migration, control loop),
+79c25d37ca43376e33b22083a32ba56d1f33d158	83ed7c6ed73ffeccc75f34382c6d0518baf2230a	M5: test CA with SPIFFE IDs, mTLS gRPC control plane with per-handshake reload, 
+968685d772ad2ef4e87f6f4f06ba5f3f09cbe8aa	40aa4990fdde77fedca98d86b740aff592bd5280	M6: virtual-time execution (CPU-time-charged compute) for load-independent media
+81c0f606590128933d117c50c2bef6ed9cf501a3	24d490500866f922753406fb4d8d7daca08a1d88	M4 results: crash campaign (1000 kill -9, 500 torn-write, 500 bit-flip; 0 undete
+5b2d90a328d7c8da70a53178b98828e9a77d750d	f4370788c5d5bf3360a8df55db9d78ad30bf4483	M3/M5 drivers: analysis, rotation experiment, figure/plot style, number audit, r
+17215633bce7cf91733b359c8e1678005c9b1c0a	97ae4cf5a58563363967f2e2922b07d60785191e	lab integration tests (convergence, plane-A RTT, TE steering, failover); non-log
+a85ae8c92fef0d2da11e38119f15f084a4066b0e	9721f6e223d8d7a12936e1df8d8c1a5daf7911f6	fix: full training state on every rank for sliced checkpoints (cpu_offload dropp
+7d4a7711da18d5c3916d735d9013364f789470b9	d0f3f20bb373baa630633839eda518d2233ef944	wan_run: crash relaunch restores from newest complete checkpoint across storage 
+e3629ee15ad9b52e672d3beb3a67873aae0b83de	d8afc4e7afd407e0d20e00946e53b4458cf13cae	M4: aegis-ckpt engine (segments, RocksDB index, manifest WAL, group commit, reco
+cdeaa72dd716aec50919c6deafcfff73d6be5c38	f7b735fcbd042cec247b965ba6a9064491b1c88e	Merge branch 'worktree-agent-a516e975d393c1c33' into worktree-agent-a4a85e3e785d
+c4487bdca15e8427cd65e47a41be664f9589461f	59ce1f31d1d2ae8118dd27ab834a5da748913ffd	wip(alt engine): durability log for crash harness (superseded, kept for referenc
+eb3632cfcd54ef282e9807b085265b1366ac52f9	534062d1726075b8d48f6e6e2d74efce32c584c8	drop the parallel M4 engine in favour of the earlier aegis-ckpt implementation (
+ae936c1af85d0439c3b15216645ab5d6e38cbbd7	61441e801a9bd6b37489f97fd80f35aad8f3786b	Merge branch 'worktree-agent-a7e1cec597105cb2a' into worktree-agent-a21f8a2a064f
+6621aaf292c1a7e1b50154b3cc3386af2249d7a2	3d6c0834a04405b4f96912f77d378c39e0ac2c8a	Merge M6 work from worktree-agent-ab2c2888a9f82d63a
+f084e0cc54e9e1ac23eab9156ac73031cde08a5c	facfd6def150d6e25f4cf75a8a20f36f63b710c5	M6: jitter impairment profile + conditions; inference docstring matches asyncio 
+d90f7f32da13b0af234b1e8ce526140697d24227	a811d5b456e87bc38cb275c6293742cf8292fd59	fix: one path resolver for result reads/writes (`--out results/m3` wrote to resu
+c44300c07f4d60ecc0a047908675ea05cf87f135	f355000daf5bb53730af51beac398b723f2a712b	lab: deterministic plane-A base policy at gateways (BGP tie-break picked plane B
+860fd02d635471c81e970a1350cb59aae639c018	9e1e870f78f8fdeaf75ce01c0284f13691e31d34	M6: paired + pooled joint-vs-independent tests, blocking ablation test, plotstyl
+77aa9830e408d2169e8ab7bfd4e2cc9181644862	76ad860ec7d4cc6fb46117db93f6257a9b1c394a	M8: bring over pending changes from prior session (split tuning, task-base priva
+93ec01d9feeb25e101c7d40784e6d219fd1c4216	dd2719961e4e7fd5339044b2fc2fcd2e4d84f4d7	claims registry (numbers computed from named result files → results/claims.json 
+580d19771fad7e74884a4e33f75e8126779f1ced	22e22610bfd13d0d6ca0feb4f4ce02f08d3f5828	ring-order microbenchmark driver (validates cost-model ring structure); paper sk
+24f4bb1fe53f564cc8639164a39245f355f51444	1ef92f3cb5c2a2321ee5632fe9f4d8311d10e5bf	M6: order-preserving jitter option for netem (jitter profile), drivers renamed t
+b8bd1ac13ca1ecb4a80fb16334a64aee3f3f4e2c	c1a08f7234c929f2cfe78314e9f186fa7f30c0eb	paper: implementation section draft
+852e259160586d1d4c066aa163ae5b46f461bdaf	9d530e6840a2d121ddb4262bc864ac66ceb3e80e	paper: related work
+65bcf0b1b3a4cd6516e16e76de311a9eb94b6a5a	041c946ecd4ecb0d0cfa11f01c456971b60d071d	M8: federated figure, raw-data bytes in report
+5c299ac1d03d01e7666b9895d0de2eccb0ab5369	489bb83f03573b12b20c772e006751ecca15ab95	M6: WebRTC ingest uses host ICE candidates only (default STUN pair delivered no 
+2b83083d841bd1fd6bbf59ac72348ef0808be871	2abe9eebffcac69363337a5956a1a3fa960ef83e	M6 results: 55-trial campaign (5 conditions x policies x 5 seeds, virtual time),
+c0288ad2ccbb4b5bd6fa8156c8bfb73792d0bd5f	9eb5c8e12a3f7b9e6630c4c7059abd6abe56b536	Merge branch 'worktree-agent-a39b913e63d8ffc8f'
+5ec6cc519c313e3d73d58b5b182d854d66911cf8	8d62ac1f3e5793b32a31783f0e4372e961a060b0	ckpt: EngineBackend put/get adapter (drop-in for netlab.blobstore.Client, used b
+93f8f04fff7c6af3f85a6a4b47e6ba0be8f24f72	0877dd1ca97caf0b54a061d9cedd1cea826c67f9	docs: fold M6 decisions/blockers/index entries
+e204f85d8e810c538b31e4a5854309ed4d120ad9	e9ca30b2a89cced9ff7c8aa16781a0914d976bdb	cost model: per-plane kappa (calibrated on both planes, online update for the bo
+8acf420c1d2fe60b2a9615f61133f45d97f449bb	c953fdef0198d9151d4b83f8764bfcddefb83c76	M8: federated rounds x local-steps communication sweep
+a24250c49ad5db391c6ead0c9bfe0a3075015239	12ec6f70b0db5bf5c186ddb670ff77a8be131e43	M4 bench: real TinyVLM workload (get_full_state tensors), seeded method interlea
+b5d9aab77887a6255b99e63795f4ac756f0ed044	8f914523d2c33805a03d3d52c15368dd7adab113	M4: dedup-vs-chunking analysis driver (real model, tensor vs torch.save-blob chu
+221fbae7d4103ca41890279a2a27c8f04e665053	0f28e23a24d8eee00a3523b066cdb1d6356a7178	M5: envelope (P2) recovery/save overhead driver; security/envelope.py re-exports
+683730a598409ba840318cf9f1f9d29f7bd988d5	aae5b68a916580283c411ccfea414b4ddd391d70	M4 figures/tables script on plotstyle (bench, dedup, crash, envelope)
+be208d32443c7cde85feca6bc14961a1c67c0c0f	1a74633edb01264f3e8ddeb2068909ac1ff45a1e	lab test: EngineBackend over io_uring with kill -9; test-lab builds aegis-ckpt f
+ce524acc4cfea24d7b9f08bff3c2472e02f10258	72822a44963a53fb3f4fa02d85a5212d843fd68c	m4_bench docstring: command actually used (small preset; base was too slow under
+a0e6ce46a47a5c6e968ef11cc4f5ee5160681447	0a17890b7ef560f4d7bd249f6437a9d858cba876	m4_dedup: adapter-tuning scenario
+bdac93e91487eedd0c546b997c3e632fb8779384	5d6172b150957ff6d4a009210d88f646939e5de3	M8: clip-only (sigma=0) DP-SGD ablation; extra large-epsilon points in docstring
+74728cede00913c0df20400d60e47e658dfc2866	398a0aca6812076b2822705395fea9d991b6ff15	M8: posttrain output sub-directory for a second compute budget
+7ad543983804f4b46fde34f8f9d609c1c763567c	5bda757ae58885fdfc6a81f5ef7b025ce73b3d21	M8: fix offline-LiRA shadows (v2: same-format reference canaries from a disjoint
+426ecadc048a1a08ccdf442eccaf56fbe985a9c8	f4caca45be90c18c71dc1b2c0c8d8422dd3526e3	M4/M5 results: ext4+XFS benchmark matrix (5 trials), dedup vs chunking (5 seeds)
+b0c78a3bd9fe3f1ea047ceb68d13cb5217dbcc01	e447a590ae9a00f7e584e511f82a12d78b218f67	M8: EM-vs-budget figure and second-budget report table
+7fcbf0dbf7775295702e7776b9e823ae61d99c73	d88ad3cf4734ba411b9cbee5c0d069c928b7f300	M4 results: crash campaign rerun, bench/dedup/envelope figures, NOTES
+7cdb36498559e53287cb3404dcdb4a3869a830d7	ff36d0e6ff546be53ae6efd65890684ac062fa52	M8 results: post-training (2 budgets), DP-SGD + MIA (LiRA v2), federated; report
+9af33e4b9e8d3ccc2f4a6345e38dae5b57f2d682	157d08f2b6f13eb51c4c53b651d54734e0a53018	Merge branch 'worktree-agent-a21f8a2a064fbf4a7'
+a3efe1eeb09712e98ddf30002ad888e7be3004ad	28637bbe5fe9da949a6be5431db0785b309dd209	Merge branch 'worktree-agent-a4a85e3e785df7874'
+93396dbdbce84fc2038ab8ba904e5bf0996d85d4	b64919b2661bb9c48bb22cc7301ae3536a9a5e7a	docs: fold M4/M8 decisions, blockers and index; progress
+c649890b2d7e66e833432e78d38bbce98afd9d19	75ba20d6761b2f32179a279e8a2acf91f1c199d4	P2 job key directory (shared KEK/MAC/signing key/wrapped DEK) so relaunched jobs
+d5a82fc6fe227369675a4d844c03e9d5fafbd04f	deacf31a8f7c48d6801b642cde3dcd738134a7fd	M10 demo: engine-backed (encrypted, signed) checkpoints in WAN runs, crash scan 
+4df89c1bd77d12f0182a3a58f061a464f042d752	9973eb8cc09bbf14c954fd9306a4eeca839d9761	claims: load both claim modules
+8e49ff295e9346344f970199864f9817f2eda150	18467ec4f59c9cefcfb5ab89bd40c3fee996b41d	paper: limitations draft
+7ceb1d5a612239497e2c715e06de7d7dab65c83b	7e3049e4c6905b9c33924ab5af2bcd387a1965db	remove stray M2/M3 results from an unfrozen duplicate campaign (provenance unrel
+e132e5ce7a067a9b4c6f124a1537d3ec417f33e8	7d6ec6e4e123555a6a25f2793846467107e8afbd	paper: supporting subsystems and extensions section (M4, M5 envelope, M6-M9) bac
+aea02cf0153d14eee347f952b24323e503aa5271	477f9ff9d0bff93352b292697b18058a6bb70c92	m6 notes: correct rounding of pooled p and A/V skew bound
+ef00e0cd0fbc2d4e24775bf15763bd25fbe2c6d6	331e8eda60e9aab6236b32049df766fd6abd01dd	m8 notes: warm-start per-type score precision
+65d9d548bf94cecebacf258d42047f160bf2346c	6555bcd7d3ba983043a7229d1ee85705a7330fc3	claims: M1/M2 claim definitions; fix registry when run as __main__
+ec4f35a3fd46eb23984ace246cada733bb850bd0	c08f348fed204d298ba7cd6ac6a3b49e334cd2ac	m3_analyze: seed-paired tests (+Welch), time-to-quality and failure-excess metri
+2dde5b4253fc0fb63ab34735855141df4bf46cc8	a1f9274ea65b22b4d115eb876845ce4721741472	ci: libclang/ffmpeg/java deps, TLA+ checks
+77bb953aa012ff3aa5ccf815621e2560fad0e0e3	6037bcce56418be1363a67dfe9d31c7f672986a3	M1 results: DDP/FSDP2/HSDP baselines, loopback + WAN, 5 seeds (frozen campaign a
+c6aee5b50896f6ae0cb71393f264d4f933395fc0	ad869012e0e87e913f35f33688d3f26be8ea2b8f	paper: M1 evaluation subsection, section stubs; audit skips CI-level conventions
+9cccf0d21affa0353dfba97994e4a32e78ec0093	31bbe3188a88fae2beb77842631ddb24b258d063	M2 results (convergence per failure type, 10 trials) + eval subsection
+5fb57160e16424464b8dd82f70357f427e9bc2a3	b19c7b7b1c84b49abb7a52609dfce1aaa8f05e1e	D-014 update: campaign kappa per plane
+8ab38f41dafcc0c9064c39a9b10377f27c05d67d	d96ad6f604a2cbd970a42621a31899c837a38b18	M3 calibration + ring-order validation results; design section uses them
+a802f8048d37393b48bb8d910fd0ed0d8297b191	530087a5439210bb818c0c6c828fe1777d2b6ada	paper: per-plane kappa in cost model equation
+337cbbc2e5730b0c479fa20b1c1233a11cee304d	b7ca9aaa19b02cce3453fec4f9b720cb13b805bf	lab image pins (PuLP 4 broke TE MILP in-container) + job-manager fixes: no migra
+d82e4d57208c07debeec4d3394ec119e2d0a0ce5	8c3f8008a125abd48e8fd8b1b5d29c7d9e83287d	progress: campaign3; M1/M2 campaign logs
+6b6a8c7fa4bfe2f15860c0b81edd6601fea7533d	aa6881eb8bba6d3c78d3d49afa7a9c6778780ea7	README draft (architecture, layout, reproduction, limitations)
+5ee033e5e9afb9a86daa4aee13a56e6f5340e87a	14da7b0dbaed1466c20b1cdd48d71af967e84587	claims: M3 table, per-scenario paired improvements/Holm p, pooled effects
+4cce43fa43c6ff12c8ce9da3fe1b4bd79e819965	b58bc6b9f938df5a5a2f3b9d10ee7af56c28d8ca	claims: M3 ablations
+b991b51dc588e5b912d4a2fe887862af87e61510	0e2ab937459180ae6d4f505c2a2af20495c3df6f	M5 negative-test recorder; M5 claims
+3d70bdb0e4e1870d7efe3cbb441837e187a1c183	10b3b9c201791acdd9581470acd20ca615957a54	M5 negative tests: all attacks rejected
+7db219f901732fd59763b49d2739934879cc8e2a	f84c3e64ffbd64d6aa7996c42a3eda97367bdbe3	paper/numbers.tex is generated (make paper / make audit run bench.claims); untra
+5b77a3a30aa6ee82baad118c1390c121636979c4	e973539a5ed277c3869776d1357fedd115e26430	M5 negative tests rerun from clean tree
+a3544f62976bfae867053546b0020d1d598f1835	01b9b6ea0524312df3561b51d4e697ef648a0208	blockers: B-021 campaign container exit
+5c58a20b5238d3436df657755a79f456ef299cb7	d3670331673447dd4f85da9a5c7a9d6a947a85f0	blockers: B-003 remote now exists
