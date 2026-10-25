@@ -49,7 +49,7 @@ test-py:
 	$(UV) run pytest -q
 
 test-rust:
-	@if [ -f ckpt/Cargo.toml ]; then cd ckpt && $(CARGO_ENV) cargo test -q --release; fi
+	@if [ -f ckpt/Cargo.toml ]; then cd ckpt && $(CARGO_ENV) cargo build -q --release && $(CARGO_ENV) cargo test -q --release; fi
 
 test-formal:
 	bash formal/get_tools.sh && $(UV) run pytest -q -m slow -o addopts="" tests/test_formal.py

@@ -299,8 +299,23 @@ class CheckpointClient:
             f.result()
 
     def _commit(self, shards, ordered, step, extra, st: SaveStats, uniq) -> None:
+        # Several writers (e.g. the ranks of one job, each saving its slice) may share one server and
+        # its single manifest sequence. If another writer takes `seq` first, the server rejects ours as
+        # non-monotonic; re-derive seq/prev from the new head and re-sign (chunks are already durable).
+        for _race in range(64):
+            try:
+                return self._commit_once(shards, ordered, step, extra, st, uniq)
+            except InvalidRequest:
+                latest = self._ctl.latest() or 0
+                if latest < max(self.hwm, st.seq):
+                    raise
+                st.retries += 1
+        raise CkptError("commit lost the sequence race 64 times")
+
+    def _commit_once(self, shards, ordered, step, extra, st: SaveStats, uniq) -> None:
         latest = self._ctl.latest() or 0
         seq = max(latest, self.hwm) + 1
+        st.seq = seq
         prev = ""
         if latest:
             _, _, pblob = self._ctl.get_manifest(latest)
@@ -477,3 +492,80 @@ class CheckpointClient:
 
     def verify(self, seq: int = 0) -> dict:
         return self._ctl.verify(seq)
+
+
+class EngineBackend:
+    """Blob backend with the `netlab.blobstore.Client` interface: `put(key, bytes) -> seconds`,
+    `get(key) -> bytes | None`. `train.checkpointing.SliceCheckpointer` uses it unchanged, and
+    `train.trainer --ckpt-backend engine` constructs it as `EngineBackend(addr, job=..., rank=...)`.
+
+    Each put is one committed checkpoint whose only shard is the blob (a uint8 tensor in fixed-size
+    chunks), with `{"key": key}` in the (signed) manifest's `extra`. Successive puts of similar blobs
+    (successive training checkpoints of one slice) upload only the chunks the server does not already
+    hold. get(key) restores the newest manifest carrying that key, fully verified. With `crypto` the
+    blob is encrypted and the manifest signed (P2). The seq recorded at put time is the lower bound
+    enforced at get time (anti-rollback; pass a shared `trusted` dict to extend it beyond this object).
+    """
+
+    def __init__(
+        self,
+        addr: str,
+        job: str = "job",
+        rank: int = 0,
+        crypto: CkptCrypto | None = None,
+        chunk_size: int = 256 << 10,
+        connections: int = 2,
+        timeout: float = 300.0,
+        trusted: dict[str, int] | None = None,
+    ):
+        self.rank = rank
+        self.cli = CheckpointClient(
+            addr, crypto, job=job, chunk_size=chunk_size, connections=connections, timeout=timeout
+        )
+        self.trusted = trusted if trusted is not None else {}
+        self._index: dict[str, int] = {}  # key -> newest seq seen carrying it
+        self._scanned: set[int] = set()
+        self.last_put: SaveStats | None = None
+        self.last_get: RestoreInfo | None = None
+        self._lock = threading.Lock()
+
+    def put(self, key: str, data: bytes) -> float:
+        t0 = time.perf_counter()
+        if data:
+            blob = torch.frombuffer(bytearray(data), dtype=torch.uint8)
+        else:
+            blob = torch.empty(0, dtype=torch.uint8)
+        with self._lock:
+            st = self.cli.save({"blob": blob}, step=0, extra={"key": key})
+            self.last_put = st
+            self._index[key] = st.seq
+            self.trusted[key] = max(self.trusted.get(key, 0), st.seq)
+        return time.perf_counter() - t0
+
+    def _find(self, key: str) -> int | None:
+        for s in sorted(set(self.cli.list()) - self._scanned, reverse=True):
+            try:
+                _, _, blob = self.cli._ctl.get_manifest(s)
+                k = json.loads(blob[4 + SIG_LEN :]).get("extra", {}).get("key")
+            except (NotFoundError, ValueError):
+                continue
+            self._scanned.add(s)
+            if k is not None and self._index.get(k, 0) < s:
+                self._index[k] = s
+        return self._index.get(key)
+
+    def get(self, key: str) -> bytes | None:
+        with self._lock:
+            seq = self._find(key)
+            if seq is None:
+                if key in self.trusted:
+                    raise RollbackError(f"{key}: committed as seq {self.trusted[key]} but not on the server")
+                return None
+            out, info = self.cli.restore(seq=seq, trusted_hwm=self.trusted.get(key))
+            if info.extra.get("key") != key:
+                raise SignatureError(f"manifest {seq} is not for key {key!r}")
+            self.last_get = info
+            return out["blob"].numpy().tobytes()
+
+    def close(self) -> None:
+        self.cli.close()
