@@ -97,3 +97,13 @@ been recorded with the buggy version (the smoke output went to `scratch/`).
 - Campaign budget on the shared host: M3 main = 8 scenarios × 5 methods × 5 seeds. Ablations use 3 seeds
   (4 scenarios × 6 variants) and are reported as such: they estimate each signal's contribution and are not
   the primary claim. Driver: `bench/lab_campaigns.sh`.
+
+## D-013 (2026-10-24) M6 media: virtual-time execution, own RTP/AV1 stack, encoder re-init
+- The impaired media campaign runs on a virtual-clock asyncio loop. Real codec, STT (whisper-tiny) and
+  vision-stub compute is charged at its measured CPU time, and the network comes from a seeded in-process
+  link model. Host load made wall-clock real-time media runs meaningless (B-005). Latencies are therefore
+  model-derived. The only wall-clock media number is the unimpaired aiortc ingest leg.
+- aiortc has no AV1 RTP support, so the campaign uses the repo's own RTP/RTCP + AV1-payload stack, and aiortc
+  (VP8 ingest + AV1 transcode) covers the WebRTC leg.
+- libsvtav1/libaom-av1 in this PyAV build ignore bitrate changes after open, so rate changes re-create the
+  encoder (a keyframe), with hysteresis. Details: `results/m6/NOTES.md`.
