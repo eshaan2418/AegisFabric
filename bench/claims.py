@@ -57,10 +57,15 @@ def register_all() -> None:
 
 
 def evaluate() -> tuple[list[dict], list[str]]:
+    import importlib
+
     register_all()
+    # claim modules register into the importable `bench.claims`, which is a different module object from
+    # `__main__` when this file runs as `python -m bench.claims`
+    registry = importlib.import_module("bench.claims").CLAIMS
     out, missing = [], []
     seen = set()
-    for c in CLAIMS:
+    for c in registry:
         if not re.fullmatch(r"[A-Za-z]+", c.id) or c.id in seen:
             raise ValueError(f"bad or duplicate claim id {c.id!r}")
         seen.add(c.id)
