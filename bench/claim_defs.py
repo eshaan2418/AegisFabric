@@ -158,3 +158,115 @@ claim("calGradMB", "m3/calibration.json", "{:.1f}")(lambda d: d["grad_bytes"] / 
 claim("calCkptMB", "m3/calibration.json", "{:.1f}")(lambda d: d["ckpt_bytes"] / 1e6)
 claim("calKappaA", "m3/calibration.json", "{:.2f}")(lambda d: d["kappa_plane"]["a"])
 claim("calKappaB", "m3/calibration.json", "{:.2f}")(lambda d: d["kappa_plane"]["b"])
+
+
+# --- M3 main campaign (results/m3/summary.json from bench.m3_analyze) ----------------------------------
+SCEN = {
+    "steady": "Steady",
+    "link_down": "LinkDown",
+    "blackhole": "Blackhole",
+    "flap": "Flap",
+    "bw_collapse": "BwCollapse",
+    "latency_spike": "LatSpike",
+    "bgp_reset": "BgpReset",
+    "site_degradation": "SiteDeg",
+}
+METH = {"static": "Static", "ecmp": "Ecmp", "independent": "Indep", "joint": "Joint", "oracle": "Oracle"}
+M3_ROW = {
+    "total_s": ("Total", "{:.0f}"),
+    "step_p99_s": ("Pnn", "{:.2f}"),
+    "step_std_s": ("Std", "{:.2f}"),
+    "ttq_s": ("Ttq", "{:.0f}"),
+}
+
+
+def _row(sc, m, k, stat="mean"):
+    def get(d):
+        s = d["table"][sc][m][k]
+        if stat == "ci":
+            return (s["ci95_hi"] - s["ci95_lo"]) / 2
+        return s[stat]
+
+    return get
+
+
+for _sc, _S in SCEN.items():
+    for _m, _Mm in METH.items():
+        for _k, (_K, _fmt) in M3_ROW.items():
+            claim(f"mThree{_S}{_Mm}{_K}", "m3/summary.json", _fmt)(_row(_sc, _m, _k))
+            claim(f"mThree{_S}{_Mm}{_K}Ci", "m3/summary.json", _fmt)(_row(_sc, _m, _k, "ci"))
+        claim(f"mThree{_S}{_Mm}Mig", "m3/summary.json", "{:.1f}")(
+            (lambda s, m: lambda d: d["table"][s][m]["migrations_mean"])(_sc, _m)
+        )
+        claim(f"mThree{_S}{_Mm}N", "m3/summary.json", "{:d}")(
+            (lambda s, m: lambda d: d["table"][s][m]["n"])(_sc, _m)
+        )
+        if _sc != "steady":
+            claim(f"mThree{_S}{_Mm}Excess", "m3/summary.json", "{:.1f}", "time lost in 60 s after inject")(
+                (lambda s, m: lambda d: d["table"][s][m]["excess_s_60"]["mean"])(_sc, _m)
+            )
+            claim(f"mThree{_S}{_Mm}Rec", "m3/summary.json", "{:.1f}")(
+                (lambda s, m: lambda d: d["table"][s][m]["recovery_s"]["mean"])(_sc, _m)
+            )
+            claim(f"mThree{_S}{_Mm}Cens", "m3/summary.json", "{:d}", "unrecovered failure events")(
+                (lambda s, m: lambda d: d["table"][s][m]["recovery_censored"])(_sc, _m)
+            )
+        if _m != "joint":
+            for _k, _K in (("total_s", "Total"), ("step_p99_s", "Pnn"), ("excess_mean_s", "Excess")):
+                if _k == "excess_mean_s" and _sc == "steady":
+                    continue
+                claim(f"mThree{_S}{_Mm}{_K}Impr", "m3/summary.json", "{:.0f}", "joint rel. improvement %")(
+                    (
+                        lambda s, m, k: (
+                            lambda d: 100 * d["tests"]["baselines"][k][f"{s}|{m}"]["rel_improvement_paired"]
+                        )
+                    )(_sc, _m, _k)
+                )
+                claim(f"mThree{_S}{_Mm}{_K}Holm", "m3/summary.json", "{:.2g}", "Holm-adjusted p")(
+                    (lambda s, m, k: lambda d: d["tests"]["baselines"][k][f"{s}|{m}"]["p_holm"])(_sc, _m, _k)
+                )
+
+
+def _get(m, k, f):
+    return lambda d: d["pooled"][m][k][f]
+
+
+for _m, _Mm in METH.items():
+    if _m == "joint":
+        continue
+    for _k, _K in (
+        ("total_s", "Total"),
+        ("step_p99_s", "Pnn"),
+        ("step_std_s", "Std"),
+        ("excess_mean_s", "Excess"),
+        ("ttq_s", "Ttq"),
+    ):
+        claim(f"pool{_Mm}{_K}", "m3/summary.json", "{:.0f}", "pooled joint rel. improvement %")(
+            (lambda g: lambda d: 100 * g(d))(_get(_m, _k, "mean_rel_improvement"))
+        )
+        claim(f"pool{_Mm}{_K}Lo", "m3/summary.json", "{:.0f}")(
+            (lambda g: lambda d: 100 * g(d))(_get(_m, _k, "ci95_lo"))
+        )
+        claim(f"pool{_Mm}{_K}Hi", "m3/summary.json", "{:.0f}")(
+            (lambda g: lambda d: 100 * g(d))(_get(_m, _k, "ci95_hi"))
+        )
+        claim(f"pool{_Mm}{_K}P", "m3/summary.json", "{:.2g}")(_get(_m, _k, "p_wilcoxon"))
+        claim(f"pool{_Mm}{_K}Frac", "m3/summary.json", "{:.0f}")(
+            (lambda g: lambda d: 100 * g(d))(_get(_m, _k, "frac_joint_better"))
+        )
+        claim(f"pool{_Mm}{_K}N", "m3/summary.json", "{:d}")(_get(_m, _k, "n_pairs"))
+
+
+@claim("mThreeRuns", "m3/summary.json", "{:d}")
+def _m3_runs(d):
+    return sum(r["n"] for sc in d["table"].values() for m, r in sc.items() if not m.startswith("joint-"))
+
+
+@claim("mThreeCrashes", "m3/summary.json", "{:d}")
+def _m3_crashes(d):
+    return sum(r["crashes"] for sc in d["table"].values() for r in sc.values())
+
+
+@claim("mThreeTimedOut", "m3/summary.json", "{:d}")
+def _m3_to(d):
+    return sum(r["timed_out"] for sc in d["table"].values() for r in sc.values())
