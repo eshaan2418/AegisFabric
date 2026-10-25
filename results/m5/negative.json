@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "git": {
+      "commit": "b991b51dc588e5b912d4a2fe887862af87e61510",
+      "dirty": true
+    },
+    "hardware": {
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "machine": "arm64",
+      "python": "3.12.14",
+      "cpu_count": 18,
+      "host_label": "darwin",
+      "mem_gb": 48.0,
+      "torch": "2.14.1",
+      "torch_threads": 6
+    },
+    "seed": null,
+    "config": {
+      "cases": {
+        "expired_cert": "tests/test_security.py::test_expired_cert_rejected",
+        "unknown_ca": "tests/test_security.py::test_unknown_ca_rejected",
+        "wrong_san_trust_domain": "tests/test_security.py::test_wrong_trust_domain_san_denied",
+        "renew_other_identity": "tests/test_security.py::test_cannot_renew_someone_elses_identity",
+        "tls_below_1_3": "tests/test_security.py::test_server_negotiates_tls13",
+        "tampered_chunk": "tests/test_ckpt_client.py::test_tampered_chunk_rejected",
+        "gcm_tag_tamper": "tests/test_ckpt_client.py::test_gcm_tamper_detected_client_side",
+        "tampered_manifest": "tests/test_ckpt_client.py::test_tampered_manifest_rejected",
+        "replayed_manifest": "tests/test_ckpt_client.py::test_replayed_manifest_rejected",
+        "rolled_back_manifest": "tests/test_ckpt_client.py::test_rollback_rejected",
+        "wrong_keys": "tests/test_ckpt_client.py::test_wrong_keys_rejected",
+        "foreign_job_keys": "tests/test_ckpt_backend.py::test_keydir_lets_a_relaunched_job_restore"
+      },
+      "cwd": "/Users/eshaan.kapooswalla/AegisFabric"
+    },
+    "command": "m5_negative.py",
+    "timestamp": "2026-10-25T17:11:12+00:00"
+  },
+  "data": {
+    "cases": {
+      "expired_cert": {
+        "test": "tests/test_security.py::test_expired_cert_rejected",
+        "outcome": "passed",
+        "rejected": true
+      },
+      "unknown_ca": {
+        "test": "tests/test_security.py::test_unknown_ca_rejected",
+        "outcome": "passed",
+        "rejected": true
+      },
+      "wrong_san_trust_domain": {
+        "test": "tests/test_security.py::test_wrong_trust_domain_san_denied",
+        "outcome": "passed",
+        "rejected": true
+      },
+      "renew_other_identity": {
+        "test": "tests/test_security.py::test_cannot_renew_someone_elses_identity",
+        "outcome": "passed",
+        "rejected": true
+      },
+      "tls_below_1_3": {
+        "test": "tests/test_security.py::test_server_negotiates_tls13",
+        "outcome": "passed",
+        "rejected": true
+      },
+      "tampered_chunk": {
+        "test": "tests/test_ckpt_client.py::test_tampered_chunk_rejected",
+        "outcome": "passed",
+        "rejected": true
+      },
+      "gcm_tag_tamper": {
+        "test": "tests/test_ckpt_client.py::test_gcm_tamper_detected_client_side",
+        "outcome": "passed",
+        "rejected": true
+      },
+      "tampered_manifest": {
+        "test": "tests/test_ckpt_client.py::test_tampered_manifest_rejected",
+        "outcome": "passed",
+        "rejected": true
+      },
+      "replayed_manifest": {
+        "test": "tests/test_ckpt_client.py::test_replayed_manifest_rejected",
+        "outcome": "passed",
+        "rejected": true
+      },
+      "rolled_back_manifest": {
+        "test": "tests/test_ckpt_client.py::test_rollback_rejected",
+        "outcome": "passed",
+        "rejected": true
+      },
+      "wrong_keys": {
+        "test": "tests/test_ckpt_client.py::test_wrong_keys_rejected",
+        "outcome": "passed",
+        "rejected": true
+      },
+      "foreign_job_keys": {
+        "test": "tests/test_ckpt_backend.py::test_keydir_lets_a_relaunched_job_restore",
+        "outcome": "passed",
+        "rejected": true
+      }
+    },
+    "n_cases": 12,
+    "n_rejected": 12,
+    "n_skipped": 0,
+    "pytest_exit": 0
+  }
+}
