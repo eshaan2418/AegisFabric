@@ -153,3 +153,8 @@ without them saturated at AUC 0.5). A clip-only (σ=0) ablation separates clippi
 In-process FedAvg/FedProx over 3 non-IID sites. Communication is accounted as fp32 weight bytes, not
 measured on a wire. Compared with centralized and local-only training at equal total local steps, plus a
 rounds × local-steps sweep at fixed local work.
+- *Update (2026-10-25).* The campaign calibration (`results/m3/calibration.json`, quieter host) measured
+  κ_a ≈ 0.95 and κ_b ≈ 1.35, with tight trials: the planes do differ, but in the opposite direction from the
+  smoke run quoted above. Those smoke values were taken under heavy host load (compute time 1.54 s vs 0.69 s
+  now), which contaminated the subtraction of compute from step time. Per-plane κ stands; the smoke
+  values do not.
