@@ -1,7 +1,7 @@
 {
   "meta": {
     "git": {
-      "commit": "d8b74eeb0c4b68113d06ccd6c3dcbc9079b4fefe",
+      "commit": "a0e6ce46a47a5c6e968ef11cc4f5ee5160681447",
       "dirty": false
     },
     "hardware": {
@@ -22,8 +22,8 @@
       "seed": 0,
       "out": "m4"
     },
-    "command": "ckpt_crash.py --kill-trials 1000 --torn-trials 500 --flip-trials 500 --seed 0 --out m4",
-    "timestamp": "2026-10-24T18:26:29+00:00"
+    "command": "m4_crash.py --kill-trials 1000 --torn-trials 500 --flip-trials 500 --seed 0",
+    "timestamp": "2026-10-25T01:30:39+00:00"
   },
   "data": {
     "trials": 500,
@@ -49,7 +49,7 @@
         "undetected": 0
       }
     },
-    "wall_s": 381.76902651786804,
+    "wall_s": 73.32906889915466,
     "trials_detail": [
       {
         "trial": 0,
@@ -89,9 +89,9 @@
       {
         "trial": 5,
         "target": "wal",
-        "fault": "flip 2 bits in manifest.wal at [37719, 18956]",
+        "fault": "flip 2 bits in manifest.wal at [37718, 18955]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 12692 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
       },
       {
         "trial": 6,
@@ -103,7 +103,7 @@
       {
         "trial": 7,
         "target": "wal",
-        "fault": "flip 2 bits in manifest.wal at [35652, 104]",
+        "fault": "flip 2 bits in manifest.wal at [35651, 104]",
         "outcome": "detected",
         "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
       },
@@ -271,9 +271,9 @@
       {
         "trial": 31,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [15013, 27255, 37101]",
+        "fault": "flip 3 bits in manifest.wal at [15013, 27254, 37100]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 12692 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
       },
       {
         "trial": 32,
@@ -292,9 +292,9 @@
       {
         "trial": 34,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [34564, 18250, 22938]",
+        "fault": "flip 3 bits in manifest.wal at [34563, 18250, 22937]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 12692 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
       },
       {
         "trial": 35,
@@ -453,7 +453,7 @@
       {
         "trial": 57,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [11440, 34684, 4300]",
+        "fault": "flip 3 bits in manifest.wal at [11440, 34683, 4300]",
         "outcome": "detected",
         "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
       },
@@ -467,7 +467,7 @@
       {
         "trial": 59,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [25523, 1727, 21785]",
+        "fault": "flip 3 bits in manifest.wal at [25522, 1727, 21784]",
         "outcome": "detected",
         "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
       },
@@ -565,7 +565,7 @@
       {
         "trial": 73,
         "target": "wal",
-        "fault": "flip 1 bits in manifest.wal at [37404]",
+        "fault": "flip 1 bits in manifest.wal at [37403]",
         "outcome": "detected",
         "detail": "rollback-detected latest=7 acked=8: RollbackError"
       },
@@ -574,7 +574,7 @@
         "target": "wal",
         "fault": "flip 1 bits in manifest.wal at [15471]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 12692 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
       },
       {
         "trial": 75,
@@ -593,7 +593,7 @@
       {
         "trial": 77,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [10944, 6336, 6054]",
+        "fault": "flip 3 bits in manifest.wal at [10943, 6336, 6054]",
         "outcome": "detected",
         "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
       },
@@ -684,7 +684,7 @@
       {
         "trial": 90,
         "target": "wal",
-        "fault": "flip 1 bits in manifest.wal at [35062]",
+        "fault": "flip 1 bits in manifest.wal at [35061]",
         "outcome": "detected",
         "detail": "rollback-detected latest=7 acked=8: RollbackError"
       },
@@ -1006,7 +1006,7 @@
       {
         "trial": 136,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [37668, 31913, 33857]",
+        "fault": "flip 3 bits in manifest.wal at [37667, 31912, 33856]",
         "outcome": "detected",
         "detail": "rollback-detected latest=7 acked=8: RollbackError"
       },
@@ -1041,9 +1041,9 @@
       {
         "trial": 141,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [38054, 10024, 20641]",
+        "fault": "flip 3 bits in manifest.wal at [38053, 10024, 20641]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 6346 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
       },
       {
         "trial": 142,
@@ -1125,9 +1125,9 @@
       {
         "trial": 153,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [38067, 36384, 14840]",
+        "fault": "flip 3 bits in manifest.wal at [38066, 36383, 14840]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 12692 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
       },
       {
         "trial": 154,
@@ -1384,16 +1384,16 @@
       {
         "trial": 190,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [9962, 34124, 9726]",
+        "fault": "flip 3 bits in manifest.wal at [9962, 34123, 9726]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 6346 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
       },
       {
         "trial": 191,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [19842, 36023, 15017]",
+        "fault": "flip 3 bits in manifest.wal at [19841, 36022, 15017]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 12692 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
       },
       {
         "trial": 192,
@@ -1517,9 +1517,9 @@
       {
         "trial": 209,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [19275, 7735, 33995]",
+        "fault": "flip 3 bits in manifest.wal at [19275, 7735, 33994]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 6346 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
       },
       {
         "trial": 210,
@@ -1547,7 +1547,7 @@
         "target": "wal",
         "fault": "flip 2 bits in manifest.wal at [12248, 19485]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 6346 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
       },
       {
         "trial": 214,
@@ -1643,7 +1643,7 @@
       {
         "trial": 227,
         "target": "wal",
-        "fault": "flip 2 bits in manifest.wal at [37308, 34067]",
+        "fault": "flip 2 bits in manifest.wal at [37307, 34066]",
         "outcome": "detected",
         "detail": "rollback-detected latest=7 acked=8: RollbackError"
       },
@@ -1699,7 +1699,7 @@
       {
         "trial": 235,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [5272, 25009, 32460]",
+        "fault": "flip 3 bits in manifest.wal at [5272, 25008, 32459]",
         "outcome": "detected",
         "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
       },
@@ -1839,7 +1839,7 @@
       {
         "trial": 255,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [4551, 32392, 21128]",
+        "fault": "flip 3 bits in manifest.wal at [4551, 32391, 21127]",
         "outcome": "detected",
         "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
       },
@@ -1869,7 +1869,7 @@
         "target": "wal",
         "fault": "flip 1 bits in manifest.wal at [6692]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 6346 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
       },
       {
         "trial": 260,
@@ -1972,9 +1972,9 @@
       {
         "trial": 274,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [16554, 27530, 12695]",
+        "fault": "flip 3 bits in manifest.wal at [16554, 27529, 12694]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 12692 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
       },
       {
         "trial": 275,
@@ -2058,7 +2058,7 @@
         "target": "wal",
         "fault": "flip 2 bits in manifest.wal at [21155, 6919]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 6346 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
       },
       {
         "trial": 287,
@@ -2147,9 +2147,9 @@
       {
         "trial": 299,
         "target": "wal",
-        "fault": "flip 2 bits in manifest.wal at [28038, 6503]",
+        "fault": "flip 2 bits in manifest.wal at [28037, 6503]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 6346 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
       },
       {
         "trial": 300,
@@ -2161,7 +2161,7 @@
       {
         "trial": 301,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [36344, 30597, 36108]",
+        "fault": "flip 3 bits in manifest.wal at [36343, 30597, 36107]",
         "outcome": "detected",
         "detail": "rollback-detected latest=6 acked=8: RollbackError"
       },
@@ -2210,7 +2210,7 @@
       {
         "trial": 308,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [24645, 23513, 4561]",
+        "fault": "flip 3 bits in manifest.wal at [24644, 23513, 4561]",
         "outcome": "detected",
         "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
       },
@@ -2301,9 +2301,9 @@
       {
         "trial": 321,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [35738, 17797, 33354]",
+        "fault": "flip 3 bits in manifest.wal at [35737, 17796, 33353]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 12692 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
       },
       {
         "trial": 322,
@@ -2350,14 +2350,14 @@
       {
         "trial": 328,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [542, 7503, 31734]",
+        "fault": "flip 3 bits in manifest.wal at [542, 7502, 31733]",
         "outcome": "detected",
         "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
       },
       {
         "trial": 329,
         "target": "wal",
-        "fault": "flip 1 bits in manifest.wal at [26908]",
+        "fault": "flip 1 bits in manifest.wal at [26907]",
         "outcome": "detected",
         "detail": "latest: corrupt: WAL record at offset 25383 invalid but later records exist"
       },
@@ -2429,7 +2429,7 @@
         "target": "wal",
         "fault": "flip 2 bits in manifest.wal at [23440, 10301]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 6346 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
       },
       {
         "trial": 340,
@@ -2490,7 +2490,7 @@
       {
         "trial": 348,
         "target": "wal",
-        "fault": "flip 2 bits in manifest.wal at [34235, 33138]",
+        "fault": "flip 2 bits in manifest.wal at [34234, 33137]",
         "outcome": "detected",
         "detail": "rollback-detected latest=7 acked=8: RollbackError"
       },
@@ -2560,9 +2560,9 @@
       {
         "trial": 358,
         "target": "wal",
-        "fault": "flip 1 bits in manifest.wal at [7191]",
+        "fault": "flip 1 bits in manifest.wal at [7190]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 6346 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
       },
       {
         "trial": 359,
@@ -2595,9 +2595,9 @@
       {
         "trial": 363,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [25926, 9687, 22734]",
+        "fault": "flip 3 bits in manifest.wal at [25925, 9687, 22733]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 6346 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
       },
       {
         "trial": 364,
@@ -2616,7 +2616,7 @@
       {
         "trial": 366,
         "target": "wal",
-        "fault": "flip 2 bits in manifest.wal at [3403, 1559]",
+        "fault": "flip 2 bits in manifest.wal at [3402, 1559]",
         "outcome": "detected",
         "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
       },
@@ -2660,7 +2660,7 @@
         "target": "wal",
         "fault": "flip 1 bits in manifest.wal at [11401]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 6346 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
       },
       {
         "trial": 373,
@@ -2716,7 +2716,7 @@
         "target": "wal",
         "fault": "flip 1 bits in manifest.wal at [7195]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 6346 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
       },
       {
         "trial": 381,
@@ -2744,7 +2744,7 @@
         "target": "wal",
         "fault": "flip 1 bits in manifest.wal at [10540]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 6346 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
       },
       {
         "trial": 385,
@@ -2763,9 +2763,9 @@
       {
         "trial": 387,
         "target": "wal",
-        "fault": "flip 2 bits in manifest.wal at [16732, 33094]",
+        "fault": "flip 2 bits in manifest.wal at [16732, 33093]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 12692 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
       },
       {
         "trial": 388,
@@ -2847,7 +2847,7 @@
       {
         "trial": 399,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [1498, 34511, 15519]",
+        "fault": "flip 3 bits in manifest.wal at [1498, 34510, 15518]",
         "outcome": "detected",
         "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
       },
@@ -2945,9 +2945,9 @@
       {
         "trial": 413,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [18187, 33242, 37831]",
+        "fault": "flip 3 bits in manifest.wal at [18187, 33241, 37830]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 12692 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
       },
       {
         "trial": 414,
@@ -2987,14 +2987,14 @@
       {
         "trial": 419,
         "target": "wal",
-        "fault": "flip 1 bits in manifest.wal at [26594]",
+        "fault": "flip 1 bits in manifest.wal at [26593]",
         "outcome": "detected",
         "detail": "latest: corrupt: WAL record at offset 25383 invalid but later records exist"
       },
       {
         "trial": 420,
         "target": "wal",
-        "fault": "flip 2 bits in manifest.wal at [31896, 2160]",
+        "fault": "flip 2 bits in manifest.wal at [31895, 2160]",
         "outcome": "detected",
         "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
       },
@@ -3057,9 +3057,9 @@
       {
         "trial": 429,
         "target": "wal",
-        "fault": "flip 2 bits in manifest.wal at [12737, 25848]",
+        "fault": "flip 2 bits in manifest.wal at [12737, 25847]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 12692 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
       },
       {
         "trial": 430,
@@ -3176,7 +3176,7 @@
       {
         "trial": 446,
         "target": "wal",
-        "fault": "flip 2 bits in manifest.wal at [1135, 37272]",
+        "fault": "flip 2 bits in manifest.wal at [1135, 37271]",
         "outcome": "detected",
         "detail": "latest: corrupt: WAL record at offset 0 invalid but later records exist"
       },
@@ -3190,9 +3190,9 @@
       {
         "trial": 448,
         "target": "wal",
-        "fault": "flip 2 bits in manifest.wal at [10089, 32984]",
+        "fault": "flip 2 bits in manifest.wal at [10088, 32983]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 6346 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
       },
       {
         "trial": 449,
@@ -3234,7 +3234,7 @@
         "target": "wal",
         "fault": "flip 1 bits in manifest.wal at [10506]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 6346 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
       },
       {
         "trial": 455,
@@ -3274,9 +3274,9 @@
       {
         "trial": 460,
         "target": "wal",
-        "fault": "flip 1 bits in manifest.wal at [14699]",
+        "fault": "flip 1 bits in manifest.wal at [14698]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 12692 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
       },
       {
         "trial": 461,
@@ -3332,7 +3332,7 @@
         "target": "wal",
         "fault": "flip 1 bits in manifest.wal at [16502]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 12692 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
       },
       {
         "trial": 469,
@@ -3365,9 +3365,9 @@
       {
         "trial": 473,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [21270, 36618, 11099]",
+        "fault": "flip 3 bits in manifest.wal at [21270, 36617, 11099]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 6346 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
       },
       {
         "trial": 474,
@@ -3407,9 +3407,9 @@
       {
         "trial": 479,
         "target": "wal",
-        "fault": "flip 2 bits in manifest.wal at [11389, 36439]",
+        "fault": "flip 2 bits in manifest.wal at [11389, 36438]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 6346 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 6345 invalid but later records exist"
       },
       {
         "trial": 480,
@@ -3465,7 +3465,7 @@
         "target": "wal",
         "fault": "flip 1 bits in manifest.wal at [17299]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 12692 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
       },
       {
         "trial": 488,
@@ -3540,9 +3540,9 @@
       {
         "trial": 498,
         "target": "wal",
-        "fault": "flip 3 bits in manifest.wal at [13556, 22033, 27713]",
+        "fault": "flip 3 bits in manifest.wal at [13555, 22033, 27712]",
         "outcome": "detected",
-        "detail": "latest: corrupt: WAL record at offset 12692 invalid but later records exist"
+        "detail": "latest: corrupt: WAL record at offset 12691 invalid but later records exist"
       },
       {
         "trial": 499,

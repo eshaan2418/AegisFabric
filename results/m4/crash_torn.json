@@ -1,7 +1,7 @@
 {
   "meta": {
     "git": {
-      "commit": "d8b74eeb0c4b68113d06ccd6c3dcbc9079b4fefe",
+      "commit": "a0e6ce46a47a5c6e968ef11cc4f5ee5160681447",
       "dirty": false
     },
     "hardware": {
@@ -22,8 +22,8 @@
       "seed": 0,
       "out": "m4"
     },
-    "command": "ckpt_crash.py --kill-trials 1000 --torn-trials 500 --flip-trials 500 --seed 0 --out m4",
-    "timestamp": "2026-10-24T18:20:05+00:00"
+    "command": "m4_crash.py --kill-trials 1000 --torn-trials 500 --flip-trials 500 --seed 0",
+    "timestamp": "2026-10-25T01:29:25+00:00"
   },
   "data": {
     "trials": 500,
@@ -49,7 +49,7 @@
         "undetected": 0
       }
     },
-    "wall_s": 306.62779784202576,
+    "wall_s": 67.30154514312744,
     "trials_detail": [
       {
         "trial": 0,
