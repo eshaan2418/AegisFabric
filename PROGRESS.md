@@ -6,7 +6,7 @@ Status values: `todo / in-progress / done / blocked-with-fallback`.
 |---|-------|--------|----------|
 | M0 | Bootstrap | done | `ENVIRONMENT.md`, `results/m0/environment.json`, `make test` + `make lint` green |
 | M1 | Baseline distributed training | done | `results/m1/baselines.json` (3 parallelism configs × 2 networks × 5 seeds, time-to-target, per-collective share, tokens/s, MFU, RSS) |
-| M2 | Network laboratory | in-progress | code: `netlab/`, lab tests `tests/test_netlab.py` (4/4 in container); `bench/m2_convergence.py` campaign pending |
+| M2 | Network laboratory | done | `results/m2/convergence.json` (6 failure types × 10 trials); lab tests `tests/test_netlab.py`; step-time impact under static routing = M3 `static` runs |
 | M3 | Adaptive placement & routing controller (primary) | in-progress | code: `controller/`, `bench/wan_run.py`, `bench/m3_*.py`; calibration + campaign pending |
 | M4 | Crash-consistent checkpoint engine | done | `results/m4/` (crash campaign 0 undetected/2000, bench, dedup), `results/m4/NOTES.md` |
 | M5 | Security layer | in-progress | CA/mTLS/rotation in `security/`; envelope done (`results/m5/envelope_overhead.json`); rotation campaign queued |

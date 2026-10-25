@@ -1,0 +1,2 @@
+{"wall": 1792906374.311825, "mono": 3.0083774180020555, "event": "inject", "kind": "blackhole", "plane": "a", "s1": "tor", "s2": "mtl", "duration": 6.246657519203681}
+{"wall": 1792906380.5678556, "mono": 9.263968711999041, "event": "restore", "kind": "blackhole", "plane": "a", "s1": "tor", "s2": "mtl"}

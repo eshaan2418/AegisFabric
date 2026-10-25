@@ -37,4 +37,22 @@ WAN & HSDP & \CmOneWanHsdpStep{}$\pm$\CmOneWanHsdpStepCi & \CmOneWanHsdpTtt{}$\p
 \end{tabular}
 \end{table}
 
-% M2, M3, M5-rotation and M10 subsections are added when their campaigns finish.
+\subsection{Network laboratory: convergence per failure type (M2)}
+\label{sec:eval-m2}
+A \cfg{5}\,ms UDP prober runs between compute hosts in Toronto and Montr\'eal over the plane-A path, and
+each failure is injected on that link (\CmTwoTrials{} trials per type, BGP keepalive/hold \cfg{1}/\cfg{3}\,s).
+A carrier loss (\emph{link down}) is detected locally: the FIB moves to the surviving path in
+\CmTwoLinkDownFib\,s and the data-plane outage is \CmTwoLinkDownOutage\,s. A \emph{blackhole} keeps the carrier
+up while dropping everything, so it is detected only when the BGP hold timer expires, and the outage grows
+to \CmTwoBlackholeOutage{}$\pm$\CmTwoBlackholeOutageCi\,s. A \emph{BGP session reset} on the link costs a
+\CmTwoBgpResetOutage\,s outage while the route is withdrawn and re-learned, and the session needs
+\CmTwoBgpResetBgpReest{}$\pm$\CmTwoBgpResetBgpReestCi\,s to re-establish. \emph{Flaps} behave like repeated link
+downs (\CmTwoFlapOutage\,s per event). BGP does not react to the two failures that degrade a link without
+breaking it. A bandwidth collapse cuts TCP throughput from \CmTwoBwCollapseTputBefore\ to
+\CmTwoBwCollapseTputDuring\,Mbit/s at unchanged RTT, and a latency spike raises RTT from
+\CmTwoLatSpikeRttBefore\ to \CmTwoLatSpikeRttDuring\,ms. Routing \emph{reachability} therefore recovers within
+about a hold time even for silent failures, and sub-second when the carrier drops. Performance failures are invisible to BGP, and they are where a
+controller that knows the job can help (\S\ref{sec:eval-m3}). The training step-time impact of each
+failure under static routing is the \textsf{static} column of the M3 results.
+
+% M3, M5-rotation and M10 subsections are added when their campaigns finish.

@@ -79,9 +79,9 @@ M2_KEYS = {
 }
 M2_APPLIES = {
     "link_down": ["outage_s", "fib_change_s", "restore_fib_s", "restore_outage_s"],
-    "blackhole": ["outage_s", "fib_change_s", "bgp_down_detect_s"],
-    "flap": ["outage_s", "fib_change_s", "restore_fib_s", "restore_outage_s"],
-    "bgp_reset": ["outage_s", "fib_change_s", "bgp_reestablish_s"],
+    "blackhole": ["outage_s", "fib_change_s", "restore_fib_s", "restore_outage_s"],
+    "flap": ["outage_s", "fib_change_s"],
+    "bgp_reset": ["outage_s", "fib_change_s", "bgp_down_detect_s", "bgp_reestablish_s"],
     "bw_collapse": ["rtt_before_ms", "rtt_during_ms", "tput_before_mbit", "tput_during_mbit"],
     "latency_spike": ["rtt_before_ms", "rtt_during_ms", "tput_before_mbit", "tput_during_mbit"],
 }
