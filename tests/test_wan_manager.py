@@ -29,3 +29,22 @@ def test_newest_complete_checkpoint_skips_partial_and_spans_sites(tmp_path):
 
 def test_newest_complete_checkpoint_none(tmp_path):
     assert _mgr(tmp_path, "tor").newest_complete_checkpoint() == (-1, None)
+
+
+def test_stable_gates_migration_until_segment_runs(tmp_path, monkeypatch):
+    import time
+
+    import bench.wan_run as W
+
+    m = _mgr(tmp_path, "tor")
+    m.segment, m.events = 0, []
+    monkeypatch.setattr(W.JobManager, "alive", lambda self: True)
+    seg = tmp_path / "seg0"
+    seg.mkdir()
+    monkeypatch.setattr(W, "read_rank_log", lambda d, r: [{"event": "step"}] * n_steps[0])
+    n_steps = [2]
+    assert not m.stable()  # still starting / restoring
+    n_steps[0] = 10
+    assert m.stable()
+    m.events.append({"event": "migrate", "wall": time.time()})
+    assert not m.stable()  # cooldown

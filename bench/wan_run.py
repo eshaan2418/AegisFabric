@@ -36,6 +36,8 @@ from netlab.lab import default_lab, nsexec
 from train.launch import Job, Slot, read_rank_log
 
 CKPT_PORT = 7400
+MIGRATE_MIN_SEG_STEPS = 5  # a new segment must complete this many steps before another migration
+MIGRATE_COOLDOWN_S = 30.0  # minimum time between migrations
 MAX_CRASHES = 5  # relaunches per run before the run is abandoned (reported as timed_out + crashes)
 
 
@@ -229,11 +231,11 @@ class JobManager:
         codes = self.job.wait(timeout)
         if any(c != 0 for c in codes):
             self.job.kill()
-        ends = [r for r in read_rank_log(self.out / f"seg{self.segment}", 0) if r.get("event") == "end"]
-        step = ends[-1]["step"] if ends else cur
-        old_storage = self.plan.storage
+        # restore from what is actually complete on storage: the final checkpoint if the stop wrote one,
+        # else the newest earlier one (never "from scratch" while a complete checkpoint exists)
+        step, site = self.newest_complete_checkpoint()
         t_stop = time.time()
-        self.launch(new, restore_step=step, restore_site=old_storage)
+        self.launch(new, restore_step=step if step > 0 else -1, restore_site=site)
         ev = {
             "wall": t0,
             "event": "migrate",
@@ -245,6 +247,16 @@ class JobManager:
         }
         self.events.append(ev)
         return ev
+
+    def segment_steps(self) -> int:
+        return sum(1 for r in read_rank_log(self.out / f"seg{self.segment}", 0) if r.get("event") == "step")
+
+    def stable(self, min_steps: int = MIGRATE_MIN_SEG_STEPS, cooldown_s: float = MIGRATE_COOLDOWN_S) -> bool:
+        """May the controller start a migration now? Not while the current segment is still starting or
+        restoring (a stop request cannot be honoured before its first step), and not within a cooldown after
+        the previous migration."""
+        last = max((e["wall"] for e in self.events if e["event"] == "migrate"), default=0.0)
+        return self.alive() and self.segment_steps() >= min_steps and time.time() - last >= cooldown_s
 
     def kill(self) -> None:
         if self.job:
@@ -389,6 +401,7 @@ def run(cfg: RunConfig) -> dict:
         kappa_plane=dict(calib.get("kappa_plane", {})),
     )
     planner = make_planner(cfg, job)
+    may_migrate = getattr(planner, "allow_migration", False)
     oracle = cfg.method == "oracle"
     time.sleep(2.0)
     est.poll()
@@ -465,6 +478,8 @@ def run(cfg: RunConfig) -> dict:
                 ]
                 if cks:
                     job.ckpt_bytes = float(np.median([c["bytes"] for c in cks[-3:]])) * job.n_ranks
+            if hasattr(planner, "allow_migration"):
+                planner.allow_migration = may_migrate and mgr.stable()
             d = planner.replan(net, mgr.plan, est.controlled_demand())
             est_hist.append(
                 {"t_rel": t_rel, "links": {"|".join(k): dataclasses.asdict(v) for k, v in net.links.items()}}

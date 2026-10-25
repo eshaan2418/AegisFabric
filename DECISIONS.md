@@ -158,3 +158,18 @@ rounds × local-steps sweep at fixed local work.
   smoke run quoted above. Those smoke values were taken under heavy host load (compute time 1.54 s vs 0.69 s
   now), which contaminated the subtraction of compute from step time. Per-plane κ stands; the smoke
   values do not.
+
+## D-021 (2026-10-25) Job-manager fixes found in the first M3 runs (those runs are discarded)
+In the first M3 attempt at a802f80, `link_down/joint/seed0` took longer than static. Its trace showed two
+job-manager bugs, not a planner-quality effect:
+1. A second migration was proposed 9 s after the first, while the relaunched segment was still restoring
+   and had run no steps. The stop request ("stop at step 1") could not be honoured before the restore
+   finished, so it hit the 240 s stop timeout and the job was killed.
+2. Without a final `end` record, `migrate()` then relaunched with `restore_step = current_step = -1`,
+   i.e. from scratch, although complete checkpoints existed.
+Fix: the planner may propose a migration only when the current segment has completed
+`MIGRATE_MIN_SEG_STEPS` (5) steps and `MIGRATE_COOLDOWN_S` (30 s) have passed since the previous migration.
+After a stop, the restore point is always the newest *complete* checkpoint found on storage. Planner
+parameters (horizon, hysteresis 1.5×, minimum gain 3%) were not changed. All 9 runs of that attempt are
+discarded and the campaign restarts from a new frozen commit. These are correctness fixes, decided by
+inspecting a trace, not by comparing aggregate outcomes.

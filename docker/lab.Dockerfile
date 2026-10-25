@@ -18,7 +18,7 @@ WORKDIR /opt/aegis
 COPY docker/requirements-lab.txt /opt/aegis/requirements-lab.txt
 RUN --mount=type=secret,id=uvindex,env=UV_INDEX_URL \
     uv venv /opt/venv -p /usr/local/bin/python3.12 && \
-    VIRTUAL_ENV=/opt/venv uv pip install --no-deps --index-url https://download.pytorch.org/whl/cpu torch && \
+    VIRTUAL_ENV=/opt/venv uv pip install --no-deps --index-url https://download.pytorch.org/whl/cpu torch==2.14.1 && \
     VIRTUAL_ENV=/opt/venv uv pip install -r /opt/aegis/requirements-lab.txt \
       filelock sympy networkx jinja2 fsspec typing-extensions setuptools
 ENV PATH=/opt/venv/bin:$PATH PYTHONPATH=/work AEGIS_HOST_LABEL=lab-container

@@ -1,5 +1,8 @@
 import numpy as np
+import pytest
 import torch
+
+pytest.importorskip("sklearn")  # optional `posttrain` extra; absent from the lab image
 
 from data.synth import qa
 from posttrain.model import ModelConfig, TinyLM

@@ -99,3 +99,20 @@ def test_link_down_fails_over(lab):
     finally:
         lab.wan_link_state("a", "tor", "mtl", up=True)
         lab.wait_converged()
+
+
+@pytest.mark.netlab
+def test_te_milp_runs_in_lab_image():
+    """The independent baseline's TE MILP must work with the lab image's solver stack (regression: an
+    unpinned image pulled PuLP 4, whose LpVariable API differs, and every `independent` run failed)."""
+    from controller import model as M
+    from controller.planner import te_min_mlu
+
+    net = M.NetState.nominal()
+    demand = {
+        ("tor", "mtl", "compute"): 150.0,
+        ("mtl", "tor", "compute"): 150.0,
+        ("tor", "mtl", "storage"): 100.0,
+    }
+    routes = te_min_mlu(net, demand)
+    assert set(routes) == set(demand) and set(routes.values()) <= {"a", "b"}
