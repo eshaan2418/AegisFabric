@@ -4,13 +4,15 @@
 \subsection{Cost model}
 For ranks $0..n{-}1$ in ring order with sites $\sigma(i)$, the ring time is
 \[
-T_{\text{ring}} = 2(n-1)\,\kappa\,\max_{e}\Big[\frac{S}{n\,b_e} + \ell_e\Big],
+T_{\text{ring}} = 2(n-1)\,\max_{e}\;\kappa_{p(e)}\Big[\frac{S}{n\,b_e} + \ell_e\Big],
 \]
 where edge $e=(\sigma(i),\sigma(i{+}1))$ is a LAN edge if both ranks share a site. Otherwise it uses the
 path $r$ selects for (src, dst, \textsc{compute}). The edge bandwidth $b_e$ is the minimum, over the
 links $l$ of that path, of the fair share $\max(\epsilon, c_l - g_l)/f_l$: capacity minus background
-load, divided among the controlled flows on $l$. $\ell_e$ is the path latency. $\kappa$ is a calibration
-factor, initialised from a measured run and refined online from rank-0 collective timings. Every $K$
+load, divided among the controlled flows on $l$. $\ell_e$ is the path latency. $\kappa_{p}$ is a per-plane
+calibration factor for the plane $p(e)$ the edge uses. It is initialised from measured runs pinned to each
+plane, and the bottleneck edge's plane is refined online from rank-0 step timings of steps that do not
+overlap a checkpoint upload. Every $K$
 steps, each rank uploads $B/n$ bytes to site $s$ over the path $r$ selects for (site, $s$,
 \textsc{storage}); while that flush is in flight, ring edges that share a link with it get a halved share.
 With flush duration $D$ and $m=\min(K, D/T_{\text{ring,flush}})$ overlapped steps, the expected step time is
