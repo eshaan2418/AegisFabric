@@ -54,6 +54,9 @@ def parse(argv=None):
     ap.add_argument("--ckpt-every", type=int, default=0)
     ap.add_argument("--ckpt-addr", default=None, help="storage service host:port")
     ap.add_argument("--ckpt-backend", default="blob", choices=["blob", "engine"])
+    ap.add_argument(
+        "--ckpt-keys", type=Path, default=None, help="engine backend: job key dir (P2 encryption + signing)"
+    )
     ap.add_argument("--restore-step", type=int, default=-1, help="restore this step (from --restore-addr)")
     ap.add_argument("--restore-addr", default=None, help="storage to restore from (default: --ckpt-addr)")
     ap.add_argument("--job", default="job")
@@ -161,7 +164,12 @@ def make_checkpointer(args, rank: int, world: int, addr: str | None = None):
     else:
         from ckpt.client import EngineBackend  # M4 engine adapter
 
-        backend = EngineBackend(addr, job=args.job, rank=rank)
+        crypto = None
+        if args.ckpt_keys:
+            from ckpt.crypto import load_keydir
+
+            crypto = load_keydir(args.ckpt_keys, args.job)
+        backend = EngineBackend(addr, job=args.job, rank=rank, crypto=crypto)
     return SliceCheckpointer(backend, rank, world, job=args.job)
 
 

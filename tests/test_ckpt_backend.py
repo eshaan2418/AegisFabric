@@ -123,3 +123,29 @@ def test_tampered_store_detected(srv):
     with pytest.raises(IntegrityError):
         EngineBackend(srv.addr, chunk_size=4096).get("k")
     shutil.rmtree(srv.root, ignore_errors=True)
+
+
+def test_keydir_lets_a_relaunched_job_restore(srv, tmp_path):
+    """Migration/crash restart: new processes load the same job key dir and can verify + decrypt earlier
+    checkpoints. A freshly generated key set (another job's material) cannot."""
+    from ckpt.crypto import init_keydir, load_keydir
+
+    kd = tmp_path / "keys"
+    init_keydir(kd, "j")
+    full = full_state()
+    world = 2
+    for r in range(world):
+        b = EngineBackend(srv.addr, job="j", rank=r, crypto=load_keydir(kd, "j"))
+        SliceCheckpointer(b, r, world, job="j").save(30, full, blocking=True)
+        b.close()
+    b2 = EngineBackend(srv.addr, job="j", rank=0, crypto=load_keydir(kd, "j"))  # "relaunched" process
+    got = SliceCheckpointer(b2, 0, world, job="j").restore(30)
+    k = next(iter(full["model"]))
+    assert torch.equal(got["model"][k], full["model"][k])
+    b2.close()
+    other = EngineBackend(srv.addr, job="j", rank=0, crypto=CkptCrypto.generate("j"))
+    with pytest.raises(Exception):  # noqa: B017 - signature or integrity error, whichever is hit first
+        SliceCheckpointer(other, 0, world, job="j").restore(30)
+    other.close()
+    with pytest.raises(IntegrityError):
+        load_keydir(kd, "another-job")

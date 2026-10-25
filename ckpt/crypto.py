@@ -118,3 +118,52 @@ class CkptCrypto:
             self.verify_key.verify(sig, body)
         except InvalidSignature as e:
             raise SignatureError("manifest signature invalid") from e
+
+
+# --- job key material on disk (lab stand-in for a KMS + secret distribution) ---------------------
+def init_keydir(path, job: str) -> None:
+    """Create the job's key material once: KEK (stands in for the KMS), keyed-hash key, Ed25519 manifest
+    signing key, and the epoch-1 DEK *wrapped* by the KEK. Every rank of every segment of the job loads the
+    same material, so a relaunched job (migration, crash restart) can decrypt and verify earlier checkpoints."""
+    from pathlib import Path
+
+    from cryptography.hazmat.primitives import serialization
+
+    p = Path(path)
+    p.mkdir(parents=True, exist_ok=True)
+    os.chmod(p, 0o700)
+    c = CkptCrypto.generate(job, KeyService(kek := AESGCM.generate_key(bit_length=256)))
+    files = {
+        "kek.bin": kek,
+        "mac.bin": c.mac_key,
+        "sign.pem": c.signing_key.private_bytes(
+            serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8, serialization.NoEncryption()
+        ),
+        "dek1.wrapped": c.wrapped_deks()[1],
+        "job.txt": job.encode(),
+    }
+    for name, data in files.items():
+        fd = os.open(p / name, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        with os.fdopen(fd, "wb") as f:
+            f.write(data)
+
+
+def load_keydir(path, job: str) -> CkptCrypto:
+    from pathlib import Path
+
+    from cryptography.hazmat.primitives import serialization
+
+    p = Path(path)
+    if (p / "job.txt").read_bytes().decode() != job:
+        raise IntegrityError(f"key directory {p} belongs to another job")
+    sk = serialization.load_pem_private_key((p / "sign.pem").read_bytes(), password=None)
+    c = CkptCrypto(
+        job=job,
+        kms=KeyService((p / "kek.bin").read_bytes()),
+        verify_key=sk.public_key(),
+        mac_key=(p / "mac.bin").read_bytes(),
+        signing_key=sk,
+    )
+    c.dek(1, (p / "dek1.wrapped").read_bytes())  # unwrap through the KMS stand-in
+    c.key_epoch = 1
+    return c
