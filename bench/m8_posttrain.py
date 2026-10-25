@@ -4,6 +4,9 @@
   uv run python -m bench.m8_posttrain tune-merge
   AEGIS_DEVICE=mps nice -n 19 uv run python -m bench.m8_posttrain run --seeds 0 1 2 3 4 --budget 4e12
   uv run python -m bench.m8_posttrain summarize
+  # second budget (LRs reused from the 4e12 tuning):
+  AEGIS_DEVICE=mps nice -n 19 uv run python -m bench.m8_posttrain run --seeds 0 1 2 3 4 --budget 1.6e13 --sub /budget1.6e13
+  uv run python -m bench.m8_posttrain summarize --sub /budget1.6e13
 
 Compute budget = analytic FLOPs (2N/token forward incl. sampling & reference/RM passes, 6N/token for
 forward+backward) spent *after* the shared warm start. Wall-clock is recorded too, but machine is shared.
@@ -122,7 +125,7 @@ def cmd_run(a):
             print(seed, name, res[name]["eval"]["exact"], f"{c.flops:.2e}", round(c.wall_s), flush=True)
         res["total_wall_s"] = time.perf_counter() - t0
         write_result(
-            f"{OUT}/seed{seed}.json",
+            f"{OUT}{a.sub}/seed{seed}.json",
             res,
             config={
                 "budget": a.budget,
@@ -139,7 +142,7 @@ def cmd_run(a):
 
 
 def cmd_summarize(a):
-    files = sorted((RESULTS / OUT).glob("seed*.json"))
+    files = sorted((RESULTS / f"{OUT}{a.sub}").glob("seed*.json"))
     per = [json.loads(f.read_text())["data"] for f in files]
     methods_ = ["warm"] + [m for m in ["sft", "dpo", "grpo", "grpo_rm"] if m in per[0]]
     table = {}
@@ -170,7 +173,7 @@ def cmd_summarize(a):
         "pos_rate": summarize([p["reward_model"]["rm_test_pos_rate"] for p in per]).as_dict(),
     }
     write_result(
-        f"{OUT}/summary.json",
+        f"{OUT}{a.sub}/summary.json",
         {
             "table": table,
             "tests": tests,
@@ -179,7 +182,7 @@ def cmd_summarize(a):
             "files": [f.name for f in files],
         },
     )
-    _plot(table)
+    _plot(table, a.sub.strip("/").replace("/", "_"))
     for m, t in table.items():
         e = t["exact"]
         print(
@@ -189,7 +192,7 @@ def cmd_summarize(a):
     print("RM acc", rm["accuracy"]["mean"], "auc", rm["auc"]["mean"])
 
 
-def _plot(table):
+def _plot(table, suffix: str = ""):
     import matplotlib
 
     matplotlib.use("Agg")
@@ -211,7 +214,7 @@ def _plot(table):
     ax.set_ylim(0, 1)
     ax.set_title("Post-training at equal compute (mean ± 95% CI)")
     fig.tight_layout()
-    fig.savefig(figs / "posttrain_exact.png", dpi=150)
+    fig.savefig(figs / f"posttrain_exact{'_' + suffix if suffix else ''}.png", dpi=150)
 
 
 def main():
@@ -224,6 +227,9 @@ def main():
     ap.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2, 3, 4])
     ap.add_argument("--methods", nargs="+", default=["sft", "dpo", "grpo", "grpo_rm"])
     ap.add_argument("--n-eval", type=int, default=500)
+    ap.add_argument(
+        "--sub", default="", help="output sub-directory, e.g. /budget1.6e13 (LRs still from tune.json)"
+    )
     a = ap.parse_args()
     {"tune": cmd_tune, "tune-merge": cmd_tune_merge, "run": cmd_run, "summarize": cmd_summarize}[a.cmd](a)
 
