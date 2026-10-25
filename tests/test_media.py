@@ -219,3 +219,17 @@ def test_webrtc_stamp_roundtrip():
     bad = stamp(img, 5)
     bad[:8, 0:8] = 255 - bad[:8, 0:8]
     assert read_stamp(bad) is None
+
+
+def test_netem_order_preserving_jitter():
+    import numpy as np
+
+    from media.netem import LinkProfile, _Dir
+
+    for reorder in (True, False):
+        p = LinkProfile("j", delay_ms=50, jitter_ms=40, rate_kbps=1500, reorder=reorder)
+        d = _Dir(p, np.random.default_rng(0), 0.0)
+        ts = [d.schedule(1000, i * 0.01) for i in range(500)]
+        assert None not in ts
+        inversions = sum(b < a for a, b in zip(ts, ts[1:], strict=False))
+        assert (inversions > 0) == reorder

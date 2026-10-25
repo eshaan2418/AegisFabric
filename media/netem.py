@@ -27,6 +27,9 @@ class LinkProfile:
     rate_kbps: float | None = None
     queue_ms: float = 150.0  # drop-tail queue limit (as delay at the current rate)
     rate_schedule: list[tuple[float, float]] = field(default_factory=list)  # (t_s, rate_kbps)
+    # False: delivery order is preserved (jitter as queueing-delay variation, delivery = max(prev, t)).
+    # True (netem default): every packet gets independent jitter, so packets can be reordered.
+    reorder: bool = True
 
     def mean_loss(self) -> float:
         if self.ge_p == 0:
@@ -50,8 +53,11 @@ PROFILES = {
         rate_kbps=1200,
         rate_schedule=[(8.0, 250.0), (16.0, 1200.0)],
     ),
-    # high delay variation (normal, sd 40 ms; can reorder) with 1% random loss
-    "jitter": LinkProfile("jitter", delay_ms=50, jitter_ms=40, ge_loss_good=0.01, rate_kbps=1500),
+    # high delay variation (normal, sd 40 ms) with 1% random loss; order preserved (see NOTES: with
+    # netem-style reordering the receiver's immediate NACKs cause a retransmission storm)
+    "jitter": LinkProfile(
+        "jitter", delay_ms=50, jitter_ms=40, ge_loss_good=0.01, rate_kbps=1500, reorder=False
+    ),
 }
 REVERSE = LinkProfile("reverse", delay_ms=30, jitter_ms=2)
 
@@ -65,6 +71,7 @@ class _Dir:
         self.t0 = t0
         self.bad = False
         self.link_free = 0.0
+        self.last_delivery = 0.0
         self.stats = {"in": 0, "lost": 0, "qdrop": 0, "out_bytes": 0}
 
     def rate(self, now: float) -> float | None:
@@ -95,7 +102,11 @@ class _Dir:
             self.link_free = depart
         jit = float(self.rng.normal(0, p.jitter_ms)) if p.jitter_ms > 0 else 0.0
         self.stats["out_bytes"] += size
-        return depart + max(0.0, p.delay_ms + jit) / 1000
+        at = depart + max(0.0, p.delay_ms + jit) / 1000
+        if not p.reorder:
+            at = max(at, self.last_delivery)
+            self.last_delivery = at
+        return at
 
 
 class Relay:

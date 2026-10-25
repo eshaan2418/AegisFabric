@@ -1,6 +1,6 @@
 """WebRTC (aiortc, VP8) ingest + AV1 transcode: glass-to-server latency and transcode cost.
 
-uv run python -m bench.media_webrtc --trials 5
+uv run python -m bench.m6_webrtc --trials 5
 """
 
 from __future__ import annotations

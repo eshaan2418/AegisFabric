@@ -3,7 +3,7 @@
 For each (rung, fps) the source is encoded with libsvtav1 (CBR, low-delay), decoded, and rendered at 30 fps
 with frame repetition. VMAF is measured against the 30 fps source.
 
-  uv run python -m bench.media_calibrate --seeds 0 1 2
+  uv run python -m bench.m6_calibrate --seeds 0 1 2
 """
 
 from __future__ import annotations

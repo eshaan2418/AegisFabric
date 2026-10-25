@@ -1,7 +1,7 @@
 """M6 campaign: joint vs independent media/inference adaptation under userspace-emulated impairments.
 
-  uv run python -m bench.media_run --trials 5            # full M6 campaign (~30 min)
-  uv run python -m bench.media_run --trials 2 --quick    # reproduce-quick subset
+  uv run python -m bench.m6_run --trials 5            # full M6 campaign (~30 min)
+  uv run python -m bench.m6_run --trials 2 --quick    # reproduce-quick subset
 
 Each trial writes results/m6/trials/<condition>_s<seed>.json; aggregates go to results/m6/summary.json and
 figures to results/m6/figs/. Network impairment: seeded in-process link emulation (media/netem.py), NOT kernel netem; executed in

@@ -7,7 +7,7 @@
   the frame selector runs at a fixed max rate, and the inference queue is FIFO.
 * `JointPolicy`: one controller picks (bitrate rung, encoder fps, selection rate, inference policy) under a
   bandwidth estimate and the measured inference service rate. Encoder fps comes from an offline
-  calibration table Q(bitrate, fps) → VMAF (results/m6/calibration.json, measured by bench/media_calibrate.py).
+  calibration table Q(bitrate, fps) → VMAF (results/m6/calibration.json, measured by bench/m6_calibrate.py).
 """
 
 from __future__ import annotations
