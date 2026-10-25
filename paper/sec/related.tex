@@ -1,0 +1,39 @@
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{WAN traffic engineering.}
+B4~\citep{b4} and SWAN~\citep{swan} showed that centralised TE over a private inter-datacenter WAN can run
+links at high utilisation by allocating measured or declared demand across paths. Espresso~\citep{espresso}
+moved BGP peering into software for application-aware routing at Google's edge. Our \emph{independent}
+baseline is a deliberately simple member of this family: a min-max-utilisation MILP over measured
+per-prefix demand. We ask what happens when the TE objective is not the job's objective, and when the
+controller may also move the job. We do not claim our TE matches the sophistication of those systems.
+
+\paragraph{Parallelism and placement.}
+Megatron-LM~\citep{megatron} composes tensor, pipeline and data parallelism and shows that poor
+combinations cost throughput even on fast interconnects. FSDP~\citep{fsdp} shards parameters, gradients
+and optimiser state. DiLoCo~\citep{diloco} attacks the WAN problem algorithmically by communicating much less
+often. That is complementary to our approach, which keeps the synchronous algorithm and changes where
+ranks run and how their bytes are routed.
+
+\paragraph{Checkpointing.}
+CheckFreq~\citep{checkfreq} pipelines snapshot and persist and tunes frequency online. Check-N-Run~\citep{checknrun}
+makes checkpoints incremental and quantized, and Gemini~\citep{gemini} checkpoints to CPU memory and
+explicitly schedules checkpoint traffic so that it does not interfere with training traffic. That
+interference is the same interaction our cost model represents when it charges ring edges that share a
+link with a flush. Our checkpoint engine (content-addressed chunks, write-ahead log, verified recovery)
+borrows standard storage-system techniques. The novelty claimed here is only in treating the checkpoint
+\emph{destination and path} as part of the joint decision.
+
+\paragraph{Real-time media.}
+Salsify~\citep{salsify} couples the video codec and the transport in one control loop. Our media extension
+asks a similar ``joint versus independent'' question, with the inference scheduler as a third loop.
+
+\paragraph{Privacy and post-training.}
+We use DP-SGD~\citep{dpsgd} through Opacus~\citep{opacus}, loss-threshold membership inference in the
+spirit of Shokri et al.~\citep{shokri}, FedAvg~\citep{fedavg}, DPO~\citep{dpo} and GRPO~\citep{deepseekmath}. All of
+these run at toy scale, as sanity-checked components of the platform rather than as contributions.
+
+\paragraph{Formal methods.}
+We model-check the checkpoint commit/recovery and certificate-rotation protocols in TLA+~\citep{tla}
+with TLC.
