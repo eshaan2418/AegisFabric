@@ -1,5 +1,6 @@
 name: ci
 on: [push, pull_request]
+concurrency: { group: ci-${{ github.ref }}, cancel-in-progress: true }
 jobs:
   test:
     runs-on: ubuntu-24.04
@@ -8,6 +9,8 @@ jobs:
       - uses: astral-sh/setup-uv@v5
       - uses: dtolnay/rust-toolchain@stable
         with: { components: "clippy,rustfmt" }
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: "ckpt -> target" }
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: "21" }
       - name: System deps (libclang for rocksdb bindgen; ffmpeg for media tests)
