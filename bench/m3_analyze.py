@@ -19,7 +19,7 @@ import numpy as np
 
 from bench import plotstyle
 from bench.meta import resolve, write_result
-from bench.stats import holm, summarize, welch
+from bench.stats import bootstrap_ci, holm, summarize, welch
 
 BASELINES = ["static", "ecmp", "independent", "oracle"]
 METRICS = ["total_s", "ttq_s", "step_mean_s", "step_p99_s", "step_std_s"]
@@ -31,6 +31,102 @@ def load(out: Path) -> dict:
         d = json.loads(p.read_text())
         runs[p.parent.parent.name][p.parent.name].append(d["data"]["summary"] | {"seed": d["meta"]["seed"]})
     return runs
+
+
+TEST_METRICS = ["total_s", "ttq_s", "step_mean_s", "step_p99_s", "step_std_s", "excess_mean_s"]
+
+
+def _paired(a: list[dict], b: list[dict], metric: str) -> tuple[list[float], list[float]]:
+    """Seed-matched values (same seed ⇒ same failure times, pair and background schedule)."""
+    bs = {r["seed"]: r.get(metric) for r in b}
+    xa, xb = [], []
+    for r in a:
+        va, vb = r.get(metric), bs.get(r["seed"])
+        if va is not None and vb is not None:
+            xa.append(float(va))
+            xb.append(float(vb))
+    return xa, xb
+
+
+def _test(a: list[dict], b: list[dict], metric: str) -> dict | None:
+    from scipy import stats as st
+
+    xa = [float(r[metric]) for r in a if r.get(metric) is not None]
+    xb = [float(r[metric]) for r in b if r.get(metric) is not None]
+    if len(xa) < 2 or len(xb) < 2:
+        return None
+    out = welch(xa, xb)
+    pa, pb = _paired(a, b, metric)
+    out.update({"n_a": len(xa), "n_b": len(xb), "mean_a": float(np.mean(xa)), "mean_b": float(np.mean(xb))})
+    if len(pa) >= 2:
+        d = np.asarray(pa) - np.asarray(pb)
+        out["n_paired"] = len(pa)
+        out["mean_diff_paired"] = float(d.mean())
+        out["p_paired"] = float(st.ttest_rel(pa, pb).pvalue) if np.any(d != d[0]) else float("nan")
+        rel = (np.asarray(pb) - np.asarray(pa)) / np.asarray(pb)  # >0: `a` (joint) better
+        out["rel_improvement_paired"] = float(rel.mean())
+    return out
+
+
+def compare(runs: dict) -> dict:
+    """joint vs each baseline (family 'baselines') and joint vs each ablation variant (family 'ablations').
+    Holm correction per (family, metric) across all scenarios × comparators, applied to the paired p-value
+    (seeds are matched) when available, else Welch."""
+    out: dict = {"baselines": {}, "ablations": {}}
+    for fam in out:
+        for metric in TEST_METRICS:
+            raw, pv = {}, {}
+            for sc, by_m in runs.items():
+                if "joint" not in by_m:
+                    continue
+                comps = BASELINES if fam == "baselines" else sorted(k for k in by_m if k.startswith("joint-"))
+                for b in comps:
+                    if b not in by_m:
+                        continue
+                    t = _test(by_m["joint"], by_m[b], metric)
+                    if t is None:
+                        continue
+                    key = f"{sc}|{b}"
+                    raw[key] = t
+                    p = t.get("p_paired")
+                    pv[key] = p if p is not None and np.isfinite(p) else t["p_welch"]
+            adj = holm(pv) if pv else {}
+            out[fam][metric] = {k: {**raw[k], "p_holm": adj[k]} for k in raw}
+    return out
+
+
+def pooled_effects(runs: dict) -> dict:
+    """Across scenarios: mean seed-paired relative improvement of joint over each comparator, with a
+    bootstrap 95% CI over (scenario, seed) pairs and a Wilcoxon signed-rank test."""
+    from scipy import stats as st
+
+    res: dict = {}
+    comps = set(BASELINES) | {k for by_m in runs.values() for k in by_m if k.startswith("joint-")}
+    for b in sorted(comps):
+        res[b] = {}
+        for metric in TEST_METRICS:
+            rel = []
+            for by_m in runs.values():
+                if "joint" in by_m and b in by_m:
+                    pa, pb = _paired(by_m["joint"], by_m[b], metric)
+                    rel += [(y - x) / y for x, y in zip(pa, pb, strict=True) if y]
+            if len(rel) < 3:
+                continue
+            lo, hi = bootstrap_ci(rel)
+            try:
+                p = float(st.wilcoxon(rel).pvalue)
+            except ValueError:
+                p = float("nan")
+            res[b][metric] = {
+                "n_pairs": len(rel),
+                "mean_rel_improvement": float(np.mean(rel)),
+                "ci95_lo": lo,
+                "ci95_hi": hi,
+                "median": float(np.median(rel)),
+                "p_wilcoxon": p,
+                "frac_joint_better": float(np.mean(np.asarray(rel) > 0)),
+            }
+    return res
 
 
 def ttq(s: dict, target: float) -> float | None:
@@ -65,29 +161,19 @@ def main() -> None:
             row["timed_out"] = sum(bool(r.get("timed_out")) for r in rs)
             row["crashes"] = sum(int(r.get("n_crashes", 0)) for r in rs)
             table[sc][m] = row
-    # joint vs baselines
-    tests: dict = {}
-    for metric in ("total_s", "step_p99_s", "step_std_s"):
-        pv = {}
-        raw = {}
-        for sc, by_m in runs.items():
-            if "joint" not in by_m:
-                continue
-            j = [r[metric] for r in by_m["joint"] if r.get(metric) is not None]
-            for b in BASELINES:
-                if b not in by_m:
-                    continue
-                x = [r[metric] for r in by_m[b] if r.get(metric) is not None]
-                if len(j) >= 2 and len(x) >= 2:
-                    w = welch(j, x)
-                    raw[f"{sc}|{b}"] = w
-                    pv[f"{sc}|{b}"] = w["p_welch"]
-        adj = holm(pv) if pv else {}
-        tests[metric] = {k: {**raw[k], "p_holm": adj[k]} for k in raw}
+    for by_m in runs.values():
+        for rs in by_m.values():
+            for r in rs:
+                ev = r["recovery"]
+                r["excess_mean_s"] = float(np.mean([e["excess_s_60"] for e in ev])) if ev else None
+    tests = compare(runs)
+    pooled = pooled_effects(runs)
     write_result(
-        out / "summary.json", {"table": table, "tests": tests, "target_loss": a.target_loss}, config=vars(a)
+        out / "summary.json",
+        {"table": table, "tests": tests, "pooled": pooled, "target_loss": a.target_loss},
+        config=vars(a),
     )
-    write_tables(out, table, tests)
+    write_tables(out, table, tests, pooled)
     figures(out, runs, table)
 
 
@@ -98,7 +184,7 @@ def fmt(s: dict | None, d: int = 3) -> str:
     return f"{s['mean']:.{d}g} ± {half:.2g}"
 
 
-def write_tables(out: Path, table: dict, tests: dict) -> None:
+def write_tables(out: Path, table: dict, tests: dict, pooled: dict) -> None:
     lines = [
         "# M3 tables (generated by `python -m bench.m3_analyze`; source: results/m3/summary.json)",
         "",
@@ -128,18 +214,37 @@ def write_tables(out: Path, table: dict, tests: dict) -> None:
             )
         lines.append("")
     lines += [
-        "## Joint vs baselines (Welch t-test, Holm-corrected per metric)",
+        "## Joint vs comparators (seed-paired t-test; Holm-corrected per family × metric)",
         "",
-        "| metric | scenario | baseline | rel. diff (joint vs baseline) | Hedges g | p (Welch) | p (Holm) |",
+        "rel. impr. = mean over seeds of (comparator − joint)/comparator; > 0 means joint is better.",
+        "",
+        "| family | metric | scenario | comparator | joint | comparator | rel. impr. | p (paired) | p (Welch) "
+        "| p (Holm) |",
+        "|---|---|---|---|---|---|---|---|---|---|",
+    ]
+    for fam, by_metric in tests.items():
+        for metric, t in by_metric.items():
+            for k in sorted(t):
+                sc, b = k.split("|")
+                v = t[k]
+                lines.append(
+                    f"| {fam} | {metric} | {sc} | {b} | {v['mean_a']:.3g} | {v['mean_b']:.3g} | "
+                    f"{v.get('rel_improvement_paired', float('nan')) * 100:+.1f}% | "
+                    f"{v.get('p_paired', float('nan')):.3g} | {v['p_welch']:.3g} | {v['p_holm']:.3g} |"
+                )
+    lines += [
+        "",
+        "## Pooled over scenarios (seed-paired relative improvement of joint; bootstrap 95% CI; Wilcoxon)",
+        "",
+        "| comparator | metric | pairs | mean rel. impr. | 95% CI | joint better (frac) | p (Wilcoxon) |",
         "|---|---|---|---|---|---|---|",
     ]
-    for metric, t in tests.items():
-        for k in sorted(t):
-            sc, b = k.split("|")
-            v = t[k]
+    for b, by_metric in pooled.items():
+        for metric, v in by_metric.items():
             lines.append(
-                f"| {metric} | {sc} | {b} | {v['rel_diff'] * 100:+.1f}% | {v['hedges_g']:.2f} | "
-                f"{v['p_welch']:.3g} | {v['p_holm']:.3g} |"
+                f"| {b} | {metric} | {v['n_pairs']} | {v['mean_rel_improvement'] * 100:+.1f}% | "
+                f"[{v['ci95_lo'] * 100:+.1f}%, {v['ci95_hi'] * 100:+.1f}%] | {v['frac_joint_better']:.2f} | "
+                f"{v['p_wilcoxon']:.3g} |"
             )
     (out / "TABLES.md").write_text("\n".join(lines) + "\n")
 
