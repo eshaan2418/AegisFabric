@@ -63,6 +63,7 @@ def main() -> None:
             row["migrations_mean"] = float(np.mean([r["migrations"] for r in rs]))
             row["n"] = len(rs)
             row["timed_out"] = sum(bool(r.get("timed_out")) for r in rs)
+            row["crashes"] = sum(int(r.get("n_crashes", 0)) for r in rs)
             table[sc][m] = row
     # joint vs baselines
     tests: dict = {}
@@ -110,8 +111,8 @@ def write_tables(out: Path, table: dict, tests: dict) -> None:
             f"## {sc}",
             "",
             "| method | n | total (s) | time-to-quality (s) | step mean (s) | step p99 (s) | "
-            "step std (s) | recovery (s) | censored/events | migrations |",
-            "|---|---|---|---|---|---|---|---|---|---|",
+            "step std (s) | recovery (s) | censored/events | migrations | crashes | timed out |",
+            "|---|---|---|---|---|---|---|---|---|---|---|---|",
         ]
         for m in ["static", "ecmp", "independent", "joint", "oracle"] + sorted(
             k for k in table[sc] if k not in ("static", "ecmp", "independent", "joint", "oracle")
@@ -122,7 +123,8 @@ def write_tables(out: Path, table: dict, tests: dict) -> None:
             lines.append(
                 f"| {m} | {r['n']} | {fmt(r['total_s'])} | {fmt(r['ttq_s'])} | {fmt(r['step_mean_s'])} | "
                 f"{fmt(r['step_p99_s'])} | {fmt(r['step_std_s'])} | {fmt(r['recovery_s'])} | "
-                f"{r['recovery_censored']}/{r['recovery_events']} | {r['migrations_mean']:.1f} |"
+                f"{r['recovery_censored']}/{r['recovery_events']} | {r['migrations_mean']:.1f} | "
+                f"{r['crashes']} | {r['timed_out']} |"
             )
         lines.append("")
     lines += [

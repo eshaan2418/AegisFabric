@@ -15,6 +15,7 @@ import argparse
 import dataclasses
 import json
 import os
+import re
 import shutil
 import subprocess
 import time
@@ -35,6 +36,7 @@ from netlab.lab import default_lab, nsexec
 from train.launch import Job, Slot, read_rank_log
 
 CKPT_PORT = 7400
+MAX_CRASHES = 5  # relaunches per run before the run is abandoned (reported as timed_out + crashes)
 
 
 @dataclasses.dataclass
@@ -150,6 +152,26 @@ class JobManager:
                 "restore_step": restore_step,
             }
         )
+
+    def newest_complete_checkpoint(self) -> tuple[int, str | None]:
+        """Newest step with every slice present at one storage site (slices land via tmp+rename, so a file
+        that exists is complete). Scans both sites: after a migration the newest one may be at the old site."""
+        job = f"{self.cfg.scenario}-{self.cfg.label}-{self.cfg.seed}"
+        n = len(self.plan.placement)
+        best: tuple[int, str | None] = (-1, None)
+        for site in PL.ALLOWED_STORAGE:
+            root = self.out / f"store_{site}"
+            if not root.is_dir():
+                continue
+            steps: Counter = Counter()
+            for f in root.iterdir():
+                m = re.fullmatch(rf"ckpt_{re.escape(job)}_(\d+)_slice\d+of{n}", f.name)
+                if m:
+                    steps[int(m.group(1))] += 1
+            for st, c in steps.items():
+                if c == n and (st, site == self.plan.storage) > (best[0], best[1] == self.plan.storage):
+                    best = (st, site)
+        return best
 
     def records(self) -> list[dict]:
         recs = []
@@ -377,9 +399,14 @@ def run(cfg: RunConfig) -> dict:
             break
         if not mgr.alive() and not mgr.finished():
             # crashed segment (e.g. Gloo timeout): restart from the newest complete checkpoint
-            mgr.events.append({"wall": time.time(), "event": "crash", "segment": mgr.segment})
-            last = (mgr.current_step() // cfg.ckpt_every) * cfg.ckpt_every
-            mgr.launch(mgr.plan, restore_step=last if last > 0 else -1)
+            n_crash = sum(1 for e in mgr.events if e["event"] == "crash")
+            last, site = mgr.newest_complete_checkpoint()
+            mgr.events.append(
+                {"wall": time.time(), "event": "crash", "segment": mgr.segment, "restore_step": last}
+            )
+            if n_crash >= MAX_CRASHES:
+                break
+            mgr.launch(mgr.plan, restore_step=last if last > 0 else -1, restore_site=site)
         t_rel = time.time() - t0
         if planner.replans:
             net = ground_truth(lab, bg_active(sc.bg, t_rel)) if oracle else est.poll()
@@ -442,6 +469,8 @@ def run(cfg: RunConfig) -> dict:
     summ.update(
         {
             "timed_out": timed_out,
+            "n_crashes": sum(1 for e in mgr.events if e["event"] == "crash"),
+            "n_migrations": sum(1 for e in mgr.events if e["event"] == "migrate"),
             "bgp_initial_convergence_s": conv,
             "n_decisions": len(decisions),
             "loadavg_start": load0,
