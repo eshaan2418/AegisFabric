@@ -8,10 +8,15 @@ jobs:
       - uses: astral-sh/setup-uv@v5
       - uses: dtolnay/rust-toolchain@stable
         with: { components: "clippy,rustfmt" }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "21" }
+      - name: System deps (libclang for rocksdb bindgen; ffmpeg for media tests)
+        run: sudo apt-get update && sudo apt-get install -y clang libclang-dev ffmpeg
       - name: Python deps (public PyPI; uv.lock was resolved through a mirror, see DECISIONS D-004)
         run: UV_INDEX_URL=https://pypi.org/simple uv sync --all-extras
       - run: make lint
       - run: make test
+      - run: make test-formal
   lab:
     runs-on: ubuntu-24.04
     needs: test
