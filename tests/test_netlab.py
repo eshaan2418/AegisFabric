@@ -44,6 +44,15 @@ def wait_plane(lab, src, dst, cls, plane, timeout=15.0):
     return te.fib_plane(lab, src, dst, cls)
 
 
+def test_default_policy_is_plane_a_everywhere(lab):
+    """No controller entries: every gateway routes every remote compute/storage prefix over plane A."""
+    import itertools
+
+    for src, dst in itertools.permutations(("tor", "mtl", "us"), 2):
+        for cls in ("compute", "storage"):
+            assert wait_plane(lab, src, dst, cls, "a") == "a", (src, dst, cls)
+
+
 def test_cross_site_rtt_follows_plane_a(lab):
     from netlab import te
     from netlab.topology import DEFAULT_WAN

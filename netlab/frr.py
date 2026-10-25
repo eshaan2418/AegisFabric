@@ -3,8 +3,11 @@
 Route-map hooks the controller can rewrite (control plane only; forwarding stays in the kernel FIB):
   on s-gw:   FROM-A / FROM-B   inbound from the plane-A / plane-B border (local-pref per destination prefix)
   on s-a/b:  FROM-<peer>       inbound from each eBGP peer (prefer direct vs via-third-site)
-Every route-map ends with a catch-all `permit 65000`, so with no controller entries the default BGP
-decision process applies (shortest AS path, then lowest router-id; that picks plane A at every gateway).
+Every route-map ends with a catch-all `permit 65000`. Without controller entries, the gateway prefers
+plane A through a base local-preference of 150 on FROM-A (an operator's "use the private wave" policy).
+This makes the default deterministic; without it, the choice would fall to BGP tie-breaks, and the lab
+measured plane B winning some of those. Controller entries set local-preference 200 on the chosen plane.
+In ECMP mode both planes stay at the default (100), so iBGP multipath can install both next hops.
 """
 
 from __future__ import annotations
@@ -75,6 +78,7 @@ def gw_config(topo: Topology, site: str, ecmp: bool = False) -> str:
         " exit-address-family",
         "!",
         "route-map FROM-A permit 65000",
+        *([] if ecmp else [" set local-preference 150"]),
         "route-map FROM-B permit 65000",
         "!",
     ]

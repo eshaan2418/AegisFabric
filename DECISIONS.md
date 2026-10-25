@@ -86,3 +86,14 @@ after migration failed (`KeyError`), or would have restored incomplete state. Fi
 tensors are on CPU already). Every slice now carries the full key-set digest, and restore rejects any
 incomplete, overlapping or mismatched union. Regression tests: `tests/test_checkpointing.py`. No results had
 been recorded with the buggy version (the smoke output went to `scratch/`).
+
+## D-012 (2026-10-24) Deterministic base routing policy; campaign budget
+- With no controller entries, BGP picked a plane by tie-break, and the lab measured plane B for tor→mtl,
+  contradicting the cost model and D-007 ("static = plane A"). Gateways now apply a base local-preference of 150
+  to plane-A routes (the operator policy "use the private wave"). Controller entries use 200, so they still
+  override it. ECMP mode keeps equal preferences, which multipath needs. Any direction a plan leaves unspecified
+  (e.g. reverse/ACK directions) therefore follows plane A, as the model assumes. Lab test:
+  `test_default_policy_is_plane_a_everywhere`.
+- Campaign budget on the shared host: M3 main = 8 scenarios × 5 methods × 5 seeds. Ablations use 3 seeds
+  (4 scenarios × 6 variants) and are reported as such: they estimate each signal's contribution and are not
+  the primary claim. Driver: `bench/lab_campaigns.sh`.

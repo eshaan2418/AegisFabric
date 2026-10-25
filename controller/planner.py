@@ -1,6 +1,6 @@
 """Planners: the joint (π, r, s) optimiser and the baselines it is compared against.
 
-StaticPlanner       default placement/storage; routes = whatever default BGP picks (plane A); never re-plans
+StaticPlanner       default placement/storage; routes = the lab's base BGP policy (plane A, netlab/frr.py); never re-plans
 EcmpPlanner         same, but the lab runs iBGP multipath at the gateways (L4-hash ECMP across planes)
 IndependentPlanner  placement chosen once assuming the nominal static network; storage by a fixed policy
                     (nearest allowed site to rank 0, excluding rank 0's own site); routing by a B4-style
