@@ -2,6 +2,8 @@
 
   AEGIS_DEVICE=mps nice -n 19 uv run python -m bench.m8_privacy shadows --eps inf clip 1024 256 64 16 4 1  # K OUT shadows
   AEGIS_DEVICE=mps nice -n 19 uv run python -m bench.m8_privacy run --eps inf clip 1024 256 64 16 4 1 --seeds 0 1 2 3 4
+  AEGIS_DEVICE=mps nice -n 19 uv run python -m bench.m8_privacy shadows2 --eps inf clip 1024 256 64 16 4 1
+  uv run python -m bench.m8_privacy rescore        # shadow-based attacks with v2 shadows -> mia_v2/
   uv run python -m bench.m8_privacy summarize
 
 Fixed public task model (LM pretrain + public SFT, seed 0; `task_base_model`). The seed varies: member/non-member split, private task data,
@@ -27,6 +29,7 @@ from privacy import dp_mia as D
 OUT = "m8/privacy"
 HP = dict(epochs=6, batch=128, lr=1e-3, delta=1e-5, max_grad_norm=1.0)
 N_TASK, N_POOL, POOL_SEED, K_SHADOW, N_EVAL = 1200, 200, 4242, 3, 300
+REF_SEED = 5151  # reference-canary pools for v2 shadows (disjoint from the evaluated pool; asserted)
 _BASE = {}
 
 
@@ -97,6 +100,59 @@ def cmd_shadows(a):
         )
 
 
+def cmd_shadows2(a):
+    """OUT shadows v2: same recipe, task data plus N_POOL/2 *reference* canaries of the same format drawn from a
+    disjoint pool (seed REF_SEED + k), so the shadows learn the canary format but never see an evaluated canary.
+    (v1 shadows had no canaries at all: their canary losses (~7 nats) were far above even non-member losses of
+    the targets (~1.2), so LiRA scores saturated and its AUC was 0.5 by construction.)"""
+    base = task_base_model()
+    pool = D.make_canaries(N_POOL, POOL_SEED)
+    for e in a.eps:
+        losses = []
+        for k in range(K_SHADOW):
+            ref = D.make_canaries(N_POOL // 2, REF_SEED + k)
+            assert not set(ref) & set(pool)
+            ds = D.build_dataset(qa.make_split(N_TASK, seed=70_000 + k), ref, base.cfg.max_len)
+            m, info = D.finetune(base, ds, 900 + k, epsilon=eps_val(e), clip_only=e == "clip", **HP)
+            losses.append(D.canary_losses(m, pool).tolist())
+            print("shadow2", e, k, info.get("epsilon_spent_rdp"), flush=True)
+        write_result(
+            f"{OUT}/shadows_v2_eps{e}.json",
+            {"losses": losses},
+            config={
+                "hp": HP,
+                "n_task": N_TASK,
+                "pool_seed": POOL_SEED,
+                "ref_seed": REF_SEED,
+                "eps": e,
+                "K": K_SHADOW,
+            },
+        )
+
+
+def cmd_rescore(a):
+    """Shadow-based attacks with v2 shadows, from the canary losses stored in each target's seed file."""
+    for f in sorted((RESULTS / OUT).glob("seed*_eps*.json")):
+        d = json.loads(f.read_text())["data"]
+        e = f.stem.split("_eps")[1]
+        seed = int(f.stem.split("_eps")[0][4:])
+        sh = np.array(read_result(f"{OUT}/shadows_v2_eps{e}.json")["data"]["losses"])
+        loss, member = np.array(d["canary_losses"]), np.array(d["is_member"], bool)
+        res = {
+            "mia_lira_offline": D.attack_metrics(D.lira_offline_scores(loss, sh), member, seed=seed),
+            "mia_lira_offline_globalvar": D.attack_metrics(
+                D.lira_offline_scores(loss, sh, global_var=True), member, seed=seed
+            ),
+            "mia_shadow_calibrated": D.attack_metrics(sh.mean(0) - loss, member, seed=seed),
+            "shadow_canary_loss_mean": float(sh.mean()),
+            "target_file": f.name,
+        }
+        write_result(
+            f"{OUT}/mia_v2/{f.name}", res, config={"eps": e, "shadows": f"shadows_v2_eps{e}.json"}, seed=seed
+        )
+        print(f.name, {k: round(v["auc"], 3) for k, v in res.items() if isinstance(v, dict)}, flush=True)
+
+
 def cmd_run(a):
     base = task_base_model()
     pool = D.make_canaries(N_POOL, POOL_SEED)
@@ -158,11 +214,12 @@ def cmd_run(a):
 
 
 def cmd_summarize(a):
-    rows = {}
+    rows, names = {}, {}
     for f in sorted((RESULTS / OUT).glob("seed*_eps*.json")):
         d = json.loads(f.read_text())["data"]
         e = f.stem.split("_eps")[1]
         rows.setdefault(e, []).append(d)
+        names.setdefault(e, []).append(f.name)
     table = {}
     for e, ds in rows.items():
         table[e] = {
@@ -187,6 +244,22 @@ def cmd_summarize(a):
             "lira_tpr@5%fpr": summarize([d["mia_lira_offline"]["tpr@5%fpr"] for d in ds]).as_dict(),
             "train_wall_s": summarize([d["train_wall_s"] for d in ds]).as_dict(),
         }
+        v2 = [RESULTS / OUT / "mia_v2" / n for n in names[e]]
+        if all(p.exists() for p in v2):
+            vs = [json.loads(p.read_text())["data"] for p in v2]
+            table[e] |= {
+                "v2_lira_auc": summarize([v["mia_lira_offline"]["auc"] for v in vs]).as_dict(),
+                "v2_lira_globalvar_auc": summarize(
+                    [v["mia_lira_offline_globalvar"]["auc"] for v in vs]
+                ).as_dict(),
+                "v2_calibrated_auc": summarize([v["mia_shadow_calibrated"]["auc"] for v in vs]).as_dict(),
+                "v2_lira_globalvar_tpr@5%fpr": summarize(
+                    [v["mia_lira_offline_globalvar"]["tpr@5%fpr"] for v in vs]
+                ).as_dict(),
+                "v2_lira_globalvar_tpr@1%fpr": summarize(
+                    [v["mia_lira_offline_globalvar"]["tpr@1%fpr"] for v in vs]
+                ).as_dict(),
+            }
     write_result(f"{OUT}/summary.json", {"table": table, "hp": HP, "delta": HP["delta"]})
     _plot(table)
     for e, t in table.items():
@@ -216,7 +289,10 @@ def _plot(table):
 
     plotstyle.apply()
     fig, ax = plt.subplots(1, 2, figsize=(8, 3))
-    for key, lab in [("mia_loss_auc", "loss-threshold"), ("mia_lira_auc", "offline LiRA")]:
+    lira = (
+        "v2_lira_globalvar_auc" if all("v2_lira_globalvar_auc" in table[e] for e in order) else "mia_lira_auc"
+    )
+    for key, lab in [("mia_loss_auc", "loss-threshold"), (lira, "offline LiRA (v2 shadows, global var)")]:
         ax[0].errorbar(
             order,
             [table[e][key]["mean"] for e in order],
@@ -251,11 +327,12 @@ def _plot(table):
 def main():
     torch.set_num_threads(4)
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["shadows", "run", "summarize"])
+    ap.add_argument("cmd", choices=["shadows", "shadows2", "run", "rescore", "summarize"])
     ap.add_argument("--eps", nargs="+", default=["inf", "16", "4", "1"])
     ap.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2, 3, 4])
     a = ap.parse_args()
-    {"shadows": cmd_shadows, "run": cmd_run, "summarize": cmd_summarize}[a.cmd](a)
+    cmds = {"shadows": cmd_shadows, "shadows2": cmd_shadows2, "run": cmd_run, "rescore": cmd_rescore}
+    {**cmds, "summarize": cmd_summarize}[a.cmd](a)
 
 
 if __name__ == "__main__":

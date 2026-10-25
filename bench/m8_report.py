@@ -58,9 +58,10 @@ count, and the attention term is ignored (T <= 256). Each method runs until its 
   uses the same batch size, epochs and LR, with no clipping/noise.
 - **Canaries**: `note SYN-dddddddd pin dddd-dddd` with random digits. A fixed pool is split 50/50 per seed into
   members (each inserted once) and non-members (never trained on).
-- **Attacks**: (a) loss threshold (Yeom et al. 2018); (b) offline LiRA (Carlini et al. 2022), with OUT shadow
-  models per epsilon setting. Shadows use the same recipe on fresh task data with no canaries, plus a
-  per-canary Gaussian fit of logit confidence. AUC is reported as mean with a 95% CI across seeds; per-run
+- **Attacks**: (a) loss threshold (Yeom et al. 2018); (b) offline LiRA (Carlini et al. 2022), with K=3 OUT shadow
+  models per epsilon setting. Shadows use the same recipe on fresh task data plus same-format *reference*
+  canaries from a disjoint pool (never the evaluated ones), and a Gaussian fit of logit confidence (per-canary
+  or pooled variance); (c) shadow-calibrated loss (mean OUT loss minus target loss). AUC is reported as mean with a 95% CI across seeds; per-run
   bootstrap CIs are in the seed files.
 
 {{PRIVACY}}
@@ -160,7 +161,7 @@ def privacy_section() -> list[str]:
         f"batch {hp['batch']} (Poisson, rate in table), {hp['epochs']} epochs, lr {hp['lr']}, Opacus RDP accountant "
         "(PRV accountant as cross-check).",
         "",
-        "| target ε | ε spent (RDP) | ε (PRV) | σ (noise mult.) | steps | q | task exact match | loss-threshold MIA AUC | offline-LiRA AUC (per-canary var) | offline-LiRA AUC (global var) | shadow-calibrated AUC | LiRA TPR@5%FPR | seeds |",
+        "| target ε | ε spent (RDP) | ε (PRV) | σ (noise mult.) | steps | q | task exact match | loss-threshold MIA AUC | offline-LiRA AUC (global var) | offline-LiRA AUC (per-canary var) | shadow-calibrated AUC | LiRA (global var) TPR@1%FPR | seeds |",
         "|---|---|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     order = sorted(
@@ -172,9 +173,15 @@ def privacy_section() -> list[str]:
         out.append(
             f"| {'∞ (no DP)' if e == 'inf' else ('clip-only, σ=0 (no DP)' if e == 'clip' else e)} | {ci(t['epsilon_rdp'], 2)} | {ci(t['epsilon_prv'], 2)} | {nm} | "
             f"{t['steps']} | {t['sample_rate']:.3f} | {ci(t['utility_exact'])} | {ci(t['mia_loss_auc'])} | "
-            f"{ci(t['mia_lira_auc'])} | {ci(t['mia_lira_globalvar_auc'])} | {ci(t['mia_calibrated_auc'])} | "
-            f"{ci(t['lira_tpr@5%fpr'])} | {t['n_seeds']} |"
+            f"{ci(t.get('v2_lira_globalvar_auc'))} | {ci(t.get('v2_lira_auc'))} | {ci(t.get('v2_calibrated_auc'))} | "
+            f"{ci(t.get('v2_lira_globalvar_tpr@1%fpr'))} | {t['n_seeds']} |"
         )
+    out += [
+        "",
+        "Shadow-based columns use the v2 shadows (`results/m8/privacy/mia_v2/`, `shadows_v2_eps*.json`): OUT "
+        "models trained with a disjoint set of same-format reference canaries. The v1 shadows saw no canaries at "
+        "all, which made LiRA saturate (AUC 0.5 by construction); v1 numbers stay in the seed files for the record.",
+    ]
     be = RESULTS / "m8/privacy/base_eval.json"
     if be.exists():
         u = read_result(be)["data"]["utility"]
