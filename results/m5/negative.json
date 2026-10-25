@@ -1,8 +1,8 @@
 {
   "meta": {
     "git": {
-      "commit": "b991b51dc588e5b912d4a2fe887862af87e61510",
-      "dirty": true
+      "commit": "7db219f901732fd59763b49d2739934879cc8e2a",
+      "dirty": false
     },
     "hardware": {
       "platform": "macOS-27.0.1-arm64-arm-64bit",
@@ -33,7 +33,7 @@
       "cwd": "/Users/eshaan.kapooswalla/AegisFabric"
     },
     "command": "m5_negative.py",
-    "timestamp": "2026-10-25T17:11:12+00:00"
+    "timestamp": "2026-10-25T17:11:51+00:00"
   },
   "data": {
     "cases": {
