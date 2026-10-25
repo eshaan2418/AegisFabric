@@ -311,3 +311,50 @@ for _v, _V in ABL.items():
     claim(f"abl{_V}PoolHi", "m3/summary.json", "{:.0f}")(
         (lambda v: lambda d: 100 * d["pooled"][v]["total_s"]["ci95_hi"])(_v)
     )
+
+
+# --- M5: negative tests and rotation under load ---------------------------------------------------------
+claim("negCases", "m5/negative.json", "{:d}")(lambda d: d["n_cases"])
+claim("negRejected", "m5/negative.json", "{:d}")(lambda d: d["n_rejected"])
+ROT = {"none": "None", "plaintext": "Plain", "mtls": "Mtls", "mtls-rot": "Rot"}
+for _c, _C in ROT.items():
+    claim(f"rot{_C}Step", "m5/rotation.json", "{:.2f}")(
+        (lambda c: lambda d: d["summary"][c]["step_mean_s"]["mean"])(_c)
+    )
+    claim(f"rot{_C}StepCi", "m5/rotation.json", "{:.2f}")(
+        (
+            lambda c: (
+                lambda d: (
+                    (d["summary"][c]["step_mean_s"]["ci95_hi"] - d["summary"][c]["step_mean_s"]["ci95_lo"])
+                    / 2
+                )
+            )
+        )(_c)
+    )
+    claim(f"rot{_C}Failed", "m5/rotation.json", "{:d}")(
+        (lambda c: lambda d: d["summary"][c]["failed_ranks_total"])(_c)
+    )
+    claim(f"rot{_C}RpcErr", "m5/rotation.json", "{:d}")(
+        (lambda c: lambda d: d["summary"][c]["rpc_errors_total"])(_c)
+    )
+    claim(f"rot{_C}Rpcs", "m5/rotation.json", "{:d}")((lambda c: lambda d: d["summary"][c]["rpcs_total"])(_c))
+    if _c != "none":
+        claim(f"rot{_C}VsNoneP", "m5/rotation.json", "{:.2g}")(
+            (lambda c: lambda d: d["summary"][c]["vs_none"]["p_welch"])(_c)
+        )
+        claim(f"rot{_C}VsNone", "m5/rotation.json", "{:.1f}")(
+            (lambda c: lambda d: 100 * d["summary"][c]["vs_none"]["rel_diff"])(_c)
+        )
+    if _c.startswith("mtls"):
+        claim(f"rot{_C}Hs", "m5/rotation.json", "{:.1f}")(
+            (lambda c: lambda d: d["summary"][c]["handshake_ms"]["mean"])(_c)
+        )
+        claim(f"rot{_C}HsPnn", "m5/rotation.json", "{:.1f}")(
+            (lambda c: lambda d: d["summary"][c]["handshake_ms"]["p99"])(_c)
+        )
+        claim(f"rot{_C}RpcLat", "m5/rotation.json", "{:.1f}")(
+            (lambda c: lambda d: d["summary"][c]["rpc_lat_ms_mean"]["mean"])(_c)
+        )
+claim("rotRenewals", "m5/rotation.json", "{:d}")(lambda d: d["summary"]["mtls-rot"]["renewals_total"])
+claim("rotRenewMs", "m5/rotation.json", "{:.1f}")(lambda d: d["summary"]["mtls-rot"]["renewal_ms"]["mean"])
+claim("rotTrials", "m5/rotation.json", "{:d}")(lambda d: d["summary"]["none"]["step_mean_s"]["n"])
