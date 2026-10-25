@@ -40,9 +40,9 @@ def read_stamp(rgb: np.ndarray) -> int | None:
     return idx if _code(idx) == c else None
 
 
-async def run_ingest(frames: np.ndarray, transcode_kbps: int = 400, threads: int = 4) -> dict:
+async def run_ingest(frames: np.ndarray, transcode_kbps: int = 400, threads: int = 2) -> dict:
     import av
-    from aiortc import RTCPeerConnection, VideoStreamTrack
+    from aiortc import RTCConfiguration, RTCPeerConnection, VideoStreamTrack
 
     from media.codec import Av1Encoder, EncoderSettings
 
@@ -66,7 +66,10 @@ async def run_ingest(frames: np.ndarray, transcode_kbps: int = 400, threads: int
             self.k += 1
             return f
 
-    pc_c, pc_s = RTCPeerConnection(), RTCPeerConnection()
+    # host candidates only: with aiortc's default public STUN server the selected pair on this host reached
+    # "connected" but delivered no media (observed: 0 of ~320 frames), so STUN is disabled for the loopback
+    cfg = RTCConfiguration(iceServers=[])
+    pc_c, pc_s = RTCPeerConnection(cfg), RTCPeerConnection(cfg)
     recv_log: list[tuple[int, float, float]] = []  # idx, latency, transcode_s
     done = asyncio.Event()
     h, w = frames.shape[1:3]
