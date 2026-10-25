@@ -1,0 +1,1 @@
+{"rank": 0, "wall": 1792897935.458812, "rss_mb": 500.14453125, "event": "start", "mode": "ddp", "preset": "small", "params": 4923648, "params_nonembed": 4821248, "flops_per_token": 31581696.0, "peak_flops_per_rank": 175406751177.09586, "world": 6, "init_s": 3.3496923349994177, "start_step": 1, "restore_s": 0.08306483300111722, "pid": 57658}

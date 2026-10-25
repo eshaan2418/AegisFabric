@@ -5,7 +5,7 @@ from bench.wan_run import JobManager
 
 
 def _mgr(tmp_path: Path, storage: str) -> JobManager:
-    cfg = SimpleNamespace(scenario="sc", label="joint", seed=0)
+    cfg = SimpleNamespace(scenario="sc", label="joint", seed=0, ckpt_backend="blob")
     m = JobManager.__new__(JobManager)
     m.cfg, m.out = cfg, tmp_path
     m.plan = SimpleNamespace(placement=("tor",) * 3, storage=storage)

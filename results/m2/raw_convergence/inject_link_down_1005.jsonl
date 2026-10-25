@@ -1,0 +1,2 @@
+{"wall": 1792893060.4495058, "mono": 3.0025857079999696, "event": "inject", "kind": "link_down", "plane": "a", "s1": "tor", "s2": "mtl", "duration": 6.246657519203681}
+{"wall": 1792893066.6991768, "mono": 9.252256420000776, "event": "restore", "kind": "link_down", "plane": "a", "s1": "tor", "s2": "mtl"}

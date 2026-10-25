@@ -22,7 +22,11 @@ GIT_DIRTY := $(shell test -n "$$(git status --porcelain --untracked-files=no 2>/
 LAB_RUN := docker run --rm --privileged --cgroupns=host -e AEGIS_GIT_COMMIT=$(GIT_COMMIT) -e AEGIS_GIT_DIRTY=$(GIT_DIRTY) \
 	-v $(CURDIR):/work -v aegis-cargo-target:/work/ckpt/target $(LAB_IMAGE)
 
-.PHONY: setup lab-image lint test test-py test-rust test-formal test-lab ci lab-shell probe data \
+demo:
+	$(LAB_RUN) bash -c '(cd ckpt && cargo build -q --release) && python -m bench.m10_demo lab --out results/m10'
+	$(PY) -m bench.m10_demo assistant --out results/m10
+
+.PHONY: demo setup lab-image lint test test-py test-rust test-formal test-lab ci lab-shell probe data \
 	reproduce-quick reproduce-full paper audit clean
 
 setup:

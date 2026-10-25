@@ -1,0 +1,4 @@
+{"wall": 1792896853.295776, "mono": 44.724076729000444, "event": "inject", "kind": "link_down", "plane": "b", "s1": "tor", "s2": "mtl", "duration": 40.370058238857574}
+{"wall": 1792896893.6704757, "mono": 85.09859307999977, "event": "restore", "kind": "link_down", "plane": "b", "s1": "tor", "s2": "mtl"}
+{"wall": 1792896935.983903, "mono": 127.41174105800019, "event": "inject", "kind": "link_down", "plane": "a", "s1": "tor", "s2": "mtl", "duration": 40.370058238857574}
+{"wall": 1792896976.35833, "mono": 167.7860008259995, "event": "restore", "kind": "link_down", "plane": "a", "s1": "tor", "s2": "mtl"}

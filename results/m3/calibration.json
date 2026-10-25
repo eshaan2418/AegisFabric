@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "git": {
+      "commit": "e204f85d8e810c538b31e4a5854309ed4d120ad9",
+      "dirty": false
+    },
+    "hardware": {
+      "platform": "Linux-7.0.12-linuxkit-aarch64-with-glibc2.36",
+      "machine": "aarch64",
+      "python": "3.12.15",
+      "cpu_count": 18,
+      "host_label": "lab-container",
+      "mem_gb": 47.0,
+      "torch": "2.14.1+cpu",
+      "torch_threads": 18
+    },
+    "seed": null,
+    "config": {
+      "preset": "small",
+      "batch": 16,
+      "threads": 2,
+      "out": "results/m3"
+    },
+    "command": "m3_calibrate.py --out results/m3",
+    "timestamp": "2026-10-25T02:17:58+00:00"
+  },
+  "data": {
+    "compute_s": 0.7189258329999575,
+    "compute_trials": [
+      0.7044701460008582,
+      0.7189258329999575,
+      0.7213991460002944
+    ],
+    "grad_bytes": 19694592.0,
+    "ckpt_bytes": 59172871.0,
+    "restart_s": 4.599408388137817,
+    "restart_trials": [
+      4.807974100112915,
+      4.458706855773926,
+      4.2861411571502686,
+      4.740109920501709,
+      4.83696436882019,
+      4.407388210296631
+    ],
+    "kappa": 0.9329067850073294,
+    "kappa_plane": {
+      "a": 0.9329067850073294,
+      "b": 1.3414143396138676
+    },
+    "kappa_trials": {
+      "a": [
+        0.9329067850073294,
+        0.947877864215359,
+        0.9323459436474064
+      ],
+      "b": [
+        1.3363349749383886,
+        1.3414143396138676,
+        1.383561534955647
+      ]
+    },
+    "predicted_ring_s_nominal": {
+      "a": 1.4229728,
+      "b": 0.72518912
+    }
+  }
+}

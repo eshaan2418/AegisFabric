@@ -40,7 +40,9 @@ def read_stamp(rgb: np.ndarray) -> int | None:
     return idx if _code(idx) == c else None
 
 
-async def run_ingest(frames: np.ndarray, transcode_kbps: int = 400, threads: int = 2) -> dict:
+async def run_ingest(frames: np.ndarray, transcode_kbps: int = 400, threads: int = 2, on_frame=None) -> dict:
+    """on_frame(idx, rgb, capture_monotonic_s), if given, is called for every received frame whose stamp
+    decodes. It must not block (the M10 assistant demo hands frames to a backpressured inference worker)."""
     import av
     from aiortc import RTCConfiguration, RTCPeerConnection, VideoStreamTrack
 
@@ -95,6 +97,8 @@ async def run_ingest(frames: np.ndarray, transcode_kbps: int = 400, threads: int
                 tc = time.perf_counter() - t0
                 if idx is not None and idx in cap_times:
                     recv_log.append((idx, t_rx - cap_times[idx], tc))
+                    if on_frame is not None:
+                        on_frame(idx, rgb, cap_times[idx])
 
         asyncio.ensure_future(consume())
 

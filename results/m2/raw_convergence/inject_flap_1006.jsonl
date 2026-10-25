@@ -1,0 +1,8 @@
+{"wall": 1792893562.104079, "mono": 3.000785876998634, "event": "inject", "kind": "flap", "plane": "a", "s1": "tor", "s2": "mtl", "count": 3, "down_s": 2.0, "up_s": 4.0}
+{"wall": 1792893562.1078835, "mono": 3.00459041799877, "event": "flap_down", "kind": "flap", "plane": "a", "s1": "tor", "s2": "mtl"}
+{"wall": 1792893564.1102278, "mono": 5.006933710999874, "event": "flap_up", "kind": "flap", "plane": "a", "s1": "tor", "s2": "mtl"}
+{"wall": 1792893568.1131356, "mono": 9.009478920999754, "event": "flap_down", "kind": "flap", "plane": "a", "s1": "tor", "s2": "mtl"}
+{"wall": 1792893570.115801, "mono": 11.012144796999564, "event": "flap_up", "kind": "flap", "plane": "a", "s1": "tor", "s2": "mtl"}
+{"wall": 1792893574.119347, "mono": 15.015690506999817, "event": "flap_down", "kind": "flap", "plane": "a", "s1": "tor", "s2": "mtl"}
+{"wall": 1792893576.1229372, "mono": 17.0192805079987, "event": "flap_up", "kind": "flap", "plane": "a", "s1": "tor", "s2": "mtl"}
+{"wall": 1792893580.1243865, "mono": 21.020730426998853, "event": "restore", "kind": "flap", "plane": "a", "s1": "tor", "s2": "mtl"}

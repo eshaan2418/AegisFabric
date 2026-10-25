@@ -54,6 +54,9 @@ class RunConfig:
     horizon_s: float = 120.0
     out: str = "results/m3"
     variant: str = ""  # label for ablations
+    ckpt_backend: str = "blob"  # blob (netlab.blobstore) | engine (M4 aegis-ckpt)
+    ckpt_keys: str = ""  # engine only: job key dir (P2 encryption + signed manifests); "" = plaintext
+    keep_store: bool = False  # keep checkpoint stores after the run (M10 demo restores from them)
 
     @property
     def label(self) -> str:
@@ -131,7 +134,11 @@ class JobManager:
             str(self.cfg.ckpt_every),
             "--job",
             f"{self.cfg.scenario}-{self.cfg.label}-{self.cfg.seed}",
+            "--ckpt-backend",
+            self.cfg.ckpt_backend,
         ]
+        if self.cfg.ckpt_keys:
+            args += ["--ckpt-keys", self.cfg.ckpt_keys]
         if restore_step >= 0:
             args += [
                 "--restore-step",
@@ -160,18 +167,34 @@ class JobManager:
         n = len(self.plan.placement)
         best: tuple[int, str | None] = (-1, None)
         for site in PL.ALLOWED_STORAGE:
-            root = self.out / f"store_{site}"
-            if not root.is_dir():
+            names = self._stored_keys(site)
+            if names is None:
                 continue
             steps: Counter = Counter()
-            for f in root.iterdir():
-                m = re.fullmatch(rf"ckpt_{re.escape(job)}_(\d+)_slice\d+of{n}", f.name)
+            for name in names:
+                m = re.fullmatch(rf"ckpt_{re.escape(job)}_(\d+)_slice\d+of{n}", name)
                 if m:
                     steps[int(m.group(1))] += 1
             for st, c in steps.items():
                 if c == n and (st, site == self.plan.storage) > (best[0], best[1] == self.plan.storage):
                     best = (st, site)
         return best
+
+    def _stored_keys(self, site: str) -> list[str] | None:
+        if self.cfg.ckpt_backend == "engine":
+            from ckpt.client import EngineBackend
+
+            try:
+                job = f"{self.cfg.scenario}-{self.cfg.label}-{self.cfg.seed}"
+                b = EngineBackend(f"{self.lab.mgmt_ip(f'{site}-st')}:{CKPT_PORT}", job=job, timeout=30)
+            except OSError:
+                return None
+            try:
+                return sorted(b.keys())
+            finally:
+                b.close()
+        root = self.out / f"store_{site}"
+        return [f.name for f in root.iterdir()] if root.is_dir() else None
 
     def records(self) -> list[dict]:
         recs = []
@@ -228,8 +251,18 @@ class JobManager:
             self.job.kill()
 
 
-def start_storage(lab, out: Path) -> list[subprocess.Popen]:
-    procs = []
+def start_storage(lab, out: Path, backend: str = "blob") -> list:
+    """One storage service per allowed site on its storage host, listening on CKPT_PORT."""
+    procs: list = []
+    if backend == "engine":
+        from ckpt.server import ServerProcess
+
+        for site in PL.ALLOWED_STORAGE:
+            root = out / f"store_{site}"
+            shutil.rmtree(root, ignore_errors=True)
+            srv = ServerProcess(root, listen=f"0.0.0.0:{CKPT_PORT}", io="uring", netns=f"{site}-st")
+            procs.append(srv.start())
+        return procs
     for site in PL.ALLOWED_STORAGE:
         root = out / f"store_{site}"
         shutil.rmtree(root, ignore_errors=True)
@@ -337,7 +370,7 @@ def run(cfg: RunConfig) -> dict:
     conv = lab.wait_converged()
     install_flow_counters(lab)
     BG.apply_policy(lab)
-    storage_procs = start_storage(lab, out)
+    storage_procs = start_storage(lab, out, cfg.ckpt_backend)
     rtt = RttProbes(lab, out / "rtt")
     rtt.start(duration=sc.horizon_s + 400)
     est = Estimator(lab, signals=cfg.signals, rtt=rtt)
@@ -463,7 +496,7 @@ def run(cfg: RunConfig) -> dict:
     bg.stop()
     rtt.stop()
     for p in storage_procs:
-        p.kill()
+        p.stop() if hasattr(p, "stop") else p.kill()
     inj_log = (
         [json.loads(x) for x in (out / "failures.jsonl").read_text().splitlines()]
         if (out / "failures.jsonl").exists()
@@ -496,8 +529,9 @@ def run(cfg: RunConfig) -> dict:
     }
     write_result(out.with_suffix(".json"), payload, config=dataclasses.asdict(cfg), seed=cfg.seed)
     # keep raw rank-0 logs (small); drop checkpoint stores
-    for site in PL.ALLOWED_STORAGE:
-        shutil.rmtree(out / f"store_{site}", ignore_errors=True)
+    if not cfg.keep_store:
+        for site in PL.ALLOWED_STORAGE:
+            shutil.rmtree(out / f"store_{site}", ignore_errors=True)
     lab.teardown()
     return summ
 

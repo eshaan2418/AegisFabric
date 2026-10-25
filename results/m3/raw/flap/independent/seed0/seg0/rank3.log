@@ -1,0 +1,21 @@
+[W1025 03:43:19.624536910 socket.cpp:207] [c10d] The hostname of the client socket cannot be retrieved. err=-3
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "<frozen runpy>", line 198, in _run_module_as_main
+[rank3]:   File "<frozen runpy>", line 88, in _run_code
+[rank3]:   File "/work/train/trainer.py", line 384, in <module>
+[rank3]:     raise SystemExit(main())
+[rank3]:                      ^^^^^^
+[rank3]:   File "/work/train/trainer.py", line 296, in main
+[rank3]:     loss.backward()
+[rank3]:   File "/opt/venv/lib/python3.12/site-packages/torch/_tensor.py", line 623, in backward
+[rank3]:     torch.autograd.backward(
+[rank3]:   File "/opt/venv/lib/python3.12/site-packages/torch/autograd/__init__.py", line 395, in backward
+[rank3]:     _engine_run_backward(
+[rank3]:   File "/opt/venv/lib/python3.12/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+[rank3]:     return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]: RuntimeError: Got the following error when running the callback: RuntimeError: [/__w/pytorch/pytorch/third_party/gloo/gloo/transport/tcp/pair.cc:561] Connection closed by peer [10.1.1.13]:12187. This is typically caused by a remote worker crashing. Check the logs of the remote worker before reporting an error. GLHF! 🏖️
+
+[rank3]: At:
+[rank3]:   /work/train/telemetry.py(99): done
+

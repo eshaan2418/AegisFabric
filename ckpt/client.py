@@ -554,6 +554,13 @@ class EngineBackend:
                 self._index[k] = s
         return self._index.get(key)
 
+    def keys(self) -> set[str]:
+        """Blob keys with at least one committed manifest (read from manifests without verifying them;
+        get() verifies). Used by the job manager to find the newest complete checkpoint after a crash."""
+        with self._lock:
+            self._find("")
+            return set(self._index)
+
     def get(self, key: str) -> bytes | None:
         with self._lock:
             seq = self._find(key)

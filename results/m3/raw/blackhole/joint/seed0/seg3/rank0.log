@@ -1,0 +1,18 @@
+[W1025 03:11:55.230024427 socket.cpp:207] [c10d] The hostname of the client socket cannot be retrieved. err=-3
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "<frozen runpy>", line 198, in _run_module_as_main
+[rank0]:   File "<frozen runpy>", line 88, in _run_code
+[rank0]:   File "/work/train/trainer.py", line 384, in <module>
+[rank0]:     raise SystemExit(main())
+[rank0]:                      ^^^^^^
+[rank0]:   File "/work/train/trainer.py", line 283, in main
+[rank0]:     dist.barrier()
+[rank0]:   File "/work/train/telemetry.py", line 71, in wrapped
+[rank0]:     work = fn(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/distributed/c10d_logger.py", line 83, in wrapper
+[rank0]:     return func(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/distributed/distributed_c10d.py", line 6371, in barrier
+[rank0]:     work.wait()
+[rank0]: RuntimeError: [/__w/pytorch/pytorch/third_party/gloo/gloo/transport/tcp/pair.cc:561] Connection closed by peer [10.1.1.13]:19074. This is typically caused by a remote worker crashing. Check the logs of the remote worker before reporting an error. GLHF! 🏖️
