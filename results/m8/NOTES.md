@@ -26,7 +26,7 @@ session (branch `worktree-agent-a516e975d393c1c33`) were **not** reused: they we
   Embedding/Linear/LayerNorm, so Opacus per-sample gradients work.
 - **Warm start** (per seed, `posttrain.task.warm_start`): 150 LM steps on public synthetic statements and
   transcripts, then 200 SFT steps on 2000 gold episodes (batch 64), costing 1.86e13 FLOPs. Warm-start EM is
-  0.322 [0.313, 0.330]. The warm start solves `count` and `largest_m`, scores 0.0 on `total`, `closing` and
+  0.322 [0.313, 0.330]. The warm start solves `count` and `largest_m`, scores ≤ 0.004 on `total`, `closing` and
   `diff`, and 0.01 on `largest_a` (`results/m8/posttrain/summary.json`, by_type).
 - **Compute-matching rule**: every method gets the same budget of *analytic FLOPs after the warm start*.
   That is 2N per token for every forward-only pass (sampling, reference-model log-probs, RM scoring) and 6N
