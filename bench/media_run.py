@@ -96,11 +96,56 @@ def run(trials: int, names: list[str], duration: float) -> None:
             )
 
 
+GROUPS = ["clean", "lossy", "bwdrop", "jitter", "overload"]
+NET_GROUPS = ["lossy", "bwdrop", "jitter"]  # the impairment profiles (clean = control, overload = compute)
+TEST_METRICS = [
+    "glass_to_answer_mean_s",
+    "vmaf_mean",
+    "stall_time_s",
+    "answer_correct_frac",
+    "sent_kbps",
+    "dropped_network_frac",
+    "dropped_backpressure",
+    "glass_to_inference_p95_s",
+]
+
+
+def _test(a: list[dict], b: list[dict], m: str) -> dict | None:
+    """a vs b: Welch + Mann-Whitney (bench.stats.welch) and a paired t-test over seeds present in both
+    (same seed = same content and same link-impairment RNG stream)."""
+    from scipy import stats as st
+
+    xa = [r[m] for r in a if r.get(m) is not None]
+    xb = [r[m] for r in b if r.get(m) is not None]
+    if len(xa) < 2 or len(xb) < 2 or (np.std(xa) == 0 and np.std(xb) == 0):
+        return None
+    t = welch(xa, xb)
+    ia = {(r["profile"], r["seed"]): r[m] for r in a if r.get(m) is not None}
+    ib = {(r["profile"], r["seed"]): r[m] for r in b if r.get(m) is not None}
+    keys = sorted(set(ia) & set(ib))
+    d = [ia[k] - ib[k] for k in keys]
+    t["n_a"], t["n_b"], t["n_paired"] = len(xa), len(xb), len(keys)
+    t["mean_a"], t["mean_b"] = float(np.mean(xa)), float(np.mean(xb))
+    t["mean_diff_paired"] = float(np.mean(d)) if d else None
+    t["p_paired"] = (
+        float(st.ttest_rel([ia[k] for k in keys], [ib[k] for k in keys]).pvalue)
+        if len(d) >= 2 and np.std(d) > 0
+        else None
+    )
+    return t
+
+
 def aggregate() -> dict:
     rows = []
     for p in sorted((RESULTS / "m6" / "trials").glob("*.json")):
         rows.append(json.loads(p.read_text())["data"])
-    agg: dict = {"conditions": {}, "tests": {}}
+    agg: dict = {
+        "conditions": {},
+        "tests": {},
+        "pooled_tests": {},
+        "ablation_tests": {},
+        "note": "tests: a = joint, b = independent (ablation: a = joint, b = blocking)",
+    }
     loads = [x for r in rows for x in r.get("loadavg_1m", [])]
     agg["loadavg_1m"] = (
         {"min": min(loads), "max": max(loads), "mean": float(np.mean(loads))} if loads else None
@@ -113,52 +158,115 @@ def aggregate() -> dict:
             m: summarize([r[m] for r in rs if r.get(m) is not None]).as_dict() for m in METRICS
         }
         agg["conditions"][name]["n"] = len(rs)
+        agg["conditions"][name]["seeds"] = sorted(r["seed"] for r in rs)
         agg["conditions"][name]["stt"] = sorted({r["stt"] for r in rs})
     pvals = {}
-    for grp in ("clean", "lossy", "bwdrop", "jitter", "overload"):
+    for grp in GROUPS:
         a = [r for r in rows if r["condition"] == f"{grp}-joint"]
         b = [r for r in rows if r["condition"] == f"{grp}-independent"]
-        if len(a) >= 2 and len(b) >= 2:
-            for m in ("vmaf_mean", "glass_to_answer_mean_s", "stall_time_s", "answer_correct_frac"):
-                xa = [r[m] for r in a if r.get(m) is not None]
-                xb = [r[m] for r in b if r.get(m) is not None]
-                if len(xa) >= 2 and len(xb) >= 2 and (np.std(xa) > 0 or np.std(xb) > 0):
-                    t = welch(xa, xb)
-                    agg["tests"][f"{grp}:{m}"] = t
-                    pvals[f"{grp}:{m}"] = t["p_welch"]
+        for m in TEST_METRICS:
+            t = _test(a, b, m)
+            if t is not None:
+                agg["tests"][f"{grp}:{m}"] = t
+                pvals[f"{grp}:{m}"] = t["p_welch"]
     for k, v in holm(pvals).items():
         agg["tests"][k]["p_holm"] = v
-    write_result("m6/summary.json", agg)
+    # pooled over the three impairment profiles, paired by (profile, seed)
+    a = [r for r in rows if r["condition"] in {f"{g}-joint" for g in NET_GROUPS}]
+    b = [r for r in rows if r["condition"] in {f"{g}-independent" for g in NET_GROUPS}]
+    pp = {}
+    for m in TEST_METRICS:
+        t = _test(a, b, m)
+        if t is not None:
+            agg["pooled_tests"][m] = t
+            if t["p_paired"] is not None:
+                pp[m] = t["p_paired"]
+    for k, v in holm(pp).items():
+        agg["pooled_tests"][k]["p_paired_holm"] = v
+    # backpressure ablation: blocking queue vs joint (latest-wins) under inference overload
+    a = [r for r in rows if r["condition"] == "overload-joint"]
+    b = [r for r in rows if r["condition"] == "overload-blocking"]
+    for m in ("stall_time_s", "glass_to_answer_mean_s", "vmaf_mean", "blocked_s"):
+        t = _test(a, b, m)
+        if t is not None:
+            agg["ablation_tests"][f"joint_vs_blocking:{m}"] = t
+    write_result(
+        "m6/summary.json",
+        agg,
+        config={"trials_dir": "results/m6/trials", "tests": "Welch+MWU, paired t over seeds, Holm"},
+    )
     return agg
 
 
-def figures(agg: dict) -> None:
-    import matplotlib
+LABELS = {
+    "glass_to_answer_mean_s": "glass-to-answer (s)",
+    "vmaf_mean": "VMAF, rendered stream",
+    "stall_time_s": "stall time (s per 24 s)",
+    "sent_kbps": "video sent (kbps)",
+    "dropped_network_frac": "frames lost/late (fraction)",
+    "glass_to_inference_p95_s": "glass-to-inference p95 (s)",
+}
 
-    matplotlib.use("Agg")
+
+def figures(agg: dict) -> None:
     import matplotlib.pyplot as plt
 
+    from bench import plotstyle
+
+    plotstyle.apply()
     figs = RESULTS / "m6" / "figs"
     figs.mkdir(parents=True, exist_ok=True)
-    names = list(agg["conditions"])
-    for m, label in [
-        ("glass_to_answer_mean_s", "glass-to-answer (s)"),
-        ("vmaf_mean", "VMAF (rendered)"),
-        ("stall_time_s", "stall time (s)"),
-    ]:
-        fig, ax = plt.subplots(figsize=(8, 3.2))
-        means = [agg["conditions"][n][m]["mean"] for n in names]
-        err = [(agg["conditions"][n][m]["ci95_hi"] - agg["conditions"][n][m]["ci95_lo"]) / 2 for n in names]
-        colors = [
-            "#4878a8" if "independent" in n else "#d0743c" if "joint" in n else "#8c8c8c" for n in names
-        ]
-        ax.bar(range(len(names)), means, yerr=err, color=colors, capsize=3)
-        ax.set_xticks(range(len(names)), names, rotation=30, ha="right", fontsize=8)
-        ax.set_ylabel(label)
-        ax.set_title(f"M6: {label}, mean ± 95% CI")
-        fig.tight_layout()
-        fig.savefig(figs / f"{m}.png", dpi=140)
-        plt.close(fig)
+    colors = {
+        "independent": plotstyle.METHOD_COLOR["independent"],
+        "joint": plotstyle.METHOD_COLOR["joint"],
+        "blocking": plotstyle.SLOTS[6],
+    }
+    pols = ["independent", "joint", "blocking"]
+    groups = [g for g in GROUPS if any(f"{g}-{p}" in agg["conditions"] for p in pols)]
+    table = ["# M6 figure tables (mean ± 95% CI half-width, n seeds)", ""]
+    fig, axes = plt.subplots(2, 3, figsize=(11, 5.6))
+    for ax, (m, label) in zip(axes.ravel(), LABELS.items(), strict=True):
+        table += [f"## {label}", "", "| profile | " + " | ".join(pols) + " |", "|---|---|---|---|"]
+        w = 0.26
+        for k, pol in enumerate(pols):
+            xs, ys, es = [], [], []
+            for i, g in enumerate(groups):
+                c = agg["conditions"].get(f"{g}-{pol}")
+                if not c or c[m]["n"] == 0:
+                    continue
+                xs.append(i + (k - 1) * w)
+                ys.append(c[m]["mean"])
+                es.append((c[m]["ci95_hi"] - c[m]["ci95_lo"]) / 2 if c[m]["n"] > 1 else 0)
+            if xs:
+                ax.bar(
+                    xs,
+                    ys,
+                    width=w - 0.03,
+                    yerr=es,
+                    color=colors[pol],
+                    label=pol,
+                    capsize=2,
+                    error_kw={"elinewidth": 1, "ecolor": plotstyle.TEXT2},
+                )
+        for g in groups:
+            cells = []
+            for pol in pols:
+                c = agg["conditions"].get(f"{g}-{pol}")
+                if c and c[m]["n"]:
+                    h = (c[m]["ci95_hi"] - c[m]["ci95_lo"]) / 2 if c[m]["n"] > 1 else float("nan")
+                    cells.append(f"{c[m]['mean']:.3g} ± {h:.2g} (n={c[m]['n']})")
+                else:
+                    cells.append("-")
+            table.append(f"| {g} | " + " | ".join(cells) + " |")
+        table.append("")
+        ax.set_xticks(range(len(groups)), groups)
+        ax.set_title(label, fontsize=9, loc="left")
+    axes[0, 0].legend(fontsize=8, loc="upper left")
+    fig.suptitle("M6: joint vs independent adaptation, mean ± 95% CI over seeds (virtual time)", fontsize=10)
+    fig.tight_layout()
+    fig.savefig(figs / "m6_metrics.png", dpi=150)
+    plt.close(fig)
+    (figs / "TABLES.md").write_text("\n".join(table) + "\n")
 
 
 def main() -> None:
