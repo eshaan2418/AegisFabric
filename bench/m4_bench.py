@@ -1,7 +1,7 @@
 """M4 benchmarks: aegis-ckpt (io_uring / pwrite) vs torch.save and torch.distributed.checkpoint, on ext4 and XFS.
 
 Run inside the privileged lab container (needs losetup/mkfs/mount and /proc/sys/vm/drop_caches):
-    nice -n 19 python -m bench.m4_bench --trials 5 --ckpts 8 --steps 2 --preset base --out m4
+    nice -n 19 python -m bench.m4_bench --trials 5 --ckpts 6 --steps 1 --preset small --out m4
 Writes results/m4/bench.json (summary, mean ± 95% CI over trials) and results/m4/bench_raw.json.
 
 Both filesystems are loop-mounted image files under /var/tmp in the container, i.e. on the container's
