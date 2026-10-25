@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "git": {
+      "commit": "e204f85d8e810c538b31e4a5854309ed4d120ad9",
+      "dirty": false
+    },
+    "hardware": {
+      "platform": "Linux-7.0.12-linuxkit-aarch64-with-glibc2.36",
+      "machine": "aarch64",
+      "python": "3.12.15",
+      "cpu_count": 18,
+      "host_label": "lab-container",
+      "mem_gb": 47.0,
+      "torch": "2.14.1+cpu",
+      "torch_threads": 18
+    },
+    "seed": 3,
+    "config": {
+      "seeds": 5,
+      "nets": "loopback,wan",
+      "modes": "ddp,fsdp,hsdp",
+      "preset": "small",
+      "batch": 16,
+      "threads": 2,
+      "steps": 400,
+      "target_loss": 1.6,
+      "out": "results/m1"
+    },
+    "command": "m1_baselines.py --seeds 5 --out results/m1",
+    "timestamp": "2026-10-25T04:49:41+00:00"
+  },
+  "data": {
+    "net": "loopback",
+    "mode": "ddp",
+    "seed": 3,
+    "exit": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "params": 4923648,
+    "steps": 40,
+    "reached_target_s": 34.07206630699875,
+    "final_eval": 1.2770196199417114,
+    "stop_reason": "target",
+    "launch_to_end_s": 37.25450038909912,
+    "step_mean_s": 0.8439636580811025,
+    "step_p50_s": 0.8345678750010848,
+    "step_p99_s": 0.9380017786407552,
+    "coll_time_mean_s": 0.016290548486525752,
+    "coll_share": 0.019302428878946204,
+    "tok_s_mean": 16411.66275727308,
+    "mfu_mean": 0.4962575109957907,
+    "rss_mb_max": 546.58203125,
+    "peak_flops_per_rank": 174072308754.4753,
+    "coll_breakdown": {
+      "all_reduce": 8.724081134140442e-06,
+      "ddp_allreduce": 0.016281824405391613
+    }
+  }
+}
