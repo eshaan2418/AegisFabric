@@ -1,0 +1,49 @@
+\section{Limitations and Threats to Validity}
+\label{sec:limits}
+
+\paragraph{Emulation is not a WAN.}
+Links are veth pairs with \texttt{tbf}/\texttt{netem} inside one Linux VM, with capacities scaled down
+so that a CPU testbed sits in a communication-bound regime. Real WANs have queueing, cross traffic,
+loss processes and failure modes (partial failures, gray links, asymmetric congestion) that our scripted
+failures only approximate. The \texttt{speed} signal reads the configured shaper rate. That is realistic
+for a carrier that lowers a circuit's committed rate and reports it, but it makes bandwidth collapses
+directly observable to the controller. The ablation without \texttt{speed} measures how much the results
+depend on that.
+
+\paragraph{CPUs are not GPUs.}
+There is no accelerator. Compute per step is that of a tiny model on a few CPU threads, and
+the ratio of compute to communication was chosen, then measured and reported, rather than inherited from a
+real cluster. A GPU cluster at the same WAN capacities would be even more communication-bound; at datacenter
+interconnect speeds most of the effects reported here would vanish.
+
+\paragraph{Small search space.}
+Six ranks on three sites allow exhaustive search. A production controller would need ILP/LNS or learned
+policies, plus explicit treatment of tensor/pipeline parallelism, which our CPU rung only exercises in
+M1 (FSDP2/HSDP). The joint planner's advantage depends on its cost model. The model is calibrated per
+plane and refined online, but it remains a fluid approximation of TCP over shaped links.
+
+\paragraph{Shared host.}
+Other workloads ran on the host throughout (load averages are recorded per run). Methods were interleaved
+in a seeded random order within each (seed, scenario) block, so slow drift affects them alike, but it
+inflates variance. Absolute step times should not be compared across tables collected at different times.
+
+\paragraph{Routing granularity.}
+Without Open vSwitch, traffic engineering acts on (destination prefix, class) through BGP
+local-preference, not per flow. This matches how many enterprises would steer traffic, but finer-grained
+control could do better for both the baselines and the joint planner.
+
+\paragraph{Security and privacy scope.}
+Encryption and authentication of checkpoints protect confidentiality and integrity against the storage
+service. They are not privacy: models trained on confidential data can leak it, which is why we
+measure membership inference separately (\S\ref{sec:ext}). SPIRE attestation is not deployed. The
+anti-rollback high-water mark is held by clients, not by a trusted controller. DP results are for a toy
+model with tiny private sets and say nothing about foundation-model-scale DP.
+
+\paragraph{Storage.}
+Filesystems are loop-mounted images on a VM virtual disk backed by a laptop SSD. fsync durability is only
+as strong as that stack's flush semantics, and \texttt{kill -9} does not model power loss.
+
+\paragraph{What a real-scale test needs.}
+Real multi-site GPU capacity with a programmable WAN (or a carrier test circuit), production-size
+models with tensor/pipeline parallelism, failure traces from an operational network rather than scripted
+injections, and a TE system representative of what the network team actually runs.
