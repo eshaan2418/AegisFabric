@@ -19,9 +19,14 @@ E[T] = C + \frac{(K-m)\,T_{\text{ring}} + m\,T_{\text{ring,flush}}}{K} + \frac{\
 \]
 where the stall is any part of the flush that does not finish within $K$ steps. Migrating costs a drain
 (final checkpoint), a measured restart time, and a restore in which each rank pulls the state from the
-old storage site. Before relying on the ring structure, we checked it with a microbenchmark:
-interleaving sites in rank order doubles all-reduce time, as the model predicts
-(\texttt{bench/collective\_micro.py}).
+old storage site. Before relying on the ring structure, we checked it with a microbenchmark
+(\texttt{bench/m3\_ring\_micro.py}, \CringTrials{} trials). With the same per-site counts, interleaving
+sites in rank order raises the all-reduce time from \CringContig\ to \CringInter\,s, a factor of
+\CringRatio{}$\pm$\CringRatioCi. The uncalibrated model ($\kappa=1$) predicts \CringPredContig\ and
+\CringPredInter\,s, a factor of \CringPredRatio. Calibration on this testbed gives a compute time of
+\CcalComputeS\,s per step, \CcalGradMB\,MB of gradients, a \CcalCkptMB\,MB training state, a
+\CcalRestartS\,s restart, and $\kappa_A=\CcalKappaA$, $\kappa_B=\CcalKappaB$. The two planes need
+different corrections, which is why $\kappa$ is kept per plane (D-014).
 
 \subsection{Joint planner}
 With \cfg{6} ranks, \cfg{3} sites, at most \cfg{3} ranks per site and a residency-constrained $s$, the space is small. It

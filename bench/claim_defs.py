@@ -106,3 +106,55 @@ def _m2_trials(d):
 @claim("mTwoInitConv", "m2/convergence.json", "{:.1f}", "initial BGP convergence of the lab (s)")
 def _m2_init(d):
     return d["initial_convergence_s"]
+
+
+# --- M3 calibration and ring-structure validation -------------------------------------------------------
+@claim("ringContig", "m3/ring_micro.json", "{:.2f}", "all-reduce s, contiguous ring order")
+def _ring_c(d):
+    return d["summary"]["contiguous"]["allreduce_s"]["mean"]
+
+
+@claim("ringInter", "m3/ring_micro.json", "{:.2f}", "all-reduce s, interleaved ring order")
+def _ring_i(d):
+    return d["summary"]["interleaved"]["allreduce_s"]["mean"]
+
+
+@claim("ringRatio", "m3/ring_micro.json", "{:.2f}")
+def _ring_r(d):
+    return d["summary"]["ratio_interleaved_over_contiguous"]["mean"]
+
+
+@claim("ringRatioCi", "m3/ring_micro.json", "{:.2f}")
+def _ring_rci(d):
+    s = d["summary"]["ratio_interleaved_over_contiguous"]
+    return (s["ci95_hi"] - s["ci95_lo"]) / 2
+
+
+@claim("ringPredRatio", "m3/ring_micro.json", "{:.2f}")
+def _ring_pr(d):
+    return d["summary"]["pred_ratio"]
+
+
+@claim("ringPredContig", "m3/ring_micro.json", "{:.2f}")
+def _ring_pc(d):
+    return d["summary"]["contiguous"]["pred_s"]
+
+
+@claim("ringPredInter", "m3/ring_micro.json", "{:.2f}")
+def _ring_pi(d):
+    return d["summary"]["interleaved"]["pred_s"]
+
+
+@claim("ringTrials", "m3/ring_micro.json", "{:d}")
+def _ring_n(d):
+    return d["summary"]["contiguous"]["allreduce_s"]["n"]
+
+
+for _k, _fmt in (("compute_s", "{:.2f}"), ("restart_s", "{:.1f}")):
+    claim("cal" + "".join(w.title() for w in _k.split("_")), "m3/calibration.json", _fmt)(
+        (lambda k: lambda d: d[k])(_k)
+    )
+claim("calGradMB", "m3/calibration.json", "{:.1f}")(lambda d: d["grad_bytes"] / 1e6)
+claim("calCkptMB", "m3/calibration.json", "{:.1f}")(lambda d: d["ckpt_bytes"] / 1e6)
+claim("calKappaA", "m3/calibration.json", "{:.2f}")(lambda d: d["kappa_plane"]["a"])
+claim("calKappaB", "m3/calibration.json", "{:.2f}")(lambda d: d["kappa_plane"]["b"])
