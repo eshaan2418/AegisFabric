@@ -83,8 +83,12 @@ def finetune(
     delta: float,
     max_grad_norm: float,
     accountant: str = "rdp",
+    clip_only: bool = False,
 ) -> tuple[TinyLM, dict]:
-    """Fine-tune a copy of `base` on `ds`. epsilon=None → non-private (plain AdamW, same batch/epochs)."""
+    """Fine-tune a copy of `base` on `ds`. epsilon=None → non-private (plain AdamW, same batch/epochs).
+
+    clip_only=True (with epsilon=None) is the ablation "DP-SGD mechanics without noise": Opacus Poisson
+    sampling + per-sample clipping with noise_multiplier=0 (no privacy guarantee, ε = ∞)."""
     import copy
 
     torch.manual_seed(seed)
@@ -120,6 +124,19 @@ def finetune(
         info.update(
             noise_multiplier=float(opt.noise_multiplier), max_grad_norm=max_grad_norm, accountant=accountant
         )
+    elif clip_only:
+        from opacus import PrivacyEngine
+
+        engine = PrivacyEngine(accountant=accountant)
+        model, opt, dl = engine.make_private(
+            module=model,
+            optimizer=opt,
+            data_loader=dl,
+            noise_multiplier=0.0,
+            max_grad_norm=max_grad_norm,
+            poisson_sampling=True,
+        )
+        info.update(noise_multiplier=0.0, max_grad_norm=max_grad_norm, clip_only=True)
     steps = 0
     for _ in range(epochs):
         for inp, tgt, msk in dl:
@@ -134,7 +151,9 @@ def finetune(
             opt.step()
             steps += 1
     info["steps"] = steps
-    if engine is not None:
+    if engine is not None and clip_only:
+        model = model._module
+    elif engine is not None:
         info["epsilon_spent_rdp"] = float(engine.get_epsilon(delta))
         try:  # independent cross-check with the PRV accountant on the same (q, sigma, steps)
             from opacus.accountants import PRVAccountant

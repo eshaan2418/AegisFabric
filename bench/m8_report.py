@@ -163,12 +163,14 @@ def privacy_section() -> list[str]:
         "| target ε | ε spent (RDP) | ε (PRV) | σ (noise mult.) | steps | q | task exact match | loss-threshold MIA AUC | offline-LiRA AUC (per-canary var) | offline-LiRA AUC (global var) | shadow-calibrated AUC | LiRA TPR@5%FPR | seeds |",
         "|---|---|---|---|---|---|---|---|---|---|---|---|---|",
     ]
-    order = sorted(d["table"], key=lambda e: float("inf") if e == "inf" else float(e), reverse=True)
+    order = sorted(
+        d["table"], key=lambda e: {"inf": float("inf"), "clip": 1e12}.get(e) or float(e), reverse=True
+    )
     for e in order:
         t = d["table"][e]
-        nm = f"{t['noise_multiplier']:.3f}" if t["noise_multiplier"] else "0 (non-private)"
+        nm = f"{t['noise_multiplier']:.3f}" if t["noise_multiplier"] else "0"
         out.append(
-            f"| {'∞ (no DP)' if e == 'inf' else e} | {ci(t['epsilon_rdp'], 2)} | {ci(t['epsilon_prv'], 2)} | {nm} | "
+            f"| {'∞ (no DP)' if e == 'inf' else ('clip-only, σ=0 (no DP)' if e == 'clip' else e)} | {ci(t['epsilon_rdp'], 2)} | {ci(t['epsilon_prv'], 2)} | {nm} | "
             f"{t['steps']} | {t['sample_rate']:.3f} | {ci(t['utility_exact'])} | {ci(t['mia_loss_auc'])} | "
             f"{ci(t['mia_lira_auc'])} | {ci(t['mia_lira_globalvar_auc'])} | {ci(t['mia_calibrated_auc'])} | "
             f"{ci(t['lira_tpr@5%fpr'])} | {t['n_seeds']} |"

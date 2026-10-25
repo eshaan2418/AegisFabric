@@ -1,7 +1,7 @@
 """M8 privacy: DP-SGD (Opacus) on the private fine-tuning step; MIA (loss-threshold + offline LiRA) on canaries.
 
-  AEGIS_DEVICE=mps nice -n 19 uv run python -m bench.m8_privacy shadows --eps inf 16 4 1   # K OUT shadows per ε
-  AEGIS_DEVICE=mps nice -n 19 uv run python -m bench.m8_privacy run --eps inf 16 4 1 --seeds 0 1 2 3 4
+  AEGIS_DEVICE=mps nice -n 19 uv run python -m bench.m8_privacy shadows --eps inf clip 1024 256 64 16 4 1  # K OUT shadows
+  AEGIS_DEVICE=mps nice -n 19 uv run python -m bench.m8_privacy run --eps inf clip 1024 256 64 16 4 1 --seeds 0 1 2 3 4
   uv run python -m bench.m8_privacy summarize
 
 Fixed public task model (LM pretrain + public SFT, seed 0; `task_base_model`). The seed varies: member/non-member split, private task data,
@@ -72,7 +72,12 @@ def task_base_model():
 
 
 def eps_val(s: str) -> float | None:
-    return None if s == "inf" else float(s)
+    """'inf' = non-private; 'clip' = per-sample clipping + Poisson sampling, zero noise (ablation, no DP)."""
+    return None if s in ("inf", "clip") else float(s)
+
+
+def eps_key(s: str) -> float:
+    return {"inf": float("inf"), "clip": 1e12}.get(s) or float(s)
 
 
 def cmd_shadows(a):
@@ -82,7 +87,7 @@ def cmd_shadows(a):
         losses = []
         for k in range(K_SHADOW):
             ds = D.build_dataset(qa.make_split(N_TASK, seed=70_000 + k), [], base.cfg.max_len)
-            m, info = D.finetune(base, ds, 900 + k, epsilon=eps_val(e), **HP)
+            m, info = D.finetune(base, ds, 900 + k, epsilon=eps_val(e), clip_only=e == "clip", **HP)
             losses.append(D.canary_losses(m, pool).tolist())
             print("shadow", e, k, info.get("epsilon_spent_rdp"), flush=True)
         write_result(
@@ -108,7 +113,7 @@ def cmd_run(a):
         ds = D.build_dataset(task_eps, [c for c, m in zip(pool, member, strict=True) if m], base.cfg.max_len)
         for e in a.eps:
             t0 = time.perf_counter()
-            m, info = D.finetune(base, ds, seed, epsilon=eps_val(e), **HP)
+            m, info = D.finetune(base, ds, seed, epsilon=eps_val(e), clip_only=e == "clip", **HP)
             wall = time.perf_counter() - t0
             loss = D.canary_losses(m, pool)
             sh = np.array(read_result(f"{OUT}/shadows_eps{e}.json")["data"]["losses"])
@@ -163,10 +168,10 @@ def cmd_summarize(a):
         table[e] = {
             "n_seeds": len(ds),
             "epsilon_rdp": summarize([d["dp"].get("epsilon_spent_rdp", np.inf) for d in ds]).as_dict()
-            if e != "inf"
+            if e not in ("inf", "clip")
             else None,
             "epsilon_prv": summarize([d["dp"].get("epsilon_spent_prv", np.nan) for d in ds]).as_dict()
-            if e != "inf"
+            if e not in ("inf", "clip")
             else None,
             "noise_multiplier": ds[0]["dp"].get("noise_multiplier"),
             "steps": ds[0]["dp"]["steps"],
@@ -206,7 +211,7 @@ def _plot(table):
 
     figs = RESULTS / "m8" / "figs"
     figs.mkdir(parents=True, exist_ok=True)
-    order = sorted(table, key=lambda e: float("inf") if e == "inf" else float(e))
+    order = sorted(table, key=eps_key)
     from bench import plotstyle
 
     plotstyle.apply()
@@ -222,7 +227,7 @@ def _plot(table):
             color=plotstyle.SLOTS[0 if key == "mia_loss_auc" else 1],
         )
     ax[0].axhline(0.5, color=plotstyle.TEXT2, ls="--", lw=0.8)
-    ax[0].set_xlabel("target ε (δ=1e-5); inf = non-private")
+    ax[0].set_xlabel("target ε (δ=1e-5); clip = clip-only, no noise; inf = non-private")
     ax[0].set_ylabel("MIA AUC")
     ax[0].legend()
     ax[1].errorbar(
@@ -236,6 +241,8 @@ def _plot(table):
         color=plotstyle.SLOTS[2],
     )
     ax[1].set_xlabel("target ε")
+    for a_ in ax:
+        plt.setp(a_.get_xticklabels(), rotation=30)
     ax[1].set_ylabel("task exact match")
     fig.tight_layout()
     fig.savefig(figs / "dp_mia_utility.png", dpi=150)

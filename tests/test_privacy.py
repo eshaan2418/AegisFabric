@@ -47,3 +47,16 @@ def test_fedavg_runs_and_accounts_comm():
     m, comm = fed_train(base, data, rounds=1, local_steps=1, batch=4, lr=1e-3, mu=0.01, seed=0)
     assert comm["bytes_per_round"] == 2 * 3 * base.n_params() * 4
     assert isinstance(m, TinyLM)
+
+
+def test_clip_only_has_no_noise_and_no_epsilon():
+    torch.manual_seed(0)
+    base = TinyLM(TINY)
+    ds = D.build_dataset(qa.make_split(24, seed=1), [], TINY.max_len)
+    m, info = D.finetune(
+        base, ds, 0, epochs=1, batch=8, lr=1e-3, epsilon=None, delta=1e-5, max_grad_norm=1.0, clip_only=True
+    )
+    assert info["noise_multiplier"] == 0.0 and info["clip_only"] and "epsilon_spent_rdp" not in info
+    assert isinstance(m, TinyLM)
+    changed = any((p0 - p1).abs().sum() > 0 for p0, p1 in zip(base.parameters(), m.parameters(), strict=True))
+    assert changed
