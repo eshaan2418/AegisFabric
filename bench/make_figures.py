@@ -7,7 +7,6 @@ Writes results/<m>/figs/*.png and copies the ones the paper uses into paper/figs
 
 from __future__ import annotations
 
-import importlib
 import json
 import shutil
 import subprocess
@@ -134,13 +133,18 @@ def main() -> int:
         subprocess.run([sys.executable, "-m", "bench.m3_analyze", "--out", str(R / "m3")], check=True)
         made += sorted((R / "m3" / "figs").glob("*.png"))
     made += fig_m1() + fig_m2() + fig_m5()
-    # extension milestones provide their own figure entry points
-    for mod in ("bench.ckpt_figures", "bench.media_figures", "bench.kernels_figures", "bench.m8_figures"):
-        try:
-            m = importlib.import_module(mod)
-        except ModuleNotFoundError:
+    # extension milestones have their own figure scripts (each reads only committed results)
+    ext = [
+        ("m4", ["bench.m4_figs"]),
+        ("m6", ["bench.m6_run", "--figures-only"]),
+        ("m7", ["bench.kernels_figs"]),
+        ("m8", ["bench.m8_figs"]),
+    ]
+    for m, cmd in ext:
+        if not (R / m).exists():
             continue
-        made += list(m.main() or [])
+        subprocess.run([sys.executable, "-m", *cmd], check=True)
+        made += sorted((R / m / "figs").glob("*.png"))
     PAPER_FIGS.mkdir(parents=True, exist_ok=True)
     for p in made:
         shutil.copy(p, PAPER_FIGS / f"{p.parent.parent.name}_{p.name}")

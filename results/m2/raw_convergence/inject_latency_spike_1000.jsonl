@@ -1,2 +1,0 @@
-{"wall": 1792894068.6623006, "mono": 0.013920916999268229, "event": "inject", "kind": "latency_spike", "plane": "a", "s1": "tor", "s2": "mtl", "extra_ms": 80, "duration": 12.0}
-{"wall": 1792894080.6769876, "mono": 12.0284585469999, "event": "restore", "kind": "latency_spike", "plane": "a", "s1": "tor", "s2": "mtl"}

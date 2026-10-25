@@ -1,2 +1,0 @@
-{"wall": 1792893872.0353088, "mono": 0.009505792000709334, "event": "inject", "kind": "bw_collapse", "plane": "a", "s1": "tor", "s2": "mtl", "rate_mbit": 20, "duration": 12.0}
-{"wall": 1792893884.0453386, "mono": 12.019535839001037, "event": "restore", "kind": "bw_collapse", "plane": "a", "s1": "tor", "s2": "mtl"}

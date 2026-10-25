@@ -1,5 +1,0 @@
-{"wall": 1792895022.7695928, "event": "bg_start", "start_s": 128.34111887391649, "duration_s": 30.956694451699654, "src": "tor", "dst": "mtl", "rate_mbit": 40.0}
-{"wall": 1792895079.0227478, "event": "bg_start", "start_s": 184.0884968728921, "duration_s": 15.704117108414753, "src": "mtl", "dst": "tor", "rate_mbit": 40.0}
-{"wall": 1792895081.4410846, "event": "bg_start", "start_s": 186.5105945184192, "duration_s": 43.43926911564925, "src": "mtl", "dst": "us", "rate_mbit": 40.0}
-{"wall": 1792895094.6361485, "event": "bg_start", "start_s": 199.70540405035146, "duration_s": 12.16281185355993, "src": "mtl", "dst": "tor", "rate_mbit": 150.0}
-{"wall": 1792895096.7688665, "event": "bg_start", "start_s": 201.83805109530405, "duration_s": 58.16194890469595, "src": "us", "dst": "tor", "rate_mbit": 80.0}

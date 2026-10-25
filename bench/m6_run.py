@@ -275,7 +275,11 @@ def main() -> None:
     ap.add_argument("--duration", type=float, default=24.0)
     ap.add_argument("--quick", action="store_true")
     ap.add_argument("--aggregate-only", action="store_true")
+    ap.add_argument("--figures-only", action="store_true", help="plot from the committed summary.json")
     a = ap.parse_args()
+    if a.figures_only:
+        figures(read_result("m6/summary.json")["data"])
+        return
     names = QUICK if a.quick else [c[0] for c in CONDITIONS]
     if not a.aggregate_only:
         run(a.trials, names, a.duration)
