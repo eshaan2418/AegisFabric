@@ -1,0 +1,1188 @@
+{
+  "meta": {
+    "git": {
+      "commit": "a0e6ce46a47a5c6e968ef11cc4f5ee5160681447",
+      "dirty": false
+    },
+    "hardware": {
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "machine": "arm64",
+      "python": "3.12.14",
+      "cpu_count": 18,
+      "host_label": "darwin",
+      "mem_gb": 48.0,
+      "torch": "2.14.1",
+      "torch_threads": 4
+    },
+    "seed": 0,
+    "config": {
+      "seeds": 5,
+      "ckpts": 10,
+      "every": 5,
+      "preset": "base",
+      "sizes": "65536,262144,1048576,4194304",
+      "threads": 4,
+      "scenarios": "full,frozen,adapter"
+    },
+    "command": "m4_dedup.py --seeds 5 --ckpts 10 --every 5 --preset base",
+    "timestamp": "2026-10-25T01:07:47+00:00"
+  },
+  "data": {
+    "summary": {
+      "full/tensor/65536": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 1.0022336121545343,
+          "std": 0.0,
+          "ci95_lo": 1.0022336121545343,
+          "ci95_hi": 1.0022336121545343,
+          "median": 1.0022336121545343,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.9977336321040917,
+          "std": 0.0,
+          "ci95_lo": 0.9977336321040917,
+          "ci95_hi": 0.9977336321040917,
+          "median": 0.9977336321040917,
+          "p99": null
+        },
+        "state_bytes": 173680540.0
+      },
+      "full/tensor/262144": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 1.0014382934024164,
+          "std": 0.0,
+          "ci95_lo": 1.0014382934024164,
+          "ci95_hi": 1.0014382934024164,
+          "median": 1.0014382934024164,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.998488305022543,
+          "std": 1.2412670766236366e-16,
+          "ci95_lo": 0.9984883050225429,
+          "ci95_hi": 0.9984883050225432,
+          "median": 0.9984883050225432,
+          "p99": null
+        },
+        "state_bytes": 173680540.0
+      },
+      "full/tensor/1048576": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 1.0000023491460728,
+          "std": 0.0,
+          "ci95_lo": 1.0000023491460728,
+          "ci95_hi": 1.0000023491460728,
+          "median": 1.0000023491460728,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.9999976508594456,
+          "std": 0.0,
+          "ci95_lo": 0.9999976508594456,
+          "ci95_hi": 0.9999976508594456,
+          "median": 0.9999976508594456,
+          "p99": null
+        },
+        "state_bytes": 173680540.0
+      },
+      "full/tensor/4194304": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 1.0000023491460728,
+          "std": 0.0,
+          "ci95_lo": 1.0000023491460728,
+          "ci95_hi": 1.0000023491460728,
+          "median": 1.0000023491460728,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.9999976508594456,
+          "std": 0.0,
+          "ci95_lo": 0.9999976508594456,
+          "ci95_hi": 0.9999976508594456,
+          "median": 0.9999976508594456,
+          "p99": null
+        },
+        "state_bytes": 173680540.0
+      },
+      "full/blob/65536": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 1.0014727925532045,
+          "std": 0.0,
+          "ci95_lo": 1.0014727925532045,
+          "ci95_hi": 1.0014727925532045,
+          "median": 1.0014727925532045,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.998491664999731,
+          "std": 1.2412670766236366e-16,
+          "ci95_lo": 0.9984916649997309,
+          "ci95_hi": 0.9984916649997311,
+          "median": 0.9984916649997309,
+          "p99": null
+        },
+        "state_bytes": 173796935.0
+      },
+      "full/blob/262144": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95_lo": 1.0,
+          "ci95_hi": 1.0,
+          "median": 1.0,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95_lo": 1.0,
+          "ci95_hi": 1.0,
+          "median": 1.0,
+          "p99": null
+        },
+        "state_bytes": 173796935.0
+      },
+      "full/blob/1048576": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95_lo": 1.0,
+          "ci95_hi": 1.0,
+          "median": 1.0,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95_lo": 1.0,
+          "ci95_hi": 1.0,
+          "median": 1.0,
+          "p99": null
+        },
+        "state_bytes": 173796935.0
+      },
+      "full/blob/4194304": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95_lo": 1.0,
+          "ci95_hi": 1.0,
+          "median": 1.0,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95_lo": 1.0,
+          "ci95_hi": 1.0,
+          "median": 1.0,
+          "p99": null
+        },
+        "state_bytes": 173796935.0
+      },
+      "frozen/tensor/65536": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 1.2934579520491387,
+          "std": 0.0,
+          "ci95_lo": 1.2934579520491387,
+          "ci95_hi": 1.2934579520491387,
+          "median": 1.2934579520491387,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.7479335320152237,
+          "std": 0.0,
+          "ci95_lo": 0.7479335320152237,
+          "ci95_hi": 0.7479335320152237,
+          "median": 0.7479335320152237,
+          "p99": null
+        },
+        "state_bytes": 115469004.0
+      },
+      "frozen/tensor/262144": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 1.2934579520491387,
+          "std": 0.0,
+          "ci95_lo": 1.2934579520491387,
+          "ci95_hi": 1.2934579520491387,
+          "median": 1.2934579520491387,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.7479335320152237,
+          "std": 0.0,
+          "ci95_lo": 0.7479335320152237,
+          "ci95_hi": 0.7479335320152237,
+          "median": 0.7479335320152237,
+          "p99": null
+        },
+        "state_bytes": 115469004.0
+      },
+      "frozen/tensor/1048576": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 1.2934579520491387,
+          "std": 0.0,
+          "ci95_lo": 1.2934579520491387,
+          "ci95_hi": 1.2934579520491387,
+          "median": 1.2934579520491387,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.7479335320152237,
+          "std": 0.0,
+          "ci95_lo": 0.7479335320152237,
+          "ci95_hi": 0.7479335320152237,
+          "median": 0.7479335320152237,
+          "p99": null
+        },
+        "state_bytes": 115469004.0
+      },
+      "frozen/tensor/4194304": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 1.2934579520491387,
+          "std": 0.0,
+          "ci95_lo": 1.2934579520491387,
+          "ci95_hi": 1.2934579520491387,
+          "median": 1.2934579520491387,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.7479335320152237,
+          "std": 0.0,
+          "ci95_lo": 0.7479335320152237,
+          "ci95_hi": 0.7479335320152237,
+          "median": 0.7479335320152237,
+          "p99": null
+        },
+        "state_bytes": 115469004.0
+      },
+      "frozen/blob/65536": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 1.2930838780887415,
+          "std": 0.0,
+          "ci95_lo": 1.2930838780887415,
+          "ci95_hi": 1.2930838780887415,
+          "median": 1.2930838780887415,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.7481611526134994,
+          "std": 0.0,
+          "ci95_lo": 0.7481611526134994,
+          "ci95_hi": 0.7481611526134994,
+          "median": 0.7481611526134994,
+          "p99": null
+        },
+        "state_bytes": 115542079.0
+      },
+      "frozen/blob/262144": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 1.2930838780887415,
+          "std": 0.0,
+          "ci95_lo": 1.2930838780887415,
+          "ci95_hi": 1.2930838780887415,
+          "median": 1.2930838780887415,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.7481611526134994,
+          "std": 0.0,
+          "ci95_lo": 0.7481611526134994,
+          "ci95_hi": 0.7481611526134994,
+          "median": 0.7481611526134994,
+          "p99": null
+        },
+        "state_bytes": 115542079.0
+      },
+      "frozen/blob/1048576": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 1.2829216174689662,
+          "std": 0.0,
+          "ci95_lo": 1.2829216174689662,
+          "ci95_hi": 1.2829216174689662,
+          "median": 1.2829216174689662,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.7549676079482697,
+          "std": 0.0,
+          "ci95_lo": 0.7549676079482697,
+          "ci95_hi": 0.7549676079482697,
+          "median": 0.7549676079482697,
+          "p99": null
+        },
+        "state_bytes": 115542079.0
+      },
+      "frozen/blob/4194304": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 1.2438211840001347,
+          "std": 0.0,
+          "ci95_lo": 1.2438211840001347,
+          "ci95_hi": 1.2438211840001347,
+          "median": 1.2438211840001347,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.7821934292873508,
+          "std": 0.0,
+          "ci95_lo": 0.7821934292873508,
+          "ci95_hi": 0.7821934292873508,
+          "median": 0.7821934292873508,
+          "p99": null
+        },
+        "state_bytes": 115542079.0
+      },
+      "adapter/tensor/65536": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 2.648475751045331,
+          "std": 0.0,
+          "ci95_lo": 2.648475751045331,
+          "ci95_hi": 2.648475751045331,
+          "median": 2.648475751045331,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.3084783779264058,
+          "std": 0.0,
+          "ci95_lo": 0.3084783779264058,
+          "ci95_hi": 0.3084783779264058,
+          "median": 0.3084783779264058,
+          "p99": null
+        },
+        "state_bytes": 72881724.0
+      },
+      "adapter/tensor/262144": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 2.648475751045331,
+          "std": 0.0,
+          "ci95_lo": 2.648475751045331,
+          "ci95_hi": 2.648475751045331,
+          "median": 2.648475751045331,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.3084783779264058,
+          "std": 0.0,
+          "ci95_lo": 0.3084783779264058,
+          "ci95_hi": 0.3084783779264058,
+          "median": 0.3084783779264058,
+          "p99": null
+        },
+        "state_bytes": 72881724.0
+      },
+      "adapter/tensor/1048576": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 2.648475751045331,
+          "std": 0.0,
+          "ci95_lo": 2.648475751045331,
+          "ci95_hi": 2.648475751045331,
+          "median": 2.648475751045331,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.3084783779264058,
+          "std": 0.0,
+          "ci95_lo": 0.3084783779264058,
+          "ci95_hi": 0.3084783779264058,
+          "median": 0.3084783779264058,
+          "p99": null
+        },
+        "state_bytes": 72881724.0
+      },
+      "adapter/tensor/4194304": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 2.648475751045331,
+          "std": 0.0,
+          "ci95_lo": 2.648475751045331,
+          "ci95_hi": 2.648475751045331,
+          "median": 2.648475751045331,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.3084783779264058,
+          "std": 0.0,
+          "ci95_lo": 0.3084783779264058,
+          "ci95_hi": 0.3084783779264058,
+          "median": 0.3084783779264058,
+          "p99": null
+        },
+        "state_bytes": 72881724.0
+      },
+      "adapter/blob/65536": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 2.6453361939406066,
+          "std": 0.0,
+          "ci95_lo": 2.6453361939406066,
+          "ci95_hi": 2.6453361939406066,
+          "median": 2.6453361939406066,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.3089153164016627,
+          "std": 0.0,
+          "ci95_lo": 0.3089153164016627,
+          "ci95_hi": 0.3089153164016627,
+          "median": 0.3089153164016627,
+          "p99": null
+        },
+        "state_bytes": 72924759.0
+      },
+      "adapter/blob/262144": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 2.6396883723284916,
+          "std": 0.0,
+          "ci95_lo": 2.6396883723284916,
+          "ci95_hi": 2.6396883723284916,
+          "median": 2.6396883723284916,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.3098139960942483,
+          "std": 0.0,
+          "ci95_lo": 0.3098139960942483,
+          "ci95_hi": 0.3098139960942483,
+          "median": 0.3098139960942483,
+          "p99": null
+        },
+        "state_bytes": 72924759.0
+      },
+      "adapter/blob/1048576": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 2.6396883723284916,
+          "std": 0.0,
+          "ci95_lo": 2.6396883723284916,
+          "ci95_hi": 2.6396883723284916,
+          "median": 2.6396883723284916,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.3098139960942483,
+          "std": 0.0,
+          "ci95_lo": 0.3098139960942483,
+          "ci95_hi": 0.3098139960942483,
+          "median": 0.3098139960942483,
+          "p99": null
+        },
+        "state_bytes": 72924759.0
+      },
+      "adapter/blob/4194304": {
+        "dedup_ratio": {
+          "n": 5,
+          "mean": 2.6396883723284916,
+          "std": 0.0,
+          "ci95_lo": 2.6396883723284916,
+          "ci95_hi": 2.6396883723284916,
+          "median": 2.6396883723284916,
+          "p99": null
+        },
+        "incremental_new_frac": {
+          "n": 5,
+          "mean": 0.3098139960942483,
+          "std": 0.0,
+          "ci95_lo": 0.3098139960942483,
+          "ci95_hi": 0.3098139960942483,
+          "median": 0.3098139960942483,
+          "p99": null
+        },
+        "state_bytes": 72924759.0
+      }
+    },
+    "per_seed": {
+      "full/tensor/65536": [
+        {
+          "dedup_ratio": 1.0022336121545343,
+          "incremental_new_frac": 0.9977336321040917,
+          "logical": 1736805400
+        },
+        {
+          "dedup_ratio": 1.0022336121545343,
+          "incremental_new_frac": 0.9977336321040917,
+          "logical": 1736805400
+        },
+        {
+          "dedup_ratio": 1.0022336121545343,
+          "incremental_new_frac": 0.9977336321040917,
+          "logical": 1736805400
+        },
+        {
+          "dedup_ratio": 1.0022336121545343,
+          "incremental_new_frac": 0.9977336321040917,
+          "logical": 1736805400
+        },
+        {
+          "dedup_ratio": 1.0022336121545343,
+          "incremental_new_frac": 0.9977336321040917,
+          "logical": 1736805400
+        }
+      ],
+      "full/tensor/262144": [
+        {
+          "dedup_ratio": 1.0014382934024164,
+          "incremental_new_frac": 0.9984883050225432,
+          "logical": 1736805400
+        },
+        {
+          "dedup_ratio": 1.0014382934024164,
+          "incremental_new_frac": 0.9984883050225432,
+          "logical": 1736805400
+        },
+        {
+          "dedup_ratio": 1.0014382934024164,
+          "incremental_new_frac": 0.9984883050225432,
+          "logical": 1736805400
+        },
+        {
+          "dedup_ratio": 1.0014382934024164,
+          "incremental_new_frac": 0.9984883050225432,
+          "logical": 1736805400
+        },
+        {
+          "dedup_ratio": 1.0014382934024164,
+          "incremental_new_frac": 0.9984883050225432,
+          "logical": 1736805400
+        }
+      ],
+      "full/tensor/1048576": [
+        {
+          "dedup_ratio": 1.0000023491460728,
+          "incremental_new_frac": 0.9999976508594456,
+          "logical": 1736805400
+        },
+        {
+          "dedup_ratio": 1.0000023491460728,
+          "incremental_new_frac": 0.9999976508594456,
+          "logical": 1736805400
+        },
+        {
+          "dedup_ratio": 1.0000023491460728,
+          "incremental_new_frac": 0.9999976508594456,
+          "logical": 1736805400
+        },
+        {
+          "dedup_ratio": 1.0000023491460728,
+          "incremental_new_frac": 0.9999976508594456,
+          "logical": 1736805400
+        },
+        {
+          "dedup_ratio": 1.0000023491460728,
+          "incremental_new_frac": 0.9999976508594456,
+          "logical": 1736805400
+        }
+      ],
+      "full/tensor/4194304": [
+        {
+          "dedup_ratio": 1.0000023491460728,
+          "incremental_new_frac": 0.9999976508594456,
+          "logical": 1736805400
+        },
+        {
+          "dedup_ratio": 1.0000023491460728,
+          "incremental_new_frac": 0.9999976508594456,
+          "logical": 1736805400
+        },
+        {
+          "dedup_ratio": 1.0000023491460728,
+          "incremental_new_frac": 0.9999976508594456,
+          "logical": 1736805400
+        },
+        {
+          "dedup_ratio": 1.0000023491460728,
+          "incremental_new_frac": 0.9999976508594456,
+          "logical": 1736805400
+        },
+        {
+          "dedup_ratio": 1.0000023491460728,
+          "incremental_new_frac": 0.9999976508594456,
+          "logical": 1736805400
+        }
+      ],
+      "full/blob/65536": [
+        {
+          "dedup_ratio": 1.0014727925532045,
+          "incremental_new_frac": 0.9984916649997309,
+          "logical": 1737969350
+        },
+        {
+          "dedup_ratio": 1.0014727925532045,
+          "incremental_new_frac": 0.9984916649997309,
+          "logical": 1737969350
+        },
+        {
+          "dedup_ratio": 1.0014727925532045,
+          "incremental_new_frac": 0.9984916649997309,
+          "logical": 1737969350
+        },
+        {
+          "dedup_ratio": 1.0014727925532045,
+          "incremental_new_frac": 0.9984916649997309,
+          "logical": 1737969350
+        },
+        {
+          "dedup_ratio": 1.0014727925532045,
+          "incremental_new_frac": 0.9984916649997309,
+          "logical": 1737969350
+        }
+      ],
+      "full/blob/262144": [
+        {
+          "dedup_ratio": 1.0,
+          "incremental_new_frac": 1.0,
+          "logical": 1737969350
+        },
+        {
+          "dedup_ratio": 1.0,
+          "incremental_new_frac": 1.0,
+          "logical": 1737969350
+        },
+        {
+          "dedup_ratio": 1.0,
+          "incremental_new_frac": 1.0,
+          "logical": 1737969350
+        },
+        {
+          "dedup_ratio": 1.0,
+          "incremental_new_frac": 1.0,
+          "logical": 1737969350
+        },
+        {
+          "dedup_ratio": 1.0,
+          "incremental_new_frac": 1.0,
+          "logical": 1737969350
+        }
+      ],
+      "full/blob/1048576": [
+        {
+          "dedup_ratio": 1.0,
+          "incremental_new_frac": 1.0,
+          "logical": 1737969350
+        },
+        {
+          "dedup_ratio": 1.0,
+          "incremental_new_frac": 1.0,
+          "logical": 1737969350
+        },
+        {
+          "dedup_ratio": 1.0,
+          "incremental_new_frac": 1.0,
+          "logical": 1737969350
+        },
+        {
+          "dedup_ratio": 1.0,
+          "incremental_new_frac": 1.0,
+          "logical": 1737969350
+        },
+        {
+          "dedup_ratio": 1.0,
+          "incremental_new_frac": 1.0,
+          "logical": 1737969350
+        }
+      ],
+      "full/blob/4194304": [
+        {
+          "dedup_ratio": 1.0,
+          "incremental_new_frac": 1.0,
+          "logical": 1737969350
+        },
+        {
+          "dedup_ratio": 1.0,
+          "incremental_new_frac": 1.0,
+          "logical": 1737969350
+        },
+        {
+          "dedup_ratio": 1.0,
+          "incremental_new_frac": 1.0,
+          "logical": 1737969350
+        },
+        {
+          "dedup_ratio": 1.0,
+          "incremental_new_frac": 1.0,
+          "logical": 1737969350
+        },
+        {
+          "dedup_ratio": 1.0,
+          "incremental_new_frac": 1.0,
+          "logical": 1737969350
+        }
+      ],
+      "frozen/tensor/65536": [
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        },
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        },
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        },
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        },
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        }
+      ],
+      "frozen/tensor/262144": [
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        },
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        },
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        },
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        },
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        }
+      ],
+      "frozen/tensor/1048576": [
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        },
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        },
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        },
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        },
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        }
+      ],
+      "frozen/tensor/4194304": [
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        },
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        },
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        },
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        },
+        {
+          "dedup_ratio": 1.2934579520491387,
+          "incremental_new_frac": 0.7479335320152237,
+          "logical": 1154690040
+        }
+      ],
+      "frozen/blob/65536": [
+        {
+          "dedup_ratio": 1.2930838780887415,
+          "incremental_new_frac": 0.7481611526134994,
+          "logical": 1155420790
+        },
+        {
+          "dedup_ratio": 1.2930838780887415,
+          "incremental_new_frac": 0.7481611526134994,
+          "logical": 1155420790
+        },
+        {
+          "dedup_ratio": 1.2930838780887415,
+          "incremental_new_frac": 0.7481611526134994,
+          "logical": 1155420790
+        },
+        {
+          "dedup_ratio": 1.2930838780887415,
+          "incremental_new_frac": 0.7481611526134994,
+          "logical": 1155420790
+        },
+        {
+          "dedup_ratio": 1.2930838780887415,
+          "incremental_new_frac": 0.7481611526134994,
+          "logical": 1155420790
+        }
+      ],
+      "frozen/blob/262144": [
+        {
+          "dedup_ratio": 1.2930838780887415,
+          "incremental_new_frac": 0.7481611526134994,
+          "logical": 1155420790
+        },
+        {
+          "dedup_ratio": 1.2930838780887415,
+          "incremental_new_frac": 0.7481611526134994,
+          "logical": 1155420790
+        },
+        {
+          "dedup_ratio": 1.2930838780887415,
+          "incremental_new_frac": 0.7481611526134994,
+          "logical": 1155420790
+        },
+        {
+          "dedup_ratio": 1.2930838780887415,
+          "incremental_new_frac": 0.7481611526134994,
+          "logical": 1155420790
+        },
+        {
+          "dedup_ratio": 1.2930838780887415,
+          "incremental_new_frac": 0.7481611526134994,
+          "logical": 1155420790
+        }
+      ],
+      "frozen/blob/1048576": [
+        {
+          "dedup_ratio": 1.2829216174689662,
+          "incremental_new_frac": 0.7549676079482697,
+          "logical": 1155420790
+        },
+        {
+          "dedup_ratio": 1.2829216174689662,
+          "incremental_new_frac": 0.7549676079482697,
+          "logical": 1155420790
+        },
+        {
+          "dedup_ratio": 1.2829216174689662,
+          "incremental_new_frac": 0.7549676079482697,
+          "logical": 1155420790
+        },
+        {
+          "dedup_ratio": 1.2829216174689662,
+          "incremental_new_frac": 0.7549676079482697,
+          "logical": 1155420790
+        },
+        {
+          "dedup_ratio": 1.2829216174689662,
+          "incremental_new_frac": 0.7549676079482697,
+          "logical": 1155420790
+        }
+      ],
+      "frozen/blob/4194304": [
+        {
+          "dedup_ratio": 1.2438211840001347,
+          "incremental_new_frac": 0.7821934292873508,
+          "logical": 1155420790
+        },
+        {
+          "dedup_ratio": 1.2438211840001347,
+          "incremental_new_frac": 0.7821934292873508,
+          "logical": 1155420790
+        },
+        {
+          "dedup_ratio": 1.2438211840001347,
+          "incremental_new_frac": 0.7821934292873508,
+          "logical": 1155420790
+        },
+        {
+          "dedup_ratio": 1.2438211840001347,
+          "incremental_new_frac": 0.7821934292873508,
+          "logical": 1155420790
+        },
+        {
+          "dedup_ratio": 1.2438211840001347,
+          "incremental_new_frac": 0.7821934292873508,
+          "logical": 1155420790
+        }
+      ],
+      "adapter/tensor/65536": [
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        },
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        },
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        },
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        },
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        }
+      ],
+      "adapter/tensor/262144": [
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        },
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        },
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        },
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        },
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        }
+      ],
+      "adapter/tensor/1048576": [
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        },
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        },
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        },
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        },
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        }
+      ],
+      "adapter/tensor/4194304": [
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        },
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        },
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        },
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        },
+        {
+          "dedup_ratio": 2.648475751045331,
+          "incremental_new_frac": 0.3084783779264058,
+          "logical": 728817240
+        }
+      ],
+      "adapter/blob/65536": [
+        {
+          "dedup_ratio": 2.6453361939406066,
+          "incremental_new_frac": 0.3089153164016627,
+          "logical": 729247590
+        },
+        {
+          "dedup_ratio": 2.6453361939406066,
+          "incremental_new_frac": 0.3089153164016627,
+          "logical": 729247590
+        },
+        {
+          "dedup_ratio": 2.6453361939406066,
+          "incremental_new_frac": 0.3089153164016627,
+          "logical": 729247590
+        },
+        {
+          "dedup_ratio": 2.6453361939406066,
+          "incremental_new_frac": 0.3089153164016627,
+          "logical": 729247590
+        },
+        {
+          "dedup_ratio": 2.6453361939406066,
+          "incremental_new_frac": 0.3089153164016627,
+          "logical": 729247590
+        }
+      ],
+      "adapter/blob/262144": [
+        {
+          "dedup_ratio": 2.6396883723284916,
+          "incremental_new_frac": 0.3098139960942483,
+          "logical": 729247590
+        },
+        {
+          "dedup_ratio": 2.6396883723284916,
+          "incremental_new_frac": 0.3098139960942483,
+          "logical": 729247590
+        },
+        {
+          "dedup_ratio": 2.6396883723284916,
+          "incremental_new_frac": 0.3098139960942483,
+          "logical": 729247590
+        },
+        {
+          "dedup_ratio": 2.6396883723284916,
+          "incremental_new_frac": 0.3098139960942483,
+          "logical": 729247590
+        },
+        {
+          "dedup_ratio": 2.6396883723284916,
+          "incremental_new_frac": 0.3098139960942483,
+          "logical": 729247590
+        }
+      ],
+      "adapter/blob/1048576": [
+        {
+          "dedup_ratio": 2.6396883723284916,
+          "incremental_new_frac": 0.3098139960942483,
+          "logical": 729247590
+        },
+        {
+          "dedup_ratio": 2.6396883723284916,
+          "incremental_new_frac": 0.3098139960942483,
+          "logical": 729247590
+        },
+        {
+          "dedup_ratio": 2.6396883723284916,
+          "incremental_new_frac": 0.3098139960942483,
+          "logical": 729247590
+        },
+        {
+          "dedup_ratio": 2.6396883723284916,
+          "incremental_new_frac": 0.3098139960942483,
+          "logical": 729247590
+        },
+        {
+          "dedup_ratio": 2.6396883723284916,
+          "incremental_new_frac": 0.3098139960942483,
+          "logical": 729247590
+        }
+      ],
+      "adapter/blob/4194304": [
+        {
+          "dedup_ratio": 2.6396883723284916,
+          "incremental_new_frac": 0.3098139960942483,
+          "logical": 729247590
+        },
+        {
+          "dedup_ratio": 2.6396883723284916,
+          "incremental_new_frac": 0.3098139960942483,
+          "logical": 729247590
+        },
+        {
+          "dedup_ratio": 2.6396883723284916,
+          "incremental_new_frac": 0.3098139960942483,
+          "logical": 729247590
+        },
+        {
+          "dedup_ratio": 2.6396883723284916,
+          "incremental_new_frac": 0.3098139960942483,
+          "logical": 729247590
+        },
+        {
+          "dedup_ratio": 2.6396883723284916,
+          "incremental_new_frac": 0.3098139960942483,
+          "logical": 729247590
+        }
+      ]
+    }
+  }
+}

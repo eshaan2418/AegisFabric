@@ -57,7 +57,15 @@ def bench_figs(out, tables: list[str]) -> None:
                     color=COLORS[meth],
                     label=meth if i == 0 else None,
                 )
-                ax.text(x, s["mean"], f"{s['mean']:.3g}", ha="center", va="bottom", fontsize=5.5, rotation=90)
+                ax.text(
+                    x,
+                    s["mean"] + _half(s),
+                    f"{s['mean']:.3g}",
+                    ha="center",
+                    va="bottom",
+                    fontsize=5.5,
+                    rotation=90,
+                )
                 rows[g].append(f"{s['mean']:.3g} ± {_half(s):.2g} (n={s['n']})")
         for g in groups:
             tables.append(f"| {g} | " + " | ".join(rows[g]) + " |")
