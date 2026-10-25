@@ -1,0 +1,58 @@
+\section{Implementation}
+\label{sec:impl}
+
+\paragraph{Testbed and fallback rung.}
+The host has no CUDA device (an Apple-silicon laptop-class machine with \cfg{18} cores). We therefore use
+the CPU-only rung of our environment ladder: a tiny multimodal transformer (chart-image patches plus
+byte-level text) trained with multi-process Gloo inside a privileged Linux container. Each rank runs in its
+own network namespace (\texttt{ENVIRONMENT.md}, \texttt{DECISIONS.md} D-002). The host was shared with
+other workloads throughout (B-005), so we interleave methods in a seeded random order within every
+(seed, scenario) block and record load averages per run.
+
+\paragraph{Network laboratory (\texttt{netlab/}).}
+Each site has a gateway router (OSPF + iBGP; originates separate \textsc{compute}, \textsc{storage} and
+background prefixes) and two border routers, one per WAN plane. Plane A is a low-latency, low-capacity
+full mesh and plane B a higher-latency, higher-capacity one, so every site pair has two disjoint direct
+paths plus two-hop alternatives. Every router runs its own FRRouting instance with eBGP between sites.
+WAN links are veth pairs shaped with \texttt{tbf}+\texttt{netem}. We used namespaces instead of
+containerlab, and BGP policy instead of Open vSwitch, because Docker Desktop's kernel has no
+\texttt{openvswitch} module (B-002, D-003, D-005). Routing granularity is therefore per
+destination prefix and class, not per flow. Failure injection (link down, blackhole, flap, bandwidth
+collapse, latency spike, BGP session reset, site-wide degradation) is scripted, seeded and timestamped.
+
+\paragraph{Control plane.}
+The controller changes routes only by rewriting gateway route-maps (local-preference \cfg{200} on the
+chosen plane for a destination prefix) through \texttt{vtysh}, followed by a soft inbound refresh. Zebra
+programs the kernel FIB, so the control plane and the data plane stay separate. A base policy prefers plane A
+(local-preference \cfg{150}), so ``no decision'' is a well-defined route (D-012).
+
+\paragraph{Training (\texttt{train/}).}
+DDP, FSDP2 (\texttt{fully\_shard}) and HSDP (2-D mesh) run over Gloo with telemetry for per-step time,
+per-collective time (wrapped collectives and a DDP comm hook, timed issue$\to$completion), tokens/s, MFU and
+RSS. MFU is training FLOPs per token, $\cfg{6}N + \cfg{12}\,L\,d\,S$ (PaLM-style, $N$ non-embedding parameters), times tokens
+per step, divided by step time times a \emph{measured} per-rank fp32 matmul peak, so it is relative to this CPU, not to
+any accelerator.
+
+\paragraph{Checkpoints and migration.}
+Every $K$ steps each rank snapshots its size-balanced slice of the full training state (the stall), and a
+background thread uploads it to the storage host of site $s$ over the routed \textsc{storage} prefix.
+Each slice carries a digest of the full key set, and restore refuses incomplete or inconsistent unions.
+That check came from a bug we found before the campaign (D-011): non-zero ranks had been slicing an
+empty state. A migration writes a final checkpoint, stops the job, relaunches at the new placement and
+restores from the old storage site. A crashed segment is relaunched from the newest complete checkpoint
+at either site.
+
+\paragraph{Security (\texttt{security/}).}
+A test CA (Python \texttt{cryptography}, ECDSA P-256) issues short-lived X.509 workload certificates with
+SPIFFE URI SANs. All gRPC control traffic uses mTLS (TLS 1.3) with an authorisation interceptor on the
+SPIFFE ID. Servers reload credentials per handshake, and clients rotate channels on renewal. CA rotation
+is two-phase: distribute the new trust bundle, then start signing with the new CA. Both this ordering and
+issuing certificates with a not-before time set slightly in the past (backdating) were required by
+counterexamples that TLC found (\S\ref{sec:ext}). SPIRE is not deployed; bootstrap identities are injected
+by the harness instead of attested (B-007). No cryptographic primitive is implemented here.
+
+\paragraph{Reproducibility.}
+Every result file records git commit, dirty flag, hardware, seed, configuration, command and timestamp.
+\texttt{bench/lab\_campaigns.sh} runs all lab campaigns resumably. \texttt{bench/claims.py} computes every
+number quoted in this paper from a named result file and generates the macros the text uses, and
+\texttt{bench/audit\_numbers.py} fails the build if a document contains a number that no claim backs.
